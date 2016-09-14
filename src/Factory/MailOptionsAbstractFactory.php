@@ -7,15 +7,15 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Factory;
+namespace Dot\Mail\Factory;
 
-use DotKernel\DotMail\Options\MailOptions;
+use Dot\Mail\Options\MailOptions;
 use Interop\Container\ContainerInterface;
 use Zend\Stdlib\ArrayUtils;
 
 /**
  * Class MailOptionsAbstractFactory
- * @package DotKernel\DotMail\Factory
+ * @package Dot\Mail\Factory
  */
 class MailOptionsAbstractFactory extends AbstractMailFactory
 {

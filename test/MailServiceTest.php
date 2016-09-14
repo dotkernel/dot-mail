@@ -7,12 +7,12 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernelTest\DotMail;
+namespace DotTest\Mail;
 
 
 /**
  * Class MailServiceTest
- * @package DotKernelTest\DotMail
+ * @package DotTest\Mail
  */
 class MailServiceTest extends \PHPUnit_Framework_TestCase
 {

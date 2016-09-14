@@ -7,11 +7,11 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Result;
+namespace Dot\Mail\Result;
 
 /**
  * Class MailResult
- * @package DotKernel\DotMail\Result
+ * @package Dot\Mail\Result
  */
 class MailResult implements ResultInterface
 {

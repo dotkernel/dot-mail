@@ -7,11 +7,11 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Exception;
+namespace Dot\Mail\Exception;
 
 /**
  * Class InvalidArgumentException
- * @package DotKernel\DotMail\Exception
+ * @package Dot\Mail\Exception
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {

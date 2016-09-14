@@ -20,7 +20,8 @@
     "zendframework/zend-servicemanager": "^3.0",
     "zendframework/zend-mail": "^2.7",
 
-    "dotkernel/dot-event": "0.6.x-dev"
+    "dotkernel/dot-event": "0.6.x-dev",
+    "dotkernel/dot-helpers": "0.6.x-dev"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8",
@@ -28,15 +29,19 @@
   },
   "autoload": {
     "psr-4": {
-      "DotKernel\\DotMail\\": "src/"
+      "Dot\\Mail\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "DotKernelTest\\DotMail\\": "test/"
+      "DotTest\\Mail\\": "test/"
     }
   },
   "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/dotkernel/dot-helpers.git"
+    },
     {
       "type": "vcs",
       "url": "https://github.com/dotkernel/dot-event.git"

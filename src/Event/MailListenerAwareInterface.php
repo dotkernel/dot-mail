@@ -7,11 +7,11 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Event;
+namespace Dot\Mail\Event;
 
 /**
  * Interface MailListenerAwareInterface
- * @package DotKernel\DotMail\Event
+ * @package Dot\Mail\Event
  */
 interface MailListenerAwareInterface
 {

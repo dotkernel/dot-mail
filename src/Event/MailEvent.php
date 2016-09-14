@@ -7,16 +7,16 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Event;
+namespace Dot\Mail\Event;
 
 
-use DotKernel\DotEvent\Event;
-use DotKernel\DotMail\Result\ResultInterface;
-use DotKernel\DotMail\Service\MailServiceInterface;
+use Dot\Event\Event;
+use Dot\Mail\Result\ResultInterface;
+use Dot\Mail\Service\MailServiceInterface;
 
 /**
  * Class MailEvent
- * @package DotKernel\DotMail\Event
+ * @package Dot\Mail\Event
  */
 class MailEvent extends Event
 {

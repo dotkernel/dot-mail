@@ -7,14 +7,14 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Options;
+namespace Dot\Mail\Options;
 
-use DotKernel\DotMail\Exception\InvalidArgumentException;
+use Dot\Mail\Exception\InvalidArgumentException;
 use Zend\Stdlib\AbstractOptions;
 
 /**
  * Class MessageOptions
- * @package DotKernel\DotMail\Options
+ * @package Dot\Mail\Options
  */
 class MessageOptions extends AbstractOptions
 {

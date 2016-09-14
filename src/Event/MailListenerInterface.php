@@ -7,13 +7,13 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Event;
+namespace Dot\Mail\Event;
 
 use Zend\EventManager\ListenerAggregateInterface;
 
 /**
  * Interface MailListenerInterface
- * @package DotKernel\DotMail\Event
+ * @package Dot\Mail\Event
  */
 interface MailListenerInterface extends ListenerAggregateInterface
 {

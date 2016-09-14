@@ -7,17 +7,17 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Service;
+namespace Dot\Mail\Service;
 
-use DotKernel\DotMail\Event\MailEvent;
-use DotKernel\DotMail\Event\MailListenerAwareInterface;
-use DotKernel\DotMail\Event\MailListenerAwareTrait;
-use DotKernel\DotMail\Exception\InvalidArgumentException;
-use DotKernel\DotMail\Exception\MailException;
-use DotKernel\DotMail\Result\MailResult;
-use DotKernel\DotMail\Result\ResultInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Dot\Helpers\Psr7\HttpMessagesAwareInterface;
+use Dot\Helpers\Psr7\HttpMessagesAwareTrait;
+use Dot\Mail\Event\MailEvent;
+use Dot\Mail\Event\MailListenerAwareInterface;
+use Dot\Mail\Event\MailListenerAwareTrait;
+use Dot\Mail\Exception\InvalidArgumentException;
+use Dot\Mail\Exception\MailException;
+use Dot\Mail\Result\MailResult;
+use Dot\Mail\Result\ResultInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Mail\Exception\ExceptionInterface as ZendMailException;
 use Zend\Mail\Message;
@@ -28,11 +28,15 @@ use Zend\Mime\Part as MimePart;
 
 /**
  * Class MailService
- * @package DotKernel\DotMail\Service
+ * @package Dot\Mail\Service
  */
-class MailService implements MailServiceInterface, MailListenerAwareInterface
+class MailService implements
+    MailServiceInterface,
+    MailListenerAwareInterface,
+    HttpMessagesAwareInterface
 {
     use MailListenerAwareTrait;
+    use HttpMessagesAwareTrait;
 
     /** @var  Message */
     protected $message;
@@ -45,12 +49,6 @@ class MailService implements MailServiceInterface, MailListenerAwareInterface
 
     /** @var array  */
     protected $attachments = [];
-
-    /** @var  ServerRequestInterface */
-    protected $request;
-
-    /** @var  ResponseInterface */
-    protected $response;
 
     /**
      * MailService constructor.
@@ -305,42 +303,4 @@ class MailService implements MailServiceInterface, MailListenerAwareInterface
         $this->transport = $transport;
         return $this;
     }
-
-    /**
-     * @return ServerRequestInterface
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return MailService
-     */
-    public function setRequest(ServerRequestInterface $request)
-    {
-        $this->request = $request;
-        return $this;
-    }
-
-    /**
-     * @return ResponseInterface
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * @param ResponseInterface $response
-     * @return MailService
-     */
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->response = $response;
-        return $this;
-    }
-
-
 }

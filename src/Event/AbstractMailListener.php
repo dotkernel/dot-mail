@@ -7,7 +7,7 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Event;
+namespace Dot\Mail\Event;
 
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;

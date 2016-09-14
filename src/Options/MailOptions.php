@@ -7,10 +7,10 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Options;
+namespace Dot\Mail\Options;
 
-use DotKernel\DotMail\Event\MailListenerInterface;
-use DotKernel\DotMail\Exception\InvalidArgumentException;
+use Dot\Mail\Event\MailListenerInterface;
+use Dot\Mail\Exception\InvalidArgumentException;
 use Zend\Mail\Transport\File;
 use Zend\Mail\Transport\FileOptions;
 use Zend\Mail\Transport\InMemory;
@@ -22,7 +22,7 @@ use Zend\Stdlib\AbstractOptions;
 
 /**
  * Class MailOptions
- * @package DotKernel\DotMail\Options
+ * @package Dot\Mail\Options
  */
 class MailOptions extends AbstractOptions
 {
@@ -200,7 +200,7 @@ class MailOptions extends AbstractOptions
     }
 
     /**
-     * @return \DotKernel\DotMail\Event\MailListenerInterface[]
+     * @return \Dot\Mail\Event\MailListenerInterface[]
      */
     public function getMailListeners()
     {
@@ -208,7 +208,7 @@ class MailOptions extends AbstractOptions
     }
 
     /**
-     * @param \DotKernel\DotMail\Event\MailListenerInterface[] $mailListeners
+     * @param \Dot\Mail\Event\MailListenerInterface[] $mailListeners
      * @return MailOptions
      */
     public function setMailListeners($mailListeners)

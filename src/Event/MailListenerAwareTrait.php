@@ -7,13 +7,13 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Event;
+namespace Dot\Mail\Event;
 
 use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * Class MailListenerAwareTrait
- * @package DotKernel\DotMail\Event
+ * @package Dot\Mail\Event
  */
 trait MailListenerAwareTrait
 {

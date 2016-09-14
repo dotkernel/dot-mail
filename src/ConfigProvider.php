@@ -7,14 +7,14 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail;
+namespace Dot\Mail;
 
-use DotKernel\DotMail\Factory\MailOptionsAbstractFactory;
-use DotKernel\DotMail\Factory\MailServiceAbstractFactory;
+use Dot\Mail\Factory\MailOptionsAbstractFactory;
+use Dot\Mail\Factory\MailServiceAbstractFactory;
 
 /**
  * Class ConfigProvider
- * @package DotKernel\DotMail
+ * @package Dot\Mail
  */
 class ConfigProvider
 {

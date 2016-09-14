@@ -7,14 +7,14 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Factory;
+namespace Dot\Mail\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
 /**
  * Class AbstractMailFactory
- * @package DotKernel\DotMail\Factory
+ * @package Dot\Mail\Factory
  */
 abstract class AbstractMailFactory implements AbstractFactoryInterface
 {

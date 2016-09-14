@@ -7,11 +7,11 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Options;
+namespace Dot\Mail\Options;
 
 /**
  * Class TemplateOptions
- * @package DotKernel\DotMail\Options
+ * @package Dot\Mail\Options
  */
 class TemplateOptions
 {

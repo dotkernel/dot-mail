@@ -7,13 +7,13 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Factory;
+namespace Dot\Mail\Factory;
 
-use DotKernel\DotMail\Event\MailListenerAwareInterface;
-use DotKernel\DotMail\Event\MailListenerInterface;
-use DotKernel\DotMail\Exception\InvalidArgumentException;
-use DotKernel\DotMail\Options\MailOptions;
-use DotKernel\DotMail\Service\MailService;
+use Dot\Mail\Event\MailListenerAwareInterface;
+use Dot\Mail\Event\MailListenerInterface;
+use Dot\Mail\Exception\InvalidArgumentException;
+use Dot\Mail\Options\MailOptions;
+use Dot\Mail\Service\MailService;
 use Interop\Container\ContainerInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -24,7 +24,7 @@ use Zend\Mail\Transport\TransportInterface;
 
 /**
  * Class MailServiceAbstractFactory
- * @package DotKernel\DotMail\Factory
+ * @package Dot\Mail\Factory
  */
 class MailServiceAbstractFactory extends AbstractMailFactory
 {

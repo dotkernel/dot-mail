@@ -7,11 +7,11 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Exception;
+namespace Dot\Mail\Exception;
 
 /**
  * Class MailException
- * @package DotKernel\DotMail\Exception
+ * @package Dot\Mail\Exception
  */
 class MailException extends \Exception implements ExceptionInterface
 {

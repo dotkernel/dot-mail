@@ -7,13 +7,13 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Options;
+namespace Dot\Mail\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
 /**
  * Class AttachmentsOptions
- * @package DotKernel\DotMail\Options
+ * @package Dot\Mail\Options
  */
 class AttachmentsOptions extends AbstractOptions
 {

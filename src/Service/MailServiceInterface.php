@@ -7,17 +7,15 @@
  * Time: 7:49 PM
  */
 
-namespace DotKernel\DotMail\Service;
+namespace Dot\Mail\Service;
 
-use DotKernel\DotMail\Result\ResultInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Dot\Mail\Result\ResultInterface;
 use Zend\Mail\Message;
 use Zend\Mime\Part;
 
 /**
  * Interface MailServiceInterface
- * @package DotKernel\DotMail\Service
+ * @package Dot\Mail\Service
  */
 interface MailServiceInterface
 {
@@ -76,26 +74,4 @@ interface MailServiceInterface
      * @return mixed
      */
     public function setAttachments(array $paths);
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return mixed
-     */
-    public function setRequest(ServerRequestInterface $request);
-
-    /**
-     * @return mixed
-     */
-    public function getRequest();
-
-    /**
-     * @param ResponseInterface $response
-     * @return mixed
-     */
-    public function setResponse(ResponseInterface $response);
-
-    /**
-     * @return mixed
-     */
-    public function getResponse();
 }
