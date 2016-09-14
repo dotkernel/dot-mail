@@ -8,7 +8,7 @@ return [
      * actually that is what you'll usually do, these config provide just default and options that remain the same for all mails
      */
 
-    'dk_mail' => [
+    'dot_mail' => [
         //the key is the mail service name, this is the default one, which does not extends any configuration
         'default' => [
             //tells which other mail service configuration to extend
