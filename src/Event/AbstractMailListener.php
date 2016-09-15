@@ -12,6 +12,10 @@ namespace Dot\Mail\Event;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 
+/**
+ * Class AbstractMailListener
+ * @package Dot\Mail\Event
+ */
 abstract class AbstractMailListener extends AbstractListenerAggregate implements MailListenerInterface
 {
     /** @var array  */
