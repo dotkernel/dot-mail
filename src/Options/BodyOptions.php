@@ -19,15 +19,15 @@ use Zend\Stdlib\AbstractOptions;
  */
 class BodyOptions extends AbstractOptions
 {
-    /** @var bool  */
+    /** @var bool */
     protected $useTemplate = false;
 
-    /** @var string  */
+    /** @var string */
     protected $content = '';
 
-    /** @var string  */
+    /** @var string */
     protected $charset = MailServiceInterface::DEFAULT_CHARSET;
-    
+
     /** @var  TemplateOptions */
     protected $template;
 
@@ -45,7 +45,7 @@ class BodyOptions extends AbstractOptions
      */
     public function setUseTemplate($useTemplate)
     {
-        $this->useTemplate = (bool) $useTemplate;
+        $this->useTemplate = (bool)$useTemplate;
         return $this;
     }
 
@@ -90,7 +90,7 @@ class BodyOptions extends AbstractOptions
      */
     public function getTemplate()
     {
-        if(!isset($this->template)) {
+        if (!isset($this->template)) {
             $this->setTemplate([]);
         }
         return $this->template;
@@ -104,11 +104,9 @@ class BodyOptions extends AbstractOptions
     {
         if (is_array($template)) {
             $this->template = new TemplateOptions($template);
-        }
-        elseif ($template instanceof TemplateOptions) {
+        } elseif ($template instanceof TemplateOptions) {
             $this->template = $template;
-        }
-        else {
+        } else {
             throw new InvalidArgumentException(sprintf(
                 'Template should be an array or an %s object. %s provided.',
                 TemplateOptions::class,
@@ -118,6 +116,5 @@ class BodyOptions extends AbstractOptions
         return $this;
     }
 
-    
 
 }

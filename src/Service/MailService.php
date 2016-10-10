@@ -47,7 +47,7 @@ class MailService implements
     /** @var  TransportInterface */
     protected $transport;
 
-    /** @var array  */
+    /** @var array */
     protected $attachments = [];
 
     /**
@@ -57,10 +57,10 @@ class MailService implements
      * @param TemplateRendererInterface $template
      */
     public function __construct(
-        Message $message ,
+        Message $message,
         TransportInterface $transport,
-        TemplateRendererInterface $template)
-    {
+        TemplateRendererInterface $template
+    ) {
         $this->message = $message;
         $this->transport = $transport;
         $this->template = $template;
@@ -82,13 +82,12 @@ class MailService implements
             $this->transport->send($this->message);
 
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_POST_SEND, $result));
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $result = $this->createMailResultFromException($e);
             //trigger error event
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
 
-            if(!$e instanceof ZendMailException) {
+            if (!$e instanceof ZendMailException) {
                 throw new MailException('A non Zend\Mail exception occurred', $e->getCode(), $e);
             }
 
@@ -105,13 +104,13 @@ class MailService implements
     protected function createMailEvent($name = MailEvent::EVENT_MAIL_PRE_SEND, ResultInterface $result = null)
     {
         $event = new MailEvent($this, $name);
-        if($this->request) {
+        if ($this->request) {
             $event->setRequest($this->request);
         }
-        if($this->response) {
+        if ($this->response) {
             $event->setResponse($this->response);
         }
-        if(isset($result)) {
+        if (isset($result)) {
             $event->setResult($result);
         }
         return $event;
@@ -141,16 +140,15 @@ class MailService implements
      */
     public function setBody($body, $charset = null)
     {
-        if(is_string($body)) {
+        if (is_string($body)) {
             //create a mime\part and wrap it into a mime\message
             $mimePart = new MimePart($body);
             $mimePart->type = $body != strip_tags($body) ? Mime::TYPE_HTML : Mime::TYPE_TEXT;
             $mimePart->charset = $charset ?: self::DEFAULT_CHARSET;
             $body = new MimeMessage();
             $body->setParts([$mimePart]);
-        }
-        elseif($body instanceof MimePart) {
-            if(isset($charset)) {
+        } elseif ($body instanceof MimePart) {
+            if (isset($charset)) {
                 $body->charset = $charset;
             }
 
@@ -160,7 +158,7 @@ class MailService implements
         }
 
         //if the body is not a string or mime message at this point, it is not a valid argument
-        if(!is_string($body) && !$body instanceof MimeMessage) {
+        if (!is_string($body) && !$body instanceof MimeMessage) {
             throw new InvalidArgumentException(sprintf(
                 'Provided body is not valid. It should be one of "%s". %s provided',
                 implode('", "', ['string', 'Zend\Mime\Part', 'Zend\Mime\Message']),
@@ -204,10 +202,9 @@ class MailService implements
      */
     public function addAttachment($path, $filename = null)
     {
-        if(isset($filename)) {
+        if (isset($filename)) {
             $this->attachments[$filename] = $path;
-        }
-        else {
+        } else {
             $this->attachments[] = $path;
         }
         return $this;
@@ -245,12 +242,12 @@ class MailService implements
      */
     protected function attachFiles()
     {
-        if(count($this->attachments) === 0) {
+        if (count($this->attachments) === 0) {
             return;
         }
 
         $mimeMessage = $this->message->getBody();
-        if(is_string($mimeMessage)) {
+        if (is_string($mimeMessage)) {
             $originalBodyPart = new MimePart($mimeMessage);
             $originalBodyPart->type = $mimeMessage != strip_tags($mimeMessage)
                 ? Mime::TYPE_HTML
@@ -266,7 +263,7 @@ class MailService implements
         $attachmentParts = [];
         $info = new \finfo(FILEINFO_MIME_TYPE);
         foreach ($this->attachments as $key => $attachment) {
-            if(!is_file($attachment)) {
+            if (!is_file($attachment)) {
                 continue;
             }
 

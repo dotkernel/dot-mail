@@ -45,7 +45,7 @@ class MailOptions extends AbstractOptions
     /** @var  FileOptions */
     protected $fileOptions;
 
-    /** @var MailListenerInterface[]  */
+    /** @var MailListenerInterface[] */
     protected $mailListeners = [];
 
     /**
@@ -80,10 +80,10 @@ class MailOptions extends AbstractOptions
      */
     public function setTransport($transport)
     {
-        if(is_string($transport) && array_key_exists(strtolower($transport), $this->transportMap)) {
+        if (is_string($transport) && array_key_exists(strtolower($transport), $this->transportMap)) {
             $transport = $this->transportMap[$transport];
             foreach ($transport as $class) {
-                if(class_exists($class)) {
+                if (class_exists($class)) {
                     $transport = $class;
                     break;
                 }
@@ -99,7 +99,7 @@ class MailOptions extends AbstractOptions
      */
     public function getMessageOptions()
     {
-        if(!isset($this->messageOptions)) {
+        if (!isset($this->messageOptions)) {
             $this->setMessageOptions([]);
         }
 
@@ -112,13 +112,11 @@ class MailOptions extends AbstractOptions
      */
     public function setMessageOptions($messageOptions)
     {
-        if(is_array($messageOptions)) {
+        if (is_array($messageOptions)) {
             $this->messageOptions = new MessageOptions($messageOptions);
-        }
-        elseif($messageOptions instanceof MessageOptions) {
+        } elseif ($messageOptions instanceof MessageOptions) {
             $this->messageOptions = $messageOptions;
-        }
-        else {
+        } else {
             throw new InvalidArgumentException(sprintf(
                 'MessageOptions should be an array or an %s object. %s provided',
                 MessageOptions::class,
@@ -134,7 +132,7 @@ class MailOptions extends AbstractOptions
      */
     public function getSmtpOptions()
     {
-        if(!isset($this->smtpOptions)) {
+        if (!isset($this->smtpOptions)) {
             $this->setSmtpOptions([]);
         }
 
@@ -149,11 +147,9 @@ class MailOptions extends AbstractOptions
     {
         if (is_array($smtpOptions)) {
             $this->smtpOptions = new SmtpOptions($smtpOptions);
-        }
-        elseif($smtpOptions instanceof SmtpOptions) {
+        } elseif ($smtpOptions instanceof SmtpOptions) {
             $this->smtpOptions = $smtpOptions;
-        }
-        else {
+        } else {
             throw new InvalidArgumentException(sprintf(
                 'SmtpOptions should be an array or an %s object. %s provided.',
                 SmtpOptions::class,
@@ -169,7 +165,7 @@ class MailOptions extends AbstractOptions
      */
     public function getFileOptions()
     {
-        if(!isset($this->fileOptions)) {
+        if (!isset($this->fileOptions)) {
             $this->setFileOptions([]);
         }
 
@@ -184,11 +180,9 @@ class MailOptions extends AbstractOptions
     {
         if (is_array($fileOptions)) {
             $this->fileOptions = new FileOptions($fileOptions);
-        }
-        elseif ($fileOptions instanceof FileOptions) {
+        } elseif ($fileOptions instanceof FileOptions) {
             $this->fileOptions = $fileOptions;
-        }
-        else {
+        } else {
             throw new InvalidArgumentException(sprintf(
                 'FileOptions should be an array or an %s object. %s provided.',
                 FileOptions::class,
@@ -213,10 +207,9 @@ class MailOptions extends AbstractOptions
      */
     public function setMailListeners($mailListeners)
     {
-        $this->mailListeners = (array) $mailListeners;
+        $this->mailListeners = (array)$mailListeners;
         return $this;
     }
 
 
-    
 }

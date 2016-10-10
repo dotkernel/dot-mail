@@ -21,7 +21,7 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
     const DOT_MAIL_PART = 'dot-mail';
     const SPECIFIC_PART = '';
 
-    /** @var string  */
+    /** @var string */
     protected $configKey = 'dot_mail';
 
     /** @var  array */
@@ -35,11 +35,11 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
     public function canCreate(ContainerInterface $container, $requestedName)
     {
         $parts = explode('.', $requestedName);
-        if(count($parts) !== 3) {
+        if (count($parts) !== 3) {
             return false;
         }
 
-        if($parts[0] !== self::DOT_MAIL_PART || $parts[1] !== static::SPECIFIC_PART) {
+        if ($parts[0] !== self::DOT_MAIL_PART || $parts[1] !== static::SPECIFIC_PART) {
             return false;
         }
 
@@ -55,7 +55,7 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
     protected function getConfig(ContainerInterface $container)
     {
         $config = $container->get('config');
-        if(isset($config[$this->configKey]) && is_array($this->configKey)) {
+        if (isset($config[$this->configKey]) && is_array($this->configKey)) {
             $this->config = $config[$this->configKey];
         }
 

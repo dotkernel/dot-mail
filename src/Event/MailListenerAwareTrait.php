@@ -45,7 +45,7 @@ trait MailListenerAwareTrait
 
         $idx = 0;
         foreach ($this->listeners as $l) {
-            if($l === $listener) {
+            if ($l === $listener) {
                 break;
             }
 

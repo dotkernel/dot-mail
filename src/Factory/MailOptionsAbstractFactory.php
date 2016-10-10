@@ -33,7 +33,7 @@ class MailOptionsAbstractFactory extends AbstractMailFactory
 
         $config = $this->getConfig($container);
         $specificConfig = $config[$specificServiceName];
-        if(!is_array($specificConfig)) {
+        if (!is_array($specificConfig)) {
             $specificConfig = [];
         }
 
@@ -47,14 +47,14 @@ class MailOptionsAbstractFactory extends AbstractMailFactory
 
             unset($specificConfig['extends']);
 
-            if(!is_null($extendsConfigKey)
+            if (!is_null($extendsConfigKey)
                 && array_key_exists($extendsConfigKey, $config)
                 && is_array($config[$extendsConfigKey])
             ) {
                 $specificConfig = ArrayUtils::merge($config[$extendsConfigKey], $specificConfig);
             }
 
-        } while($extendsConfigKey != null);
+        } while ($extendsConfigKey != null);
 
         return new MailOptions($specificConfig);
     }

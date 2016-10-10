@@ -17,13 +17,13 @@ class MailResult implements ResultInterface
 {
     const DEFAULT_MESSAGE = 'Success!';
 
-    /** @var bool  */
+    /** @var bool */
     protected $valid;
 
-    /** @var string  */
+    /** @var string */
     protected $message;
 
-    /** @var \Exception  */
+    /** @var \Exception */
     protected $exception;
 
     /**

@@ -57,18 +57,18 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             ? $container->get(EventManagerInterface::class)
             : null;
 
-        if($eventManager)
+        if ($eventManager) {
             $mailService->setEventManager($eventManager);
+        }
 
         //set subject
         $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
 
         //set body, either by using a template or a raw body
         $body = $this->mailOptions->getMessageOptions()->getBody();
-        if($body->isUseTemplate()) {
+        if ($body->isUseTemplate()) {
             $mailService->setTemplate($body->getTemplate()->getName(), $body->getTemplate()->getParams());
-        }
-        else {
+        } else {
             $mailService->setBody($body->getContent(), $body->getCharset());
         }
 
@@ -78,7 +78,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
         //attach files from dir
         $dir = $this->mailOptions->getMessageOptions()->getAttachments()->getDir();
-        if($dir['iterate'] === true && is_string($dir['path']) && is_dir('path')) {
+        if ($dir['iterate'] === true && is_string($dir['path']) && is_dir('path')) {
             $files = ($dir['recursive'] === true)
                 ? new \RecursiveIteratorIterator(
                     new \RecursiveDirectoryIterator(
@@ -87,7 +87,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
                 : new \DirectoryIterator($dir['path']);
 
             foreach ($files as $fileInfo) {
-                if($fileInfo->isDir()) {
+                if ($fileInfo->isDir()) {
                     continue;
                 }
 
@@ -109,27 +109,27 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         $message = new Message();
 
         $from = $options->getFrom();
-        if(!empty($from)) {
+        if (!empty($from)) {
             $message->setFrom($from, $options->getFromName());
         }
 
         $replyTo = $options->getReplyTo();
-        if(!empty($replyTo)) {
+        if (!empty($replyTo)) {
             $message->setReplyTo($replyTo, $options->getReplyToName());
         }
 
         $to = $options->getTo();
-        if(!empty($to)) {
+        if (!empty($to)) {
             $message->setTo($to);
         }
 
         $cc = $options->getCc();
-        if(!empty($cc)) {
+        if (!empty($cc)) {
             $message->setCc($cc);
         }
 
         $bcc = $options->getBcc();
-        if(!empty($bcc)) {
+        if (!empty($bcc)) {
             $message->setBcc($bcc);
         }
 
@@ -143,17 +143,16 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     protected function createTransport(ContainerInterface $container)
     {
         $adapter = $this->mailOptions->getTransport();
-        if($adapter instanceof TransportInterface) {
+        if ($adapter instanceof TransportInterface) {
             return $this->setupTransportConfig($adapter);
         }
 
         //check is adapter is a service
-        if(is_string($adapter) && $container->has($adapter)) {
+        if (is_string($adapter) && $container->has($adapter)) {
             $transport = $container->get($adapter);
-            if($transport instanceof TransportInterface) {
+            if ($transport instanceof TransportInterface) {
                 return $this->setupTransportConfig($transport);
-            }
-            else {
+            } else {
                 throw new InvalidArgumentException(
                     'Provided mail_adapter service does not return a ' . TransportInterface::class . ' instance'
                 );
@@ -161,7 +160,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         }
 
         //check is the adapter is one of Zend's default adapters
-        if(is_string($adapter) && is_subclass_of($adapter, TransportInterface::class)) {
+        if (is_string($adapter) && is_subclass_of($adapter, TransportInterface::class)) {
             return $this->setupTransportConfig(new $adapter);
         }
 
@@ -181,10 +180,9 @@ class MailServiceAbstractFactory extends AbstractMailFactory
      */
     protected function setupTransportConfig(TransportInterface $transport)
     {
-        if($transport instanceof Smtp) {
+        if ($transport instanceof Smtp) {
             $transport->setOptions($this->mailOptions->getSmtpOptions());
-        }
-        elseif($transport instanceof File) {
+        } elseif ($transport instanceof File) {
             $transport->setOptions($this->mailOptions->getFileOptions());
         }
 
@@ -199,21 +197,20 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     {
         $listeners = $this->mailOptions->getMailListeners();
         foreach ($listeners as $listener) {
-            if(is_string($listener) && $container->has($listener)) {
+            if (is_string($listener) && $container->has($listener)) {
                 $listener = $container->get($listener);
-            }
-            elseif(is_string($listener) && class_exists($listener)) {
+            } elseif (is_string($listener) && class_exists($listener)) {
                 $listener = new $listener;
             }
 
-            if(!$listener instanceof MailListenerInterface) {
+            if (!$listener instanceof MailListenerInterface) {
                 throw new InvalidArgumentException(sprintf(
                     'Provided mail listener of type "%s" is not valid. Expected string or %s',
                     is_object($listener) ? get_class($listener) : gettype($listener),
                     MailListenerInterface::class
                 ));
             }
-            
+
             $service->attachMailListener($listener);
         }
     }

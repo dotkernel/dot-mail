@@ -18,7 +18,7 @@ use Zend\EventManager\EventManagerInterface;
  */
 abstract class AbstractMailListener extends AbstractListenerAggregate implements MailListenerInterface
 {
-    /** @var array  */
+    /** @var array */
     protected $listeners = [];
 
     /**

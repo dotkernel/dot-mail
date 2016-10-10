@@ -77,5 +77,5 @@ class MailEvent extends Event
         return $this;
     }
 
-    
+
 }

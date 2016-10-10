@@ -15,5 +15,5 @@ namespace Dot\Mail\Exception;
  */
 class MailException extends \Exception implements ExceptionInterface
 {
-    
+
 }

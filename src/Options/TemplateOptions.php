@@ -15,7 +15,7 @@ namespace Dot\Mail\Options;
  */
 class TemplateOptions
 {
-    /** @var array  */
+    /** @var array */
     protected $params = [];
 
     /** @var  string */

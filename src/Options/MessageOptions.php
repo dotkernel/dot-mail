@@ -18,28 +18,28 @@ use Zend\Stdlib\AbstractOptions;
  */
 class MessageOptions extends AbstractOptions
 {
-    /** @var string  */
+    /** @var string */
     protected $from = '';
 
-    /** @var string  */
+    /** @var string */
     protected $fromName = '';
 
-    /** @var string  */
+    /** @var string */
     protected $replyTo = '';
 
-    /** @var string  */
+    /** @var string */
     protected $replyToName = '';
 
-    /** @var array  */
+    /** @var array */
     protected $to = [];
 
-    /** @var array  */
+    /** @var array */
     protected $cc = [];
 
-    /** @var array  */
+    /** @var array */
     protected $bcc = [];
 
-    /** @var string  */
+    /** @var string */
     protected $subject = '';
 
     /** @var  BodyOptions */
@@ -134,7 +134,7 @@ class MessageOptions extends AbstractOptions
      */
     public function setTo($to)
     {
-        $this->to = (array) $to;
+        $this->to = (array)$to;
         return $this;
     }
 
@@ -152,7 +152,7 @@ class MessageOptions extends AbstractOptions
      */
     public function setCc($cc)
     {
-        $this->cc = (array) $cc;
+        $this->cc = (array)$cc;
         return $this;
     }
 
@@ -170,7 +170,7 @@ class MessageOptions extends AbstractOptions
      */
     public function setBcc($bcc)
     {
-        $this->bcc = (array) $bcc;
+        $this->bcc = (array)$bcc;
         return $this;
     }
 
@@ -197,7 +197,7 @@ class MessageOptions extends AbstractOptions
      */
     public function getBody()
     {
-        if(!isset($this->body)) {
+        if (!isset($this->body)) {
             $this->setBody([]);
         }
 
@@ -212,11 +212,9 @@ class MessageOptions extends AbstractOptions
     {
         if (is_array($body)) {
             $this->body = new BodyOptions($body);
-        }
-        elseif ($body instanceof BodyOptions) {
+        } elseif ($body instanceof BodyOptions) {
             $this->body = $body;
-        }
-        else {
+        } else {
             throw new InvalidArgumentException(sprintf(
                 'Body should be an array or an %s, %s provided',
                 BodyOptions::class,
@@ -232,7 +230,7 @@ class MessageOptions extends AbstractOptions
      */
     public function getAttachments()
     {
-        if (! isset($this->attachments)) {
+        if (!isset($this->attachments)) {
             $this->setAttachments([]);
         }
 
@@ -247,11 +245,9 @@ class MessageOptions extends AbstractOptions
     {
         if (is_array($attachments)) {
             $this->attachments = new AttachmentsOptions($attachments);
-        }
-        elseif ($attachments instanceof AttachmentsOptions) {
+        } elseif ($attachments instanceof AttachmentsOptions) {
             $this->attachments = $attachments;
-        }
-        else {
+        } else {
             throw new InvalidArgumentException(sprintf(
                 'Attachments should be an array or an %s, %s provided',
                 AttachmentsOptions::class,

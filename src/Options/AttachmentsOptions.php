@@ -21,10 +21,10 @@ class AttachmentsOptions extends AbstractOptions
     const DEFAULT_PATH = 'data/mail/attachments';
     const DEFAULT_RECURSIVE = false;
 
-    /** @var array  */
+    /** @var array */
     protected $files = [];
 
-    /** @var array  */
+    /** @var array */
     protected $dir = [
         'iterate' => self::DEFAULT_ITERATE,
         'path' => self::DEFAULT_PATH,
@@ -40,6 +40,7 @@ class AttachmentsOptions extends AbstractOptions
         $this->dir = $dir;
         return $this->normalizeDirArray();
     }
+
     /**
      * @return array
      */
@@ -47,6 +48,7 @@ class AttachmentsOptions extends AbstractOptions
     {
         return $this->dir;
     }
+
     /**
      * @param array $files
      * @return $this
@@ -56,6 +58,7 @@ class AttachmentsOptions extends AbstractOptions
         $this->files = $files;
         return $this;
     }
+
     /**
      * @return array
      */
@@ -63,6 +66,7 @@ class AttachmentsOptions extends AbstractOptions
     {
         return $this->files;
     }
+
     /**
      * @param $filePath
      * @return $this
@@ -72,6 +76,7 @@ class AttachmentsOptions extends AbstractOptions
         $this->files[] = $filePath;
         return $this;
     }
+
     /**
      * @param array $files
      * @return $this
@@ -80,19 +85,20 @@ class AttachmentsOptions extends AbstractOptions
     {
         return $this->setFiles(array_merge($this->files, $files));
     }
+
     /**
      * Makes sure dir array has default properties at least
      * @return $this
      */
     protected function normalizeDirArray()
     {
-        if (! isset($this->dir['iterate'])) {
+        if (!isset($this->dir['iterate'])) {
             $this->dir['iterate'] = self::DEFAULT_ITERATE;
         }
-        if (! isset($this->dir['path'])) {
+        if (!isset($this->dir['path'])) {
             $this->dir['path'] = self::DEFAULT_PATH;
         }
-        if (! isset($this->dir['recursive'])) {
+        if (!isset($this->dir['recursive'])) {
             $this->dir['recursive'] = self::DEFAULT_RECURSIVE;
         }
         return $this;

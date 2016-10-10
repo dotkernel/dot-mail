@@ -15,5 +15,5 @@ namespace Dot\Mail\Exception;
  */
 interface ExceptionInterface
 {
-    
+
 }
