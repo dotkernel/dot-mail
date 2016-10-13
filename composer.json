@@ -37,16 +37,6 @@
       "DotTest\\Mail\\": "test/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/dotkernel/dot-helpers.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/dotkernel/dot-event.git"
-    }
-  ],
   "extra": {
     "branch-alias": {
       "dev-master": "0.6-dev"
