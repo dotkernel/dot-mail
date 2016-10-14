@@ -9,6 +9,7 @@
 
 namespace Dot\Mail\Service;
 
+use Dot\Helpers\Psr7\HttpMessagesAwareInterface;
 use Dot\Mail\Result\ResultInterface;
 use Zend\Mail\Message;
 use Zend\Mime\Part;
@@ -17,7 +18,7 @@ use Zend\Mime\Part;
  * Interface MailServiceInterface
  * @package Dot\Mail\Service
  */
-interface MailServiceInterface
+interface MailServiceInterface extends HttpMessagesAwareInterface
 {
     const DEFAULT_CHARSET = 'utf-8';
 

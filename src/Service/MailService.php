@@ -9,7 +9,6 @@
 
 namespace Dot\Mail\Service;
 
-use Dot\Helpers\Psr7\HttpMessagesAwareInterface;
 use Dot\Helpers\Psr7\HttpMessagesAwareTrait;
 use Dot\Mail\Event\MailEvent;
 use Dot\Mail\Event\MailListenerAwareInterface;
@@ -32,8 +31,7 @@ use Zend\Mime\Part as MimePart;
  */
 class MailService implements
     MailServiceInterface,
-    MailListenerAwareInterface,
-    HttpMessagesAwareInterface
+    MailListenerAwareInterface
 {
     use MailListenerAwareTrait;
     use HttpMessagesAwareTrait;
