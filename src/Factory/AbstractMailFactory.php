@@ -55,7 +55,7 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
     protected function getConfig(ContainerInterface $container)
     {
         $config = $container->get('config');
-        if (isset($config[$this->configKey]) && is_array($this->configKey)) {
+        if (isset($config[$this->configKey]) && is_array($config[$this->configKey])) {
             $this->config = $config[$this->configKey];
         }
 
