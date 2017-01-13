@@ -28,7 +28,7 @@ use Zend\Mail\Transport\TransportInterface;
  */
 class MailServiceAbstractFactory extends AbstractMailFactory
 {
-    const SPECIFIC_PART = 'mail-service';
+    const SPECIFIC_PART = 'service';
 
     /** @var  MailOptions */
     protected $mailOptions;

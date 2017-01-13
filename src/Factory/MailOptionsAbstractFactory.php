@@ -19,7 +19,7 @@ use Zend\Stdlib\ArrayUtils;
  */
 class MailOptionsAbstractFactory extends AbstractMailFactory
 {
-    const SPECIFIC_PART = 'mail-options';
+    const SPECIFIC_PART = 'options';
 
     /**
      * @param ContainerInterface $container
