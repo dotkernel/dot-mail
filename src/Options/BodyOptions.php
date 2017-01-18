@@ -115,6 +115,4 @@ class BodyOptions extends AbstractOptions
         }
         return $this;
     }
-
-
 }

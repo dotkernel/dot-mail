@@ -256,6 +256,4 @@ class MessageOptions extends AbstractOptions
         }
         return $this;
     }
-
-
 }

@@ -9,7 +9,6 @@
 
 namespace Dot\Mail\Event;
 
-
 use Dot\Event\Event;
 use Dot\Mail\Result\ResultInterface;
 use Dot\Mail\Service\MailServiceInterface;
@@ -76,6 +75,4 @@ class MailEvent extends Event
         $this->result = $result;
         return $this;
     }
-
-
 }

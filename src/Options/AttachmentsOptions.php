@@ -32,6 +32,14 @@ class AttachmentsOptions extends AbstractOptions
     ];
 
     /**
+     * @return array
+     */
+    public function getDir()
+    {
+        return $this->dir;
+    }
+
+    /**
      * @param array $dir
      * @return $this
      */
@@ -42,11 +50,29 @@ class AttachmentsOptions extends AbstractOptions
     }
 
     /**
+     * Makes sure dir array has default properties at least
+     * @return $this
+     */
+    protected function normalizeDirArray()
+    {
+        if (!isset($this->dir['iterate'])) {
+            $this->dir['iterate'] = self::DEFAULT_ITERATE;
+        }
+        if (!isset($this->dir['path'])) {
+            $this->dir['path'] = self::DEFAULT_PATH;
+        }
+        if (!isset($this->dir['recursive'])) {
+            $this->dir['recursive'] = self::DEFAULT_RECURSIVE;
+        }
+        return $this;
+    }
+
+    /**
      * @return array
      */
-    public function getDir()
+    public function getFiles()
     {
-        return $this->dir;
+        return $this->files;
     }
 
     /**
@@ -57,14 +83,6 @@ class AttachmentsOptions extends AbstractOptions
     {
         $this->files = $files;
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFiles()
-    {
-        return $this->files;
     }
 
     /**
@@ -84,23 +102,5 @@ class AttachmentsOptions extends AbstractOptions
     public function addFiles(array $files)
     {
         return $this->setFiles(array_merge($this->files, $files));
-    }
-
-    /**
-     * Makes sure dir array has default properties at least
-     * @return $this
-     */
-    protected function normalizeDirArray()
-    {
-        if (!isset($this->dir['iterate'])) {
-            $this->dir['iterate'] = self::DEFAULT_ITERATE;
-        }
-        if (!isset($this->dir['path'])) {
-            $this->dir['path'] = self::DEFAULT_PATH;
-        }
-        if (!isset($this->dir['recursive'])) {
-            $this->dir['recursive'] = self::DEFAULT_RECURSIVE;
-        }
-        return $this;
     }
 }

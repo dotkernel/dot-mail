@@ -88,7 +88,6 @@ class MailService implements
             if (!$e instanceof ZendMailException) {
                 throw new MailException('A non Zend\Mail exception occurred', $e->getCode(), $e);
             }
-
         }
 
         return $result;
@@ -115,20 +114,49 @@ class MailService implements
     }
 
     /**
-     * @param \Exception $e
-     * @return MailResult
+     * Attach the files to the message before sending it
      */
-    protected function createMailResultFromException(\Exception $e)
+    protected function attachFiles()
     {
-        return new MailResult(false, $e->getMessage(), $e);
-    }
+        if (count($this->attachments) === 0) {
+            return;
+        }
 
-    /**
-     * @return Message
-     */
-    public function getMessage()
-    {
-        return $this->message;
+        $mimeMessage = $this->message->getBody();
+        if (is_string($mimeMessage)) {
+            $originalBodyPart = new MimePart($mimeMessage);
+            $originalBodyPart->type = $mimeMessage != strip_tags($mimeMessage)
+                ? Mime::TYPE_HTML
+                : Mime::TYPE_TEXT;
+
+            $this->setBody($originalBodyPart);
+            $mimeMessage = $this->message->getBody();
+        }
+
+        $oldParts = $mimeMessage->getParts();
+
+        //generate a new Part for each attachment
+        $attachmentParts = [];
+        $info = new \finfo(FILEINFO_MIME_TYPE);
+        foreach ($this->attachments as $key => $attachment) {
+            if (!is_file($attachment)) {
+                continue;
+            }
+
+            $basename = is_string($key) ? $key : basename($attachment);
+
+            $part = new MimePart(fopen($attachment, 'r'));
+            $part->id = $basename;
+            $part->filename = $basename;
+            $part->type = $info->file($attachment);
+            $part->encoding = Mime::ENCODING_BASE64;
+            $part->disposition = Mime::DISPOSITION_ATTACHMENT;
+            $attachmentParts[] = $part;
+        }
+
+        $body = new MimeMessage();
+        $body->setParts(array_merge($oldParts, $attachmentParts));
+        $this->message->setBody($body);
     }
 
     /**
@@ -170,6 +198,23 @@ class MailService implements
         $this->message->getHeaders()->removeHeader('content-transfer-encoding');
         $this->message->setBody($body);
         return $this;
+    }
+
+    /**
+     * @param \Exception $e
+     * @return MailResult
+     */
+    protected function createMailResultFromException(\Exception $e)
+    {
+        return new MailResult(false, $e->getMessage(), $e);
+    }
+
+    /**
+     * @return Message
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 
     /**
@@ -233,52 +278,6 @@ class MailService implements
     {
         $this->attachments = $paths;
         return $this;
-    }
-
-    /**
-     * Attach the files to the message before sending it
-     */
-    protected function attachFiles()
-    {
-        if (count($this->attachments) === 0) {
-            return;
-        }
-
-        $mimeMessage = $this->message->getBody();
-        if (is_string($mimeMessage)) {
-            $originalBodyPart = new MimePart($mimeMessage);
-            $originalBodyPart->type = $mimeMessage != strip_tags($mimeMessage)
-                ? Mime::TYPE_HTML
-                : Mime::TYPE_TEXT;
-
-            $this->setBody($originalBodyPart);
-            $mimeMessage = $this->message->getBody();
-        }
-
-        $oldParts = $mimeMessage->getParts();
-
-        //generate a new Part for each attachment
-        $attachmentParts = [];
-        $info = new \finfo(FILEINFO_MIME_TYPE);
-        foreach ($this->attachments as $key => $attachment) {
-            if (!is_file($attachment)) {
-                continue;
-            }
-
-            $basename = is_string($key) ? $key : basename($attachment);
-
-            $part = new MimePart(fopen($attachment, 'r'));
-            $part->id = $basename;
-            $part->filename = $basename;
-            $part->type = $info->file($attachment);
-            $part->encoding = Mime::ENCODING_BASE64;
-            $part->disposition = Mime::DISPOSITION_ATTACHMENT;
-            $attachmentParts[] = $part;
-        }
-
-        $body = new MimeMessage();
-        $body->setParts(array_merge($oldParts, $attachmentParts));
-        $this->message->setBody($body);
     }
 
     /**
