@@ -210,6 +210,4 @@ class MailOptions extends AbstractOptions
         $this->mailListeners = (array)$mailListeners;
         return $this;
     }
-
-
 }

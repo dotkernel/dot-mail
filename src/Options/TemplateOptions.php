@@ -56,6 +56,4 @@ class TemplateOptions
         $this->name = $name;
         return $this;
     }
-
-
 }

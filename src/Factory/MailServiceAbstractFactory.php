@@ -42,9 +42,14 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $specificServiceName = explode('.', $requestedName)[2];
-        $this->mailOptions = $container->get(sprintf(
-            '%s.%s.%s', self::DOT_MAIL_PART, MailOptionsAbstractFactory::SPECIFIC_PART, $specificServiceName
-        ));
+        $this->mailOptions = $container->get(
+            sprintf(
+                '%s.%s.%s',
+                self::DOT_MAIL_PART,
+                MailOptionsAbstractFactory::SPECIFIC_PART,
+                $specificServiceName
+            )
+        );
 
         $template = $container->get(TemplateRendererInterface::class);
 
@@ -82,8 +87,11 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             $files = ($dir['recursive'] === true)
                 ? new \RecursiveIteratorIterator(
                     new \RecursiveDirectoryIterator(
-                        $dir['path'], \RecursiveDirectoryIterator::SKIP_DOTS),
-                    \RecursiveIteratorIterator::CHILD_FIRST)
+                        $dir['path'],
+                        \RecursiveDirectoryIterator::SKIP_DOTS
+                    ),
+                    \RecursiveIteratorIterator::CHILD_FIRST
+                )
                 : new \DirectoryIterator($dir['path']);
 
             foreach ($files as $fileInfo) {
@@ -97,7 +105,6 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
         $this->attachMailListeners($mailService, $container);
         return $mailService;
-
     }
 
     /**

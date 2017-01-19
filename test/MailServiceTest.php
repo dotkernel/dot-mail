@@ -9,7 +9,6 @@
 
 namespace DotTest\Mail;
 
-
 /**
  * Class MailServiceTest
  * @package DotTest\Mail
@@ -18,6 +17,6 @@ class MailServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testSomething()
     {
-
+        //...
     }
 }
