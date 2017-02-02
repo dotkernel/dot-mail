@@ -48,8 +48,9 @@ interface MailServiceInterface extends HttpMessagesAwareInterface
     /**
      * @param string $template
      * @param array $params
+     * @param string|null $charset
      */
-    public function setTemplate(string $template, array $params = []);
+    public function setTemplate(string $template, array $params = [], string $charset = null);
 
     /**
      * @param string $subject
