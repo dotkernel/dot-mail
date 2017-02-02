@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Result;
 
 /**
@@ -19,22 +21,22 @@ interface ResultInterface
      * Get error message when error occurs
      * @return string
      */
-    public function getMessage();
+    public function getMessage(): string;
 
     /**
      * Tells if the MailService that produced this result was properly sent
      * @return bool
      */
-    public function isValid();
+    public function isValid(): bool;
 
     /**
      * Tells if Result has an Exception
      * @return bool
      */
-    public function hasException();
+    public function hasException(): bool;
 
     /**
      * @return \Exception
      */
-    public function getException();
+    public function getException(): \Exception;
 }

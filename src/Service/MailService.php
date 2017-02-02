@@ -7,12 +7,14 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Service;
 
 use Dot\Helpers\Psr7\HttpMessagesAwareTrait;
 use Dot\Mail\Event\MailEvent;
-use Dot\Mail\Event\MailListenerAwareInterface;
-use Dot\Mail\Event\MailListenerAwareTrait;
+use Dot\Mail\Event\MailEventListenerAwareInterface;
+use Dot\Mail\Event\MailEventListenerAwareTrait;
 use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Result\MailResult;
@@ -29,11 +31,11 @@ use Zend\Mime\Part as MimePart;
  * Class MailService
  * @package Dot\Mail\Service
  */
-class MailService implements
+class MailEventService implements
     MailServiceInterface,
-    MailListenerAwareInterface
+    MailEventListenerAwareInterface
 {
-    use MailListenerAwareTrait;
+    use MailEventListenerAwareTrait;
     use HttpMessagesAwareTrait;
 
     /** @var  Message */
@@ -65,10 +67,10 @@ class MailService implements
     }
 
     /**
-     * @return MailResult
+     * @return ResultInterface
      * @throws MailException
      */
-    public function send()
+    public function send(): ResultInterface
     {
         $result = new MailResult();
         try {
@@ -98,15 +100,16 @@ class MailService implements
      * @param ResultInterface|null $result
      * @return MailEvent
      */
-    protected function createMailEvent($name = MailEvent::EVENT_MAIL_PRE_SEND, ResultInterface $result = null)
-    {
+    protected function createMailEvent(
+        $name = MailEvent::EVENT_MAIL_PRE_SEND,
+        ResultInterface $result = null
+    ): MailEvent {
         $event = new MailEvent($this, $name);
+
         if ($this->request) {
             $event->setRequest($this->request);
         }
-        if ($this->response) {
-            $event->setResponse($this->response);
-        }
+
         if (isset($result)) {
             $event->setResult($result);
         }
@@ -160,11 +163,10 @@ class MailService implements
     }
 
     /**
-     * @param string|MimeMessage|MimePart $body
-     * @param null $charset
-     * @return $this
+     * @param mixed $body
+     * @param string|null $charset
      */
-    public function setBody($body, $charset = null)
+    public function setBody(mixed $body, string $charset = null)
     {
         if (is_string($body)) {
             //create a mime\part and wrap it into a mime\message
@@ -197,14 +199,13 @@ class MailService implements
         $this->message->getHeaders()->removeHeader('content-type');
         $this->message->getHeaders()->removeHeader('content-transfer-encoding');
         $this->message->setBody($body);
-        return $this;
     }
 
     /**
      * @param \Exception $e
-     * @return MailResult
+     * @return ResultInterface
      */
-    protected function createMailResultFromException(\Exception $e)
+    protected function createMailResultFromException(\Exception $e): ResultInterface
     {
         return new MailResult(false, $e->getMessage(), $e);
     }
@@ -212,7 +213,7 @@ class MailService implements
     /**
      * @return Message
      */
-    public function getMessage()
+    public function getMessage(): Message
     {
         return $this->message;
     }
@@ -220,81 +221,70 @@ class MailService implements
     /**
      * @param string $template
      * @param array $params
-     * @return $this
      */
-    public function setTemplate($template, array $params = [])
+    public function setTemplate(string $template, array $params = [])
     {
         $this->setBody($this->template->render($template, $params));
-        return $this;
     }
 
     /**
      * @param string $subject
-     * @return $this
      */
-    public function setSubject($subject)
+    public function setSubject(string $subject)
     {
         $this->message->setSubject($subject);
-        return $this;
     }
 
     /**
      * @param string $path
-     * @param null $filename
-     * @return $this
+     * @param string $filename
      */
-    public function addAttachment($path, $filename = null)
+    public function addAttachment(string $path, string $filename = null)
     {
         if (isset($filename)) {
             $this->attachments[$filename] = $path;
         } else {
             $this->attachments[] = $path;
         }
-        return $this;
     }
 
     /**
      * @param array $paths
-     * @return MailService|mixed
      */
     public function addAttachments(array $paths)
     {
-        return $this->setAttachments(array_merge($this->attachments, $paths));
+        $this->setAttachments(array_merge($this->attachments, $paths));
     }
 
     /**
      * @return array
      */
-    public function getAttachments()
+    public function getAttachments(): array
     {
         return $this->attachments;
     }
 
     /**
      * @param array $paths
-     * @return $this
      */
     public function setAttachments(array $paths)
     {
         $this->attachments = $paths;
-        return $this;
     }
 
     /**
      * @return TransportInterface
      */
-    public function getTransport()
+    public function getTransport(): TransportInterface
     {
         return $this->transport;
     }
 
     /**
      * @param TransportInterface $transport
-     * @return MailService
      */
-    public function setTransport($transport)
+    public function setTransport(TransportInterface $transport)
     {
         $this->transport = $transport;
-        return $this;
     }
 }

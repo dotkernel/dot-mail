@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Event;
 
 use Zend\EventManager\ListenerAggregateInterface;
@@ -15,7 +17,7 @@ use Zend\EventManager\ListenerAggregateInterface;
  * Interface MailListenerInterface
  * @package Dot\Mail\Event
  */
-interface MailListenerInterface extends ListenerAggregateInterface
+interface MailEventListenerInterface extends ListenerAggregateInterface
 {
     /**
      * @param MailEvent $e

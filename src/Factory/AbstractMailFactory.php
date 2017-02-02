@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Factory;
 
 use Interop\Container\ContainerInterface;
@@ -52,7 +54,7 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
      * @param ContainerInterface $container
      * @return array
      */
-    protected function getConfig(ContainerInterface $container)
+    protected function getConfig(ContainerInterface $container): array
     {
         $config = $container->get('config');
         if (isset($config[$this->configKey]) && is_array($config[$this->configKey])) {

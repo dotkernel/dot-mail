@@ -124,13 +124,16 @@ return [
             ],*/
 
             //listeners to register with the mail service, for mail events
-            'mail_listeners' => [
-
+            'event_listeners' => [
+                [
+                    'type' => 'service or class name',
+                    'priority' => 1
+                ],
             ],
         ],
 
         /**
-         * You can define other mail services here, with the same structure as the defaul block
+         * You can define other mail services here, with the same structure as the default block
          * you can even extend from the default block, and overwrite only the differences
          */
     ],

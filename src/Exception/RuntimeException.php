@@ -1,10 +1,10 @@
 <?php
 /**
  * @copyright: DotKernel
- * @library: dotkernel/dot-mail
+ * @library: dot-mail
  * @author: n3vrax
- * Date: 9/6/2016
- * Time: 7:49 PM
+ * Date: 2/2/2017
+ * Time: 4:20 AM
  */
 
 declare(strict_types = 1);
@@ -12,10 +12,10 @@ declare(strict_types = 1);
 namespace Dot\Mail\Exception;
 
 /**
- * Class MailException
+ * Class RuntimeException
  * @package Dot\Mail\Exception
  */
-class MailException extends \Exception implements ExceptionInterface
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 
 }

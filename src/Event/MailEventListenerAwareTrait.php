@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Event;
 
 use Zend\EventManager\EventManagerAwareTrait;
@@ -15,31 +17,28 @@ use Zend\EventManager\EventManagerAwareTrait;
  * Class MailListenerAwareTrait
  * @package Dot\Mail\Event
  */
-trait MailListenerAwareTrait
+trait MailEventListenerAwareTrait
 {
     use EventManagerAwareTrait;
 
-    /** @var MailListenerInterface[] */
+    /** @var MailEventListenerInterface[] */
     protected $listeners = [];
 
     /**
-     * @param MailListenerInterface $listener
+     * @param MailEventListenerInterface $listener
      * @param int $priority
-     * @return $this
      */
-    public function attachMailListener(MailListenerInterface $listener, $priority = 1)
+    public function attachListener(MailEventListenerInterface $listener, $priority = 1)
     {
 
         $listener->attach($this->getEventManager(), $priority);
         $this->listeners[] = $listener;
-        return $this;
     }
 
     /**
-     * @param MailListenerInterface $listener
-     * @return $this
+     * @param MailEventListenerInterface $listener
      */
-    public function detachMailListener(MailListenerInterface $listener)
+    public function detachListener(MailEventListenerInterface $listener)
     {
         $listener->detach($this->getEventManager());
 
@@ -53,19 +52,17 @@ trait MailListenerAwareTrait
         }
 
         unset($this->listeners[$idx]);
-        return $this;
     }
 
     /**
-     * @return $this
+     * Detach an clear listeners array
      */
-    public function clearMailListeners()
+    public function clearListeners()
     {
         foreach ($this->listeners as $listener) {
             $listener->detach($this->getEventManager());
         }
 
         $this->listeners = [];
-        return $this;
     }
 }

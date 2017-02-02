@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Options;
 
 /**
@@ -24,36 +26,32 @@ class TemplateOptions
     /**
      * @return array
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
 
     /**
      * @param array $params
-     * @return TemplateOptions
      */
-    public function setParams($params)
+    public function setParams(array $params)
     {
         $this->params = $params;
-        return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
      * @param mixed $name
-     * @return TemplateOptions
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
-        return $this;
     }
 }

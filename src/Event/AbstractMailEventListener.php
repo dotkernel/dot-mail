@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Event;
 
 use Zend\EventManager\AbstractListenerAggregate;
@@ -16,11 +18,8 @@ use Zend\EventManager\EventManagerInterface;
  * Class AbstractMailListener
  * @package Dot\Mail\Event
  */
-abstract class AbstractMailListener extends AbstractListenerAggregate implements MailListenerInterface
+abstract class AbstractMailEventListener extends AbstractListenerAggregate implements MailEventListenerInterface
 {
-    /** @var array */
-    protected $listeners = [];
-
     /**
      * @param EventManagerInterface $events
      * @param int $priority
@@ -30,5 +29,20 @@ abstract class AbstractMailListener extends AbstractListenerAggregate implements
         $this->listeners[] = $events->attach(MailEvent::EVENT_MAIL_PRE_SEND, [$this, 'onPreSend'], $priority);
         $this->listeners[] = $events->attach(MailEvent::EVENT_MAIL_POST_SEND, [$this, 'onPostSend'], $priority);
         $this->listeners[] = $events->attach(MailEvent::EVENT_MAIL_SEND_ERROR, [$this, 'onSendError'], $priority);
+    }
+
+    public function onPreSend(MailEvent $e)
+    {
+        //NO-OP: left to implementors
+    }
+
+    public function onPostSend(MailEvent $e)
+    {
+        //NO-OP: left to implementors
+    }
+
+    public function onSendError(MailEvent $e)
+    {
+        //NO-OP: left to implementors
     }
 }

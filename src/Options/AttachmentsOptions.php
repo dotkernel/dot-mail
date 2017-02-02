@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Options;
 
 use Zend\Stdlib\AbstractOptions;
@@ -34,24 +36,22 @@ class AttachmentsOptions extends AbstractOptions
     /**
      * @return array
      */
-    public function getDir()
+    public function getDir(): array
     {
         return $this->dir;
     }
 
     /**
      * @param array $dir
-     * @return $this
      */
-    public function setDir($dir)
+    public function setDir(array $dir)
     {
         $this->dir = $dir;
-        return $this->normalizeDirArray();
+        $this->normalizeDirArray();
     }
 
     /**
      * Makes sure dir array has default properties at least
-     * @return $this
      */
     protected function normalizeDirArray()
     {
@@ -64,43 +64,37 @@ class AttachmentsOptions extends AbstractOptions
         if (!isset($this->dir['recursive'])) {
             $this->dir['recursive'] = self::DEFAULT_RECURSIVE;
         }
-        return $this;
     }
 
     /**
      * @return array
      */
-    public function getFiles()
+    public function getFiles(): array
     {
         return $this->files;
     }
 
     /**
      * @param array $files
-     * @return $this
      */
     public function setFiles(array $files)
     {
         $this->files = $files;
-        return $this;
     }
 
     /**
-     * @param $filePath
-     * @return $this
+     * @param string $filePath
      */
-    public function addFile($filePath)
+    public function addFile(string $filePath)
     {
         $this->files[] = $filePath;
-        return $this;
     }
 
     /**
      * @param array $files
-     * @return $this
      */
     public function addFiles(array $files)
     {
-        return $this->setFiles(array_merge($this->files, $files));
+        $this->setFiles(array_merge($this->files, $files));
     }
 }

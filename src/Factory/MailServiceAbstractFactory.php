@@ -7,14 +7,19 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Factory;
 
-use Dot\Mail\Event\MailListenerAwareInterface;
-use Dot\Mail\Event\MailListenerInterface;
+use Dot\Mail\Event\MailEventListenerAwareInterface;
+use Dot\Mail\Event\MailEventListenerInterface;
 use Dot\Mail\Exception\InvalidArgumentException;
+use Dot\Mail\Exception\RuntimeException;
 use Dot\Mail\Options\MailOptions;
-use Dot\Mail\Service\MailService;
+use Dot\Mail\Service\MailEventService;
+use Dot\Mail\Service\MailServiceInterface;
 use Interop\Container\ContainerInterface;
+use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Mail\Message;
@@ -37,10 +42,13 @@ class MailServiceAbstractFactory extends AbstractMailFactory
      * @param ContainerInterface $container
      * @param string $requestedName
      * @param array|null $options
-     * @return MailService
+     * @return MailServiceInterface
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
-    {
+    public function __invoke(
+        ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ): MailServiceInterface {
         $specificServiceName = explode('.', $requestedName)[2];
         $this->mailOptions = $container->get(
             sprintf(
@@ -56,15 +64,13 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         $message = $this->createMessage();
         $transport = $this->createTransport($container);
 
-        $mailService = new MailService($message, $transport, $template);
+        $mailService = new MailEventService($message, $transport, $template);
 
         $eventManager = $container->has(EventManagerInterface::class)
             ? $container->get(EventManagerInterface::class)
-            : null;
+            : new EventManager();
 
-        if ($eventManager) {
-            $mailService->setEventManager($eventManager);
-        }
+        $mailService->setEventManager($eventManager);
 
         //set subject
         $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
@@ -197,28 +203,46 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     }
 
     /**
-     * @param MailListenerAwareInterface $service
+     * @param MailEventListenerAwareInterface $service
      * @param ContainerInterface $container
      */
-    protected function attachMailListeners(MailListenerAwareInterface $service, ContainerInterface $container)
+    protected function attachMailListeners(MailEventListenerAwareInterface $service, ContainerInterface $container)
     {
-        $listeners = $this->mailOptions->getMailListeners();
+        $listeners = $this->mailOptions->getEventListeners();
         foreach ($listeners as $listener) {
-            if (is_string($listener) && $container->has($listener)) {
-                $listener = $container->get($listener);
-            } elseif (is_string($listener) && class_exists($listener)) {
-                $listener = new $listener;
-            }
+            if (is_array($listener)) {
+                $type = $listener['type'] ?? '';
+                $priority = $listener['priority'] ?? 1;
 
-            if (!$listener instanceof MailListenerInterface) {
-                throw new InvalidArgumentException(sprintf(
-                    'Provided mail listener of type "%s" is not valid. Expected string or %s',
-                    is_object($listener) ? get_class($listener) : gettype($listener),
-                    MailListenerInterface::class
-                ));
-            }
+                $listener = $this->getListenerObject($container, $type);
+                $service->attachListener($listener, $priority);
+            } elseif (is_string($listener)) {
+                $type = $listener;
+                $priority = 1;
 
-            $service->attachMailListener($listener);
+                $listener = $this->getListenerObject($container, $type);
+                $service->attachListener($listener, $priority);
+            }
         }
+    }
+
+    protected function getListenerObject(ContainerInterface $container, string $type): MailEventListenerInterface
+    {
+        $listener = null;
+        if ($container->has($type)) {
+            $listener = $container->get($type);
+        } elseif (is_string($type) && class_exists($type)) {
+            $listener = new $listener();
+        }
+
+        if (!$listener instanceof MailEventListenerInterface) {
+            throw new RuntimeException(sprintf(
+                'Mail event listener must be an instance of `%s`, but `%s was given`',
+                MailEventListenerInterface::class,
+                is_object($listener) ? get_class($listener) : gettype($listener)
+            ));
+        }
+
+        return $listener;
     }
 }
