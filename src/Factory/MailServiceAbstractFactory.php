@@ -59,7 +59,9 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             )
         );
 
-        $template = $container->get(TemplateRendererInterface::class);
+        $template = $container->has(TemplateRendererInterface::class)
+            ? $container->get(TemplateRendererInterface::class)
+            : null;
 
         $message = $this->createMessage();
         $transport = $this->createTransport($container);
@@ -78,7 +80,11 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         //set body, either by using a template or a raw body
         $body = $this->mailOptions->getMessageOptions()->getBody();
         if ($body->isUseTemplate()) {
-            $mailService->setTemplate($body->getTemplate()->getName(), $body->getTemplate()->getParams());
+            $mailService->setTemplate(
+                $body->getTemplate()->getName(),
+                $body->getTemplate()->getParams(),
+                $body->getCharset()
+            );
         } else {
             $mailService->setBody($body->getContent(), $body->getCharset());
         }

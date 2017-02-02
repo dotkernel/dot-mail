@@ -59,7 +59,7 @@ class MailEventService implements
     public function __construct(
         Message $message,
         TransportInterface $transport,
-        TemplateRendererInterface $template
+        TemplateRendererInterface $template = null
     ) {
         $this->message = $message;
         $this->transport = $transport;
@@ -221,10 +221,11 @@ class MailEventService implements
     /**
      * @param string $template
      * @param array $params
+     * @param string|null $charset
      */
-    public function setTemplate(string $template, array $params = [])
+    public function setTemplate(string $template, array $params = [], string $charset = null)
     {
-        $this->setBody($this->template->render($template, $params));
+        $this->setBody($this->template->render($template, $params), $charset);
     }
 
     /**
