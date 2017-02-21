@@ -16,7 +16,7 @@ use Dot\Mail\Event\MailEventListenerInterface;
 use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\RuntimeException;
 use Dot\Mail\Options\MailOptions;
-use Dot\Mail\Service\MailEventService;
+use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
 use Interop\Container\ContainerInterface;
 use Zend\EventManager\EventManager;
@@ -66,7 +66,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         $message = $this->createMessage();
         $transport = $this->createTransport($container);
 
-        $mailService = new MailEventService($message, $transport, $template);
+        $mailService = new MailService($message, $transport, $template);
 
         $eventManager = $container->has(EventManagerInterface::class)
             ? $container->get(EventManagerInterface::class)

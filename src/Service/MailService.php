@@ -31,7 +31,7 @@ use Zend\Mime\Part as MimePart;
  * Class MailService
  * @package Dot\Mail\Service
  */
-class MailEventService implements
+class MailService implements
     MailServiceInterface,
     MailEventListenerAwareInterface
 {
