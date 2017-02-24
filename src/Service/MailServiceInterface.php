@@ -43,7 +43,7 @@ interface MailServiceInterface extends HttpMessagesAwareInterface
      * @param mixed $body
      * @param string $charset
      */
-    public function setBody(mixed $body, string $charset = null);
+    public function setBody($body, string $charset = null);
 
     /**
      * @param string $template

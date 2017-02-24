@@ -166,7 +166,7 @@ class MailService implements
      * @param mixed $body
      * @param string|null $charset
      */
-    public function setBody(mixed $body, string $charset = null)
+    public function setBody($body, string $charset = null)
     {
         if (is_string($body)) {
             //create a mime\part and wrap it into a mime\message
