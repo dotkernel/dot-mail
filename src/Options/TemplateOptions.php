@@ -11,11 +11,13 @@ declare(strict_types = 1);
 
 namespace Dot\Mail\Options;
 
+use Zend\Stdlib\AbstractOptions;
+
 /**
  * Class TemplateOptions
  * @package Dot\Mail\Options
  */
-class TemplateOptions
+class TemplateOptions extends AbstractOptions
 {
     /** @var array */
     protected $params = [];
