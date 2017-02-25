@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace Dot\Mail\Service;
 
-use Dot\Helpers\Psr7\HttpMessagesAwareTrait;
 use Dot\Mail\Event\MailEvent;
 use Dot\Mail\Event\MailEventListenerAwareInterface;
 use Dot\Mail\Event\MailEventListenerAwareTrait;
@@ -36,7 +35,6 @@ class MailService implements
     MailEventListenerAwareInterface
 {
     use MailEventListenerAwareTrait;
-    use HttpMessagesAwareTrait;
 
     /** @var  Message */
     protected $message;
@@ -105,11 +103,6 @@ class MailService implements
         ResultInterface $result = null
     ): MailEvent {
         $event = new MailEvent($this, $name);
-
-        if ($this->request) {
-            $event->setRequest($this->request);
-        }
-
         if (isset($result)) {
             $event->setResult($result);
         }

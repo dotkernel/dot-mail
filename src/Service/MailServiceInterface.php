@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace Dot\Mail\Service;
 
-use Dot\Helpers\Psr7\HttpMessagesAwareInterface;
 use Dot\Mail\Result\ResultInterface;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
@@ -20,7 +19,7 @@ use Zend\Mail\Transport\TransportInterface;
  * Interface MailServiceInterface
  * @package Dot\Mail\Service
  */
-interface MailServiceInterface extends HttpMessagesAwareInterface
+interface MailServiceInterface
 {
     const DEFAULT_CHARSET = 'utf-8';
 
