@@ -19,8 +19,6 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
 use Interop\Container\ContainerInterface;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\File;
@@ -67,12 +65,6 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         $transport = $this->createTransport($container);
 
         $mailService = new MailService($message, $transport, $template);
-
-        $eventManager = $container->has(EventManagerInterface::class)
-            ? $container->get(EventManagerInterface::class)
-            : new EventManager();
-
-        $mailService->setEventManager($eventManager);
 
         //set subject
         $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
