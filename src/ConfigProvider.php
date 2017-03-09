@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail;
 
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
@@ -21,15 +23,13 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [
 
             'dependencies' => $this->getDependencyConfig(),
 
-            'dot_mail' => [
-
-            ]
+            'dot_mail' => [],
 
         ];
     }
@@ -37,7 +37,7 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function getDependencyConfig()
+    public function getDependencyConfig(): array
     {
         return [
             'abstract_factories' => [

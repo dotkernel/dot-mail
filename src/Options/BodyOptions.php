@@ -7,9 +7,10 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Options;
 
-use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Service\MailServiceInterface;
 use Zend\Stdlib\AbstractOptions;
 
@@ -32,63 +33,57 @@ class BodyOptions extends AbstractOptions
     protected $template;
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isUseTemplate()
+    public function isUseTemplate(): bool
     {
         return $this->useTemplate;
     }
 
     /**
-     * @param boolean $useTemplate
-     * @return BodyOptions
+     * @param bool $useTemplate
      */
-    public function setUseTemplate($useTemplate)
+    public function setUseTemplate(bool $useTemplate)
     {
-        $this->useTemplate = (bool)$useTemplate;
-        return $this;
+        $this->useTemplate = $useTemplate;
     }
 
     /**
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
     /**
      * @param string $content
-     * @return BodyOptions
      */
-    public function setContent($content)
+    public function setContent(string $content)
     {
         $this->content = $content;
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getCharset()
+    public function getCharset(): string
     {
         return $this->charset;
     }
 
     /**
      * @param string $charset
-     * @return BodyOptions
      */
-    public function setCharset($charset)
+    public function setCharset(string $charset)
     {
         $this->charset = $charset;
-        return $this;
     }
 
     /**
      * @return TemplateOptions
      */
-    public function getTemplate()
+    public function getTemplate(): TemplateOptions
     {
         if (!isset($this->template)) {
             $this->setTemplate([]);
@@ -97,22 +92,10 @@ class BodyOptions extends AbstractOptions
     }
 
     /**
-     * @param TemplateOptions|array $template
-     * @return BodyOptions
+     * @param array $template
      */
-    public function setTemplate($template)
+    public function setTemplate(array $template)
     {
-        if (is_array($template)) {
-            $this->template = new TemplateOptions($template);
-        } elseif ($template instanceof TemplateOptions) {
-            $this->template = $template;
-        } else {
-            throw new InvalidArgumentException(sprintf(
-                'Template should be an array or an %s object. %s provided.',
-                TemplateOptions::class,
-                is_object($template) ? get_class($template) : gettype($template)
-            ));
-        }
-        return $this;
+        $this->template = new TemplateOptions($template);
     }
 }

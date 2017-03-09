@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Event;
 
 use Dot\Event\Event;
@@ -34,7 +36,7 @@ class MailEvent extends Event
      * @param MailServiceInterface $mailService
      * @param string $name
      */
-    public function __construct(MailServiceInterface $mailService, $name = self::EVENT_MAIL_PRE_SEND)
+    public function __construct(MailServiceInterface $mailService, string $name = self::EVENT_MAIL_PRE_SEND)
     {
         parent::__construct($name);
         $this->mailService = $mailService;
@@ -43,36 +45,32 @@ class MailEvent extends Event
     /**
      * @return MailServiceInterface
      */
-    public function getMailService()
+    public function getMailService(): MailServiceInterface
     {
         return $this->mailService;
     }
 
     /**
      * @param MailServiceInterface $mailService
-     * @return MailEvent
      */
-    public function setMailService($mailService)
+    public function setMailService(MailServiceInterface $mailService)
     {
         $this->mailService = $mailService;
-        return $this;
     }
 
     /**
      * @return ResultInterface
      */
-    public function getResult()
+    public function getResult(): ResultInterface
     {
         return $this->result;
     }
 
     /**
      * @param ResultInterface $result
-     * @return MailEvent
      */
-    public function setResult($result)
+    public function setResult(ResultInterface $result)
     {
         $this->result = $result;
-        return $this;
     }
 }

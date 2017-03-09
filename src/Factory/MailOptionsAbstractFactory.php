@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Factory;
 
 use Dot\Mail\Options\MailOptions;
@@ -27,7 +29,7 @@ class MailOptionsAbstractFactory extends AbstractMailFactory
      * @param array|null $options
      * @return MailOptions
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): MailOptions
     {
         $specificServiceName = explode('.', $requestedName)[2];
 
@@ -53,7 +55,6 @@ class MailOptionsAbstractFactory extends AbstractMailFactory
             ) {
                 $specificConfig = ArrayUtils::merge($config[$extendsConfigKey], $specificConfig);
             }
-
         } while ($extendsConfigKey != null);
 
         return new MailOptions($specificConfig);

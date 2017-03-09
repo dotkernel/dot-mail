@@ -7,6 +7,8 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Result;
 
 /**
@@ -30,10 +32,13 @@ class MailResult implements ResultInterface
      * MailResult constructor.
      * @param bool $valid
      * @param string $message
-     * @param null $exception
+     * @param \Exception|null $exception
      */
-    public function __construct($valid = true, $message = self::DEFAULT_MESSAGE, $exception = null)
-    {
+    public function __construct(
+        bool $valid = true,
+        string $message = self::DEFAULT_MESSAGE,
+        \Exception $exception = null
+    ) {
         $this->valid = $valid;
         $this->message = $message;
         $this->exception = $exception;
@@ -42,7 +47,7 @@ class MailResult implements ResultInterface
     /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -50,7 +55,7 @@ class MailResult implements ResultInterface
     /**
      * @return bool
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->valid;
     }
@@ -58,7 +63,7 @@ class MailResult implements ResultInterface
     /**
      * @return bool
      */
-    public function hasException()
+    public function hasException(): bool
     {
         return $this->exception instanceof \Exception;
     }
@@ -66,7 +71,7 @@ class MailResult implements ResultInterface
     /**
      * @return \Exception|null
      */
-    public function getException()
+    public function getException(): \Exception
     {
         return $this->exception;
     }

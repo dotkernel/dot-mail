@@ -7,9 +7,10 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Options;
 
-use Dot\Mail\Exception\InvalidArgumentException;
 use Zend\Stdlib\AbstractOptions;
 
 /**
@@ -51,151 +52,135 @@ class MessageOptions extends AbstractOptions
     /**
      * @return string
      */
-    public function getFrom()
+    public function getFrom(): string
     {
         return $this->from;
     }
 
     /**
      * @param string $from
-     * @return MessageOptions
      */
-    public function setFrom($from)
+    public function setFrom(string $from)
     {
         $this->from = $from;
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getFromName()
+    public function getFromName(): string
     {
         return $this->fromName;
     }
 
     /**
      * @param string $fromName
-     * @return MessageOptions
      */
-    public function setFromName($fromName)
+    public function setFromName(string $fromName)
     {
         $this->fromName = $fromName;
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getReplyTo()
+    public function getReplyTo(): string
     {
         return $this->replyTo;
     }
 
     /**
      * @param string $replyTo
-     * @return MessageOptions
      */
-    public function setReplyTo($replyTo)
+    public function setReplyTo(string $replyTo)
     {
         $this->replyTo = $replyTo;
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getReplyToName()
+    public function getReplyToName(): string
     {
         return $this->replyToName;
     }
 
     /**
      * @param string $replyToName
-     * @return MessageOptions
      */
-    public function setReplyToName($replyToName)
+    public function setReplyToName(string $replyToName)
     {
         $this->replyToName = $replyToName;
-        return $this;
     }
 
     /**
      * @return array
      */
-    public function getTo()
+    public function getTo(): array
     {
         return $this->to;
     }
 
     /**
      * @param array $to
-     * @return MessageOptions
      */
-    public function setTo($to)
+    public function setTo(array $to)
     {
-        $this->to = (array)$to;
-        return $this;
+        $this->to = $to;
     }
 
     /**
      * @return array
      */
-    public function getCc()
+    public function getCc(): array
     {
         return $this->cc;
     }
 
     /**
      * @param array $cc
-     * @return MessageOptions
      */
-    public function setCc($cc)
+    public function setCc(array $cc)
     {
-        $this->cc = (array)$cc;
-        return $this;
+        $this->cc = $cc;
     }
 
     /**
      * @return array
      */
-    public function getBcc()
+    public function getBcc(): array
     {
         return $this->bcc;
     }
 
     /**
      * @param array $bcc
-     * @return MessageOptions
      */
-    public function setBcc($bcc)
+    public function setBcc(array $bcc)
     {
-        $this->bcc = (array)$bcc;
-        return $this;
+        $this->bcc = $bcc;
     }
 
     /**
      * @return string
      */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
 
     /**
      * @param string $subject
-     * @return MessageOptions
      */
-    public function setSubject($subject)
+    public function setSubject(string $subject)
     {
         $this->subject = $subject;
-        return $this;
     }
 
     /**
      * @return BodyOptions
      */
-    public function getBody()
+    public function getBody(): BodyOptions
     {
         if (!isset($this->body)) {
             $this->setBody([]);
@@ -205,30 +190,17 @@ class MessageOptions extends AbstractOptions
     }
 
     /**
-     * @param BodyOptions|array $body
-     * @return MessageOptions
+     * @param array $body
      */
-    public function setBody($body)
+    public function setBody(array $body)
     {
-        if (is_array($body)) {
-            $this->body = new BodyOptions($body);
-        } elseif ($body instanceof BodyOptions) {
-            $this->body = $body;
-        } else {
-            throw new InvalidArgumentException(sprintf(
-                'Body should be an array or an %s, %s provided',
-                BodyOptions::class,
-                is_object($body) ? get_class($body) : gettype($body)
-            ));
-        }
-
-        return $this;
+        $this->body = new BodyOptions($body);
     }
 
     /**
      * @return AttachmentsOptions
      */
-    public function getAttachments()
+    public function getAttachments(): AttachmentsOptions
     {
         if (!isset($this->attachments)) {
             $this->setAttachments([]);
@@ -238,22 +210,10 @@ class MessageOptions extends AbstractOptions
     }
 
     /**
-     * @param AttachmentsOptions|array $attachments
-     * @return MessageOptions
+     * @param array $attachments
      */
-    public function setAttachments($attachments)
+    public function setAttachments(array $attachments)
     {
-        if (is_array($attachments)) {
-            $this->attachments = new AttachmentsOptions($attachments);
-        } elseif ($attachments instanceof AttachmentsOptions) {
-            $this->attachments = $attachments;
-        } else {
-            throw new InvalidArgumentException(sprintf(
-                'Attachments should be an array or an %s, %s provided',
-                AttachmentsOptions::class,
-                is_object($attachments) ? get_class($attachments) : gettype($attachments)
-            ));
-        }
-        return $this;
+        $this->attachments = new AttachmentsOptions($attachments);
     }
 }

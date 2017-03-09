@@ -1,2 +1,3 @@
 # dot-mail
-Mail package for dotkernel zend expressive ready and zf2 based
+
+DotKernel mail component based on [zend-mail](https://github.com/zendframework/zend-mail)

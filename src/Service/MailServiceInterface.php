@@ -7,78 +7,73 @@
  * Time: 7:49 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Mail\Service;
 
-use Dot\Helpers\Psr7\HttpMessagesAwareInterface;
 use Dot\Mail\Result\ResultInterface;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
-use Zend\Mime\Part;
 
 /**
  * Interface MailServiceInterface
  * @package Dot\Mail\Service
  */
-interface MailServiceInterface extends HttpMessagesAwareInterface
+interface MailServiceInterface
 {
     const DEFAULT_CHARSET = 'utf-8';
 
     /**
      * @return ResultInterface
      */
-    public function send();
+    public function send(): ResultInterface;
 
     /**
      * @return Message
      */
-    public function getMessage();
+    public function getMessage(): Message;
 
     /**
      * @return TransportInterface
      */
-    public function getTransport();
+    public function getTransport(): TransportInterface;
 
     /**
-     * @param string|Part|\Zend\Mime\Message $body
+     * @param mixed $body
      * @param string $charset
-     * @return mixed
      */
-    public function setBody($body, $charset = null);
+    public function setBody($body, string $charset = null);
 
     /**
      * @param string $template
      * @param array $params
-     * @return mixed
+     * @param string|null $charset
      */
-    public function setTemplate($template, array $params = []);
+    public function setTemplate(string $template, array $params = [], string $charset = null);
 
     /**
      * @param string $subject
-     * @return mixed
      */
-    public function setSubject($subject);
+    public function setSubject(string $subject);
 
     /**
      * @param string $path
      * @param string|null $filename
-     * @return mixed
      */
-    public function addAttachment($path, $filename = null);
+    public function addAttachment(string $path, string $filename = null);
 
     /**
      * @param array $paths
-     * @return mixed
      */
     public function addAttachments(array $paths);
 
     /**
      * @return array
      */
-    public function getAttachments();
+    public function getAttachments(): array;
 
     /**
      * @param array $paths
-     * @return mixed
      */
     public function setAttachments(array $paths);
 }
