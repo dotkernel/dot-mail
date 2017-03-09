@@ -1,7 +1,7 @@
 {
   "name": "dotkernel/dot-mail",
   "type": "library",
-  "description": "Mail module for DotKernel based on Zend Mail",
+  "description": "Mail module for DotKernel based on zend-mail",
   "license": "MIT",
   "authors": [
     {
@@ -16,8 +16,8 @@
     "zendframework/zend-mail": "^2.7",
     "zendframework/zend-expressive-template": "^1.0",
 
-    "dotkernel/dot-event": "dev-develop as 0.6.x-dev",
-    "dotkernel/dot-helpers": "dev-develop as 0.6.x-dev"
+    "dotkernel/dot-event": "~0.1",
+    "dotkernel/dot-helpers": "~0.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8",
@@ -35,7 +35,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "0.6-dev"
+      "dev-master": "0.2-dev"
     }
   }
 }
