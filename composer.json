@@ -1,7 +1,7 @@
 {
   "name": "dotkernel/dot-mail",
   "type": "library",
-  "description": "Mail module for DotKernel based on zend-mail",
+  "description": "DotKernel mail component based on zend-mail",
   "license": "MIT",
   "authors": [
     {
