@@ -16,8 +16,8 @@
     "zendframework/zend-mail": "^2.7",
     "zendframework/zend-expressive-template": "^1.0",
 
-    "dotkernel/dot-event": "~0.1",
-    "dotkernel/dot-helpers": "~0.1"
+    "dotkernel/dot-event": "^0.1",
+    "dotkernel/dot-helpers": "^0.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8",

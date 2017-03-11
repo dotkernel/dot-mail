@@ -1,10 +1,8 @@
 <?php
 /**
- * @copyright: DotKernel
- * @library: dot-mail
- * @author: n3vrax
- * Date: 2/21/2017
- * Time: 11:23 PM
+ * @see https://github.com/dotkernel/dot-mail/ for the canonical source repository
+ * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
+ * @license https://github.com/dotkernel/dot-mail/blob/master/LICENSE.md MIT License
  */
 
 declare(strict_types = 1);
