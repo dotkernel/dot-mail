@@ -1,3 +1,21 @@
+## 0.1.3 - unreleased
+
+### Changed
+* mail exception on send include the previous non Zend\Mail exception
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+
 ## 0.1.2 - 2017-03-16
 
 ### Changed
