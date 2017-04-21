@@ -82,10 +82,6 @@ class MailService implements
             $result = $this->createMailResultFromException($e);
             //trigger error event
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
-
-            if (!$e instanceof ZendMailException) {
-                throw new MailException('A non Zend\Mail exception occurred', $e->getCode(), $e);
-            }
         }
 
         return $result;
