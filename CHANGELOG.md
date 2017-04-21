@@ -1,7 +1,7 @@
-## 0.1.3 - unreleased
+## 0.1.3 - 2017-04-21
 
 ### Changed
-* mail exception on send include the previous non Zend\Mail exception
+* send mail does not rethrow exceptions anymore
 
 ### Added
 * Nothing
