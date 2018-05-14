@@ -1,3 +1,21 @@
+## 0.2.0 - 2018-05-14
+
+### Changed
+* updated `dot-twigrenderer` dependency
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+
 ## 0.1.3 - 2017-04-21
 
 ### Changed
