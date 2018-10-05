@@ -17,7 +17,6 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
 use Interop\Container\ContainerInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\File;
 use Zend\Mail\Transport\Smtp;
@@ -55,29 +54,16 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             )
         );
 
-        $template = $container->has(TemplateRendererInterface::class)
-            ? $container->get(TemplateRendererInterface::class)
-            : null;
-
         $message = $this->createMessage();
         $transport = $this->createTransport($container);
 
-        $mailService = new MailService($message, $transport, $template);
+        $mailService = new MailService($message, $transport);
 
         //set subject
         $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
 
-        //set body, either by using a template or a raw body
         $body = $this->mailOptions->getMessageOptions()->getBody();
-        if ($body->isUseTemplate()) {
-            $mailService->setTemplate(
-                $body->getTemplate()->getName(),
-                $body->getTemplate()->getParams(),
-                $body->getCharset()
-            );
-        } else {
-            $mailService->setBody($body->getContent(), $body->getCharset());
-        }
+        $mailService->setBody($body->getContent(), $body->getCharset());
 
         //attach files
         $files = $this->mailOptions->getMessageOptions()->getAttachments()->getFiles();

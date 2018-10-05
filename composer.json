@@ -13,9 +13,8 @@
     "php": "^7.1",
     "zendframework/zend-servicemanager": "^3.3",
     "zendframework/zend-mail": "^2.9",
-    "zendframework/zend-expressive-template": "^2.0",
 
-    "dotkernel/dot-event": "^0.2"
+    "dotkernel/dot-event": "^0.2.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8",
@@ -33,8 +32,8 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "1.0-dev",
-      "dev-develop": "1.1-dev"
+      "dev-master": "1.1-dev",
+      "dev-develop": "2.0-dev"
     }
   }
 }

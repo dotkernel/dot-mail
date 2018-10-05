@@ -18,33 +18,11 @@ use Zend\Stdlib\AbstractOptions;
  */
 class BodyOptions extends AbstractOptions
 {
-    /** @var bool */
-    protected $useTemplate = false;
-
     /** @var string */
     protected $content = '';
 
     /** @var string */
     protected $charset = MailServiceInterface::DEFAULT_CHARSET;
-
-    /** @var  TemplateOptions */
-    protected $template;
-
-    /**
-     * @return bool
-     */
-    public function isUseTemplate(): bool
-    {
-        return $this->useTemplate;
-    }
-
-    /**
-     * @param bool $useTemplate
-     */
-    public function setUseTemplate(bool $useTemplate)
-    {
-        $this->useTemplate = $useTemplate;
-    }
 
     /**
      * @return string
@@ -76,24 +54,5 @@ class BodyOptions extends AbstractOptions
     public function setCharset(string $charset)
     {
         $this->charset = $charset;
-    }
-
-    /**
-     * @return TemplateOptions
-     */
-    public function getTemplate(): TemplateOptions
-    {
-        if (!isset($this->template)) {
-            $this->setTemplate([]);
-        }
-        return $this->template;
-    }
-
-    /**
-     * @param array $template
-     */
-    public function setTemplate(array $template)
-    {
-        $this->template = new TemplateOptions($template);
     }
 }

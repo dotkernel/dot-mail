@@ -56,20 +56,11 @@ return [
                 //email subject
                 'subject' => '',
 
-                //body options - content can be plain text, HTML or a template to parse
+                //body options - content can be plain text, HTML
                 'body' => [
                     'content' => '',
 
                     'charset' => 'utf-8',
-
-                    //enable if you want body content to come from a template
-                    'use_template' => false,
-
-                    //template options in case body has use template enabled
-                    'template' => [
-                        'name' => '',
-                        'params' => [],
-                    ],
                 ],
 
                 //attachments config

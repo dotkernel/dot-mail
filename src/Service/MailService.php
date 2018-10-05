@@ -16,7 +16,6 @@ use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Mail\Exception\ExceptionInterface as ZendMailException;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
@@ -37,9 +36,6 @@ class MailService implements
     /** @var  Message */
     protected $message;
 
-    /** @var  TemplateRendererInterface */
-    protected $template;
-
     /** @var  TransportInterface */
     protected $transport;
 
@@ -50,16 +46,13 @@ class MailService implements
      * MailService constructor.
      * @param Message $message
      * @param TransportInterface $transport
-     * @param TemplateRendererInterface $template
      */
     public function __construct(
         Message $message,
-        TransportInterface $transport,
-        TemplateRendererInterface $template = null
+        TransportInterface $transport
     ) {
         $this->message = $message;
         $this->transport = $transport;
-        $this->template = $template;
     }
 
     /**
@@ -83,7 +76,6 @@ class MailService implements
             //trigger error event
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
         }
-
         return $result;
     }
 
@@ -203,16 +195,6 @@ class MailService implements
     public function getMessage(): Message
     {
         return $this->message;
-    }
-
-    /**
-     * @param string $template
-     * @param array $params
-     * @param string|null $charset
-     */
-    public function setTemplate(string $template, array $params = [], string $charset = null)
-    {
-        $this->setBody($this->template->render($template, $params), $charset);
     }
 
     /**
