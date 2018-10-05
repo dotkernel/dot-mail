@@ -43,13 +43,6 @@ interface MailServiceInterface
     public function setBody($body, string $charset = null);
 
     /**
-     * @param string $template
-     * @param array $params
-     * @param string|null $charset
-     */
-    public function setTemplate(string $template, array $params = [], string $charset = null);
-
-    /**
      * @param string $subject
      */
     public function setSubject(string $subject);

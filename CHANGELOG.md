@@ -1,3 +1,22 @@
+## 1.0.0 - 2018-10-05
+
+### Changed
+* Nothing
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* TemplateRendererInterface requirement
+* Templating in mail support
+
+### Fixed
+* Nothing
+
+
 ## 0.2.0 - 2018-05-14
 
 ### Changed
