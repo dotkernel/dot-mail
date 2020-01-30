@@ -9,7 +9,7 @@ declare(strict_types = 1);
 
 namespace Dot\Mail\Event;
 
-use Zend\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
 
 /**
  * Interface MailListenerInterface

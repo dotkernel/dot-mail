@@ -9,7 +9,7 @@ declare(strict_types = 1);
 
 namespace Dot\Mail\Event;
 
-use Zend\EventManager\AbstractListenerAggregate;
+use Laminas\EventManager\AbstractListenerAggregate;
 
 /**
  * Class AbstractMailListener

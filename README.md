@@ -1,3 +1,3 @@
 # dot-mail
 
-DotKernel mail component based on [zend-mail](https://github.com/zendframework/zend-mail)
+DotKernel mail component based on [laminas-mail](https://github.com/laminas/laminas-mail)

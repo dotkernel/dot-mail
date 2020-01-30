@@ -17,10 +17,10 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
 use Interop\Container\ContainerInterface;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\File;
-use Zend\Mail\Transport\Smtp;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\File;
+use Laminas\Mail\Transport\Smtp;
+use Laminas\Mail\Transport\TransportInterface;
 
 /**
  * Class MailServiceAbstractFactory
@@ -154,7 +154,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             }
         }
 
-        //check is the adapter is one of Zend's default adapters
+        //check is the adapter is one of Laminas's default adapters
         if (is_string($adapter) && is_subclass_of($adapter, TransportInterface::class)) {
             return $this->setupTransportConfig(new $adapter);
         }

@@ -11,7 +11,7 @@ namespace Dot\Mail\Factory;
 
 use Dot\Mail\Options\MailOptions;
 use Interop\Container\ContainerInterface;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\Stdlib\ArrayUtils;
 
 /**
  * Class MailOptionsAbstractFactory

@@ -10,7 +10,7 @@ declare(strict_types = 1);
 namespace Dot\Mail\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\AbstractFactoryInterface;
+use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 
 /**
  * Class AbstractMailFactory

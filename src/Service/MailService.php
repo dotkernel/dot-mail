@@ -16,12 +16,12 @@ use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
-use Zend\Mail\Exception\ExceptionInterface as ZendMailException;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\TransportInterface;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Mime;
-use Zend\Mime\Part as MimePart;
+use Laminas\Mail\Exception\ExceptionInterface as LaminasMailException;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\TransportInterface;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Mime;
+use Laminas\Mime\Part as MimePart;
 
 /**
  * Class MailService
@@ -168,7 +168,7 @@ class MailService implements
         if (!is_string($body) && !$body instanceof MimeMessage) {
             throw new InvalidArgumentException(sprintf(
                 'Provided body is not valid. It should be one of "%s". %s provided',
-                implode('", "', ['string', 'Zend\Mime\Part', 'Zend\Mime\Message']),
+                implode('", "', ['string', 'Laminas\Mime\Part', 'Laminas\Mime\Message']),
                 is_object($body) ? get_class($body) : gettype($body)
             ));
         }

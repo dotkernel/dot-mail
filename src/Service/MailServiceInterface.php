@@ -10,8 +10,8 @@ declare(strict_types = 1);
 namespace Dot\Mail\Service;
 
 use Dot\Mail\Result\ResultInterface;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\TransportInterface;
 
 /**
  * Interface MailServiceInterface
