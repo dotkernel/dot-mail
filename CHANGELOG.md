@@ -1,3 +1,22 @@
+## 3.1.0 - 2020-11-03
+
+### Changed
+* Composer 2 compatibility.
+* Update composer.json to require version 2 of laminas/laminas-dependency-plugin to be Composer 2 compatible.
+
+### Added
+* bump min version of laminas/laminas-mail
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* bump min version of laminas/laminas-dependency-plugin
+* bump min version of dotkernel/dot-event
+
 ## 2.0.0 - 2020-01-30
 
 ### Changed
