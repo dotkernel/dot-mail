@@ -62,6 +62,11 @@ class MailService implements
     public function send(): ResultInterface
     {
         $result = new MailResult();
+        /*
+         * Enforce the UTF-8 encoding to message body
+         * @see https://github.com/dotkernel/dot-mail/issues/9
+        */
+        $this->message->setEncoding('utf-8');
         try {
             $this->getEventManager()->triggerEvent($this->createMailEvent());
 
