@@ -1,3 +1,20 @@
+## 3.1.1 - 2021-06-08
+
+### Changed
+* Nothing
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* fix issue #9: UTF-8 characters in message body 
+
 ## 3.1.0 - 2020-11-03
 
 ### Changed
