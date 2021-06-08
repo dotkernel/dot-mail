@@ -24,7 +24,7 @@
         "laminas/laminas-servicemanager": "^3.4",
         "laminas/laminas-mail": "^2.12",
         "dotkernel/dot-event": "^3.1",
-        "laminas/laminas-dependency-plugin": "^2.0"
+        "laminas/laminas-dependency-plugin": "^2.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.1",
