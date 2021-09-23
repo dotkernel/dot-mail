@@ -23,6 +23,29 @@ if (! $result->isValid()) {
 **Note : Invalid e-mail messages will not be sent.**
 
 
+### Logging outgoing emails
+Optionally, you can keep a log of each successfully sent email. This might be useful when you need to know if/when a specific email has been sent out to a recipient.
+
+Logs are stored in the following format: `[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account <test@dotkernel.com>"],"cc":[],"bcc":[]}`.
+
+By default, this feature is disabled.
+
+In order to enable it, make sure that your `config/autoload/mail.local.php` has the below `log` configuration under the `dot_mail` key:
+```php
+<?php
+
+return [
+    'dot_mail' => [
+        ...
+        'log' => [
+            'sent' => getcwd() . '/log/mail/sent.log'
+        ]
+    ]
+];
+```
+To disable it again, set the value of `sent` to `null`.
+
+
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)

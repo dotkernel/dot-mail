@@ -14,6 +14,7 @@ use Dot\Mail\Event\MailEventListenerInterface;
 use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\RuntimeException;
 use Dot\Mail\Options\MailOptions;
+use Dot\Mail\Service\LogServiceInterface;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
 use Interop\Container\ContainerInterface;
@@ -54,10 +55,11 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             )
         );
 
+        $logService = $container->get(LogServiceInterface::class);
         $message = $this->createMessage();
         $transport = $this->createTransport($container);
 
-        $mailService = new MailService($message, $transport);
+        $mailService = new MailService($logService, $message, $transport);
 
         //set subject
         $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
@@ -208,6 +210,11 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         }
     }
 
+    /**
+     * @param ContainerInterface $container
+     * @param string $type
+     * @return MailEventListenerInterface
+     */
     protected function getListenerObject(ContainerInterface $container, string $type): MailEventListenerInterface
     {
         $listener = null;
