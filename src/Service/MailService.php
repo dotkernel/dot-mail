@@ -16,7 +16,6 @@ use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
-use Laminas\Mail\Exception\ExceptionInterface as LaminasMailException;
 use Laminas\Mail\Message;
 use Laminas\Mail\Transport\TransportInterface;
 use Laminas\Mime\Message as MimeMessage;
@@ -33,24 +32,26 @@ class MailService implements
 {
     use MailEventListenerAwareTrait;
 
-    /** @var  Message */
-    protected $message;
+    protected LogServiceInterface $logService;
 
-    /** @var  TransportInterface */
-    protected $transport;
+    protected Message $message;
 
-    /** @var array */
-    protected $attachments = [];
+    protected TransportInterface $transport;
+
+    protected array $attachments = [];
 
     /**
      * MailService constructor.
+     * @param LogServiceInterface $logService
      * @param Message $message
      * @param TransportInterface $transport
      */
     public function __construct(
+        LogServiceInterface $logService,
         Message $message,
         TransportInterface $transport
     ) {
+        $this->logService = $logService;
         $this->message = $message;
         $this->transport = $transport;
     }
@@ -81,6 +82,11 @@ class MailService implements
             //trigger error event
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
         }
+
+        if ($result->isValid()) {
+            $this->logService->sent($this->message);
+        }
+
         return $result;
     }
 
