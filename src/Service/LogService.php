@@ -55,7 +55,7 @@ class LogService implements LogServiceInterface
          */
         $dirname = dirname($target);
         if (!file_exists($dirname)) {
-            mkdir($dirname, 0600, true);
+            mkdir($dirname, 0755, true);
         }
 
         /**
