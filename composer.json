@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.4",
+        "ext-json": "*",
         "laminas/laminas-servicemanager": "^3.3",
         "laminas/laminas-mail": "^2.9",
         "dotkernel/dot-event": "^2.0",
