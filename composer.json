@@ -20,10 +20,10 @@
         }
     ],
     "require": {
-        "php": "~7.4.0 || ~8.0.0 || ~8.1.0",
+        "php": "~8.0.0 || ~8.1.0",
         "ext-json": "*",
         "laminas/laminas-servicemanager": "^3.16.0",
-        "laminas/laminas-mail": "~2.16.0",
+        "laminas/laminas-mail": "^2.17.0",
         "dotkernel/dot-event": "^3.2.0",
         "laminas/laminas-dependency-plugin": "^2.3.0"
     },
