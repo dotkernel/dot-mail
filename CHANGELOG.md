@@ -1,3 +1,107 @@
+## 4.0.0 - 2022-08-10
+
+### Changed
+* Updated dependecies versions, including PHP to ~8.0.0 || ~8.1.0
+* Restricted laminas-mail version to >=2.17
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.3.1 - 2022-08-10
+
+### Changed
+* Updated dependecies versions
+* Restricted laminas-mail version to <=2.16
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.3.0 - 2022-06-20
+
+### Changed
+* Updated PHP version to allow 8.0 and 8.1
+
+### Added
+* PHP 8.0 and 8.1 compatiblity
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 2.1 - 2021-11-04
+
+### Changed
+* Nothing
+
+### Added
+* Logging sent emails
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.2.1 - 2021-09-24
+
+### Changed
+* Nothing
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* log/mail directory privileges
+
+## 3.2.0 - 2021-09-23
+
+### Changed
+* Nothing
+
+### Added
+* Logging sent emails
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
 ## 3.1.1 - 2021-06-08
 
 ### Changed
