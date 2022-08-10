@@ -14,9 +14,11 @@ use Dot\Mail\Event\MailEventListenerAwareInterface;
 use Dot\Mail\Event\MailEventListenerAwareTrait;
 use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\MailException;
+use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
 use Laminas\Mail\Message;
+use Laminas\Mail\Storage\Imap;
 use Laminas\Mail\Transport\TransportInterface;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Mime;
@@ -49,11 +51,15 @@ class MailService implements
     public function __construct(
         LogServiceInterface $logService,
         Message $message,
-        TransportInterface $transport
+        TransportInterface $transport,
+        Imap $storage,
+        MailOptions $mailOptions
     ) {
         $this->logService = $logService;
         $this->message = $message;
         $this->transport = $transport;
+        $this->storage = $storage;
+        $this->mailOptions = $mailOptions;
     }
 
     /**
@@ -85,6 +91,13 @@ class MailService implements
 
         if ($result->isValid()) {
             $this->logService->sent($this->message);
+        }
+
+        //save copy of sent message to folders
+        if ($this->mailOptions->getSaveSentMessageFolder()) {
+            foreach ($this->mailOptions->getSaveSentMessageFolder() as $folder) {
+                $this->storage->appendMessage($this->message->toString(), $folder);
+            }
         }
 
         return $result;
@@ -267,5 +280,20 @@ class MailService implements
     public function setTransport(TransportInterface $transport)
     {
         $this->transport = $transport;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFolderGlobalNames()
+    {
+        $folderGlobalNames = [];
+        foreach ($this->storage->getFolders() as $folder) {
+            $folderGlobalNames[] = $folder->getGlobalName();
+        }
+        foreach ($this->storage->getFolders()->getChildren() as $folder) {
+            $folderGlobalNames[] = $folder->getGlobalName();
+        }
+        return $folderGlobalNames;
     }
 }
