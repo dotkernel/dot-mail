@@ -1,3 +1,20 @@
+## 4.1.0 - 2022-08-11
+
+### Changed
+* Nothing
+
+### Added
+* Saving outgoing emails into folders
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
 ## 4.0.0 - 2022-08-10
 
 ### Changed
@@ -6,6 +23,23 @@
 
 ### Added
 * Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.4.0 - 2022-08-10
+
+### Changed
+* Nothing
+
+### Added
+* Saving outgoing emails into folders
 
 ### Deprecated
 * Nothing
