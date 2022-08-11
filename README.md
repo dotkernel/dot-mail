@@ -4,12 +4,12 @@ DotKernel mail component based on [laminas-mail](https://github.com/laminas/lami
 
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/3.3.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.1.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/stargazers)
-[![GitHub license](https://img.shields.io/github/license/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/blob/3.0/LICENSE.md)
+[![GitHub license](https://img.shields.io/github/license/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/blob/4.0/LICENSE.md)
 
 
 
@@ -19,9 +19,8 @@ The `$this->mailService->send()->isValid()` method call will return a boolean va
 If the returned result is `true`, the e-mail was valid, otherwise the e-mail was invalid.
 In case your e-mail was invalid, you can check for any errors using `$this->mailService->send()->getMessage()`.
 
-Using the below logic will let you determinate if a message was valid or not and log it.
-
-The implementor can write it's own custom error log logic.
+Using the below logic will let you determine if a message was valid or not and log it.
+You can implement your own custom error logging logic.
 
 ````
 $result = $this->mailService->send();
@@ -54,3 +53,21 @@ return [
 ];
 ```
 To disable it again, set the value of `sent` to `null`.
+
+### Saving a copy of an outgoing mail into a folder
+First, make sure the `save_sent_message_folder` key is present in config file `mail.local.php` under `dot_mail.default`. Below you can see its placement and default value.
+```php
+<?php
+
+return [
+    'dot_mail' => [
+        'default' => [
+        ...
+            'save_sent_message_folder' => ['INBOX.Sent']
+        ],
+    ],
+];
+```
+Common folder names are `INBOX`, `INBOX.Archive`, `INBOX.Drafts`, `INBOX.Sent`, `INBOX.Spam`, `INBOX.Trash`. If you have `MailService` available in your class, you can call `$this->mailService->getFolderGlobalNames()` to list the folder global names for the email you are using.
+
+Multiple folders can be added to the `save_sent_message_folder` key to save a copy of the outgoing email in each folder.
