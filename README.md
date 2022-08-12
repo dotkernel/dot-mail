@@ -4,7 +4,7 @@ DotKernel mail component based on [laminas-mail](https://github.com/laminas/lami
 
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.0.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
