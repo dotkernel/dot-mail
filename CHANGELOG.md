@@ -1,8 +1,25 @@
-## 4.0.0 - 2022-08-10
+## 4.0.0 - 2022-08-11
 
 ### Changed
 * Updated dependecies versions, including PHP to ~8.0.0 || ~8.1.0
 * Restricted laminas-mail version to >=2.17
+
+### Added
+* Saving outgoing emails into folders
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.4.1 - 2022-08-12
+
+### Changed
+* Nothing
 
 ### Added
 * Nothing
@@ -11,7 +28,7 @@
 * Nothing
 
 ### Removed
-* Nothing
+* laminas/laminas-dependency-plugin
 
 ### Fixed
 * Nothing
