@@ -56,6 +56,7 @@ To disable it again, set the value of `sent` to `null`.
 
 
 ### Saving a copy of an outgoing mail into a folder
+#### Valid only for SMTP Transport
 First, make sure the `save_sent_message_folder` key is present in config file `mail.local.php` under `dot_mail.default`. Below you can see its placement and default value. 
 ```
 return [
