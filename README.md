@@ -4,7 +4,7 @@ DotKernel mail component based on [laminas-mail](https://github.com/laminas/lami
 
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.1.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.0.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
@@ -55,6 +55,7 @@ return [
 To disable it again, set the value of `sent` to `null`.
 
 ### Saving a copy of an outgoing mail into a folder
+#### Valid only for SMTP Transport
 First, make sure the `save_sent_message_folder` key is present in config file `mail.local.php` under `dot_mail.default`. Below you can see its placement and default value.
 ```php
 <?php

@@ -1,3 +1,21 @@
+## 4.0.1 - 2022-08-12
+
+### Changed
+* Updated readme
+* Updated mail.global.php.dist
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
 ## 4.0.0 - 2022-08-11
 
 ### Changed
