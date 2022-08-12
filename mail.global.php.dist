@@ -4,7 +4,7 @@ return [
 
     /**
      * Dotkernel mail module configuration
-     * Note that many of these options can be set programmaticaly too, when sending mail messages
+     * Note that many of these options can be set programmatically too, when sending mail messages
      * actually that is what you'll usually do, these config provide just default and options that remain the same for all mails
      */
 
@@ -31,6 +31,10 @@ return [
             
             // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
             // Valid only if the Transport is SMTP 
+            // 'save_sent_message_folder' => ['INBOX.Sent'],
+
+            // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
+            // Valid only if the Transport is SMTP
             // 'save_sent_message_folder' => ['INBOX.Sent'],
 
             //message configuration

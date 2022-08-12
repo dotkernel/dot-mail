@@ -1,10 +1,11 @@
-## 4.1.0 - 2022-08-11
+## 4.0.1 - 2022-08-12
 
 ### Changed
-* Nothing
+* Updated readme
+* Updated mail.global.php.dist
 
 ### Added
-* Saving outgoing emails into folders
+* Nothing
 
 ### Deprecated
 * Nothing
@@ -15,14 +16,14 @@
 ### Fixed
 * Nothing
 
-## 4.0.0 - 2022-08-10
+## 4.0.0 - 2022-08-11
 
 ### Changed
 * Updated dependecies versions, including PHP to ~8.0.0 || ~8.1.0
 * Restricted laminas-mail version to >=2.17
 
 ### Added
-* Nothing
+* Saving outgoing emails into folders
 
 ### Deprecated
 * Nothing
