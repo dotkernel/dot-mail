@@ -40,6 +40,8 @@ class MailService implements
 
     protected TransportInterface $transport;
 
+    protected MailOptions $mailOptions;
+
     protected array $attachments = [];
 
     /**
@@ -47,18 +49,17 @@ class MailService implements
      * @param LogServiceInterface $logService
      * @param Message $message
      * @param TransportInterface $transport
+     * @param MailOptions $mailOptions
      */
     public function __construct(
         LogServiceInterface $logService,
         Message $message,
         TransportInterface $transport,
-        Imap $storage,
         MailOptions $mailOptions
     ) {
         $this->logService = $logService;
         $this->message = $message;
         $this->transport = $transport;
-        $this->storage = $storage;
         $this->mailOptions = $mailOptions;
     }
 
@@ -94,13 +95,36 @@ class MailService implements
         }
 
         //save copy of sent message to folders
-        if ($this->mailOptions->getSaveSentMessageFolder()) {
+        if ($this->mailOptions->getTransport() == 'Laminas\Mail\Transport\Smtp' &&
+            $this->mailOptions->getSaveSentMessageFolder()) {
             foreach ($this->mailOptions->getSaveSentMessageFolder() as $folder) {
-                $this->storage->appendMessage($this->message->toString(), $folder);
+                $this->storage = $this->createStorage();
+                if ($this->storage) {
+                    $this->storage->appendMessage($this->message->toString(), $folder);
+                }
             }
         }
 
         return $result;
+    }
+
+    /**
+     * @return false|Imap
+     */
+    protected function createStorage()
+    {
+        $host = $this->mailOptions->getSmtpOptions()->getHost();
+        $connectionConfig = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
+        if ($host == '' || $connectionConfig['username'] == '' || $connectionConfig['password'] == '') {
+            return false;
+        }
+        $storage = new Imap([
+                                'host'     => $host,
+                                'user'     => $connectionConfig['username'],
+                                'password' => $connectionConfig['password'],
+                            ]);
+
+        return $storage;
     }
 
     /**
@@ -283,10 +307,14 @@ class MailService implements
     }
 
     /**
-     * @return array
+     * @return array|false
      */
     public function getFolderGlobalNames()
     {
+        $this->storage = $this->createStorage();
+        if (!$this->storage) {
+            return false;
+        }
         $folderGlobalNames = [];
         foreach ($this->storage->getFolders() as $folder) {
             $folderGlobalNames[] = $folder->getGlobalName();
