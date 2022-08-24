@@ -97,9 +97,9 @@ class MailService implements
         //save copy of sent message to folders
         if ($this->mailOptions->getTransport() == 'Laminas\Mail\Transport\Smtp' &&
             $this->mailOptions->getSaveSentMessageFolder()) {
-            foreach ($this->mailOptions->getSaveSentMessageFolder() as $folder) {
-                $this->storage = $this->createStorage();
-                if ($this->storage) {
+            $this->storage = $this->createStorage();
+            if ($this->storage) {
+                foreach ($this->mailOptions->getSaveSentMessageFolder() as $folder) {
                     $this->storage->appendMessage($this->message->toString(), $folder);
                 }
             }
@@ -109,22 +109,24 @@ class MailService implements
     }
 
     /**
-     * @return false|Imap
+     * @return Imap|null
      */
-    protected function createStorage()
+    protected function createStorage(): ?Imap
     {
         $host = $this->mailOptions->getSmtpOptions()->getHost();
-        $connectionConfig = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
-        if ($host == '' || $connectionConfig['username'] == '' || $connectionConfig['password'] == '') {
-            return false;
+        if (empty($host)) {
+            return null;
         }
-        $storage = new Imap([
-                                'host'     => $host,
-                                'user'     => $connectionConfig['username'],
-                                'password' => $connectionConfig['password'],
-                            ]);
+        $connectionConfig = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
+        if (empty($connectionConfig['username']) || empty($connectionConfig['password'])) {
+            return null;
+        }
 
-        return $storage;
+        return new Imap([
+                            'host'     => $host,
+                            'user'     => $connectionConfig['username'],
+                            'password' => $connectionConfig['password'],
+                        ]);
     }
 
     /**
