@@ -95,7 +95,7 @@ class MailService implements
         }
 
         //save copy of sent message to folders
-        if ($this->mailOptions->getTransport() == 'Laminas\Mail\Transport\Smtp' &&
+        if ($this->mailOptions->getTransport() == Laminas\Mail\Transport\Smtp::class &&
             $this->mailOptions->getSaveSentMessageFolder()) {
             $this->storage = $this->createStorage();
             if ($this->storage) {
