@@ -12,6 +12,70 @@ DotKernel mail component based on [laminas-mail](https://github.com/laminas/lami
 [![GitHub license](https://img.shields.io/github/license/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/blob/3.0/LICENSE.md)
 
 
+### Configuration
+
+#### Mail - Sendmail
+If your server has Sendmail installed, update the `config/autoload/mail.local.php.dist` file by setting the `transport` key like below
+
+```php
+<?php
+
+return [
+    'dot_mail' => [
+        'default' => [
+            //...
+            'transport' => Laminas\Mail\Transport\Sendmail::class,
+            //...
+        ]
+    ]
+]
+```
+
+#### Mail - SMTP
+If you want your application to send mails on e.g. registration, contact, then edit the file `config/autoload/mail.local.php`.  Set the `transport`, `message_options` and `smtp_options` keys like below.
+
+Under `message_options` key:
+- `from` - email address from whom users will receive emails
+
+Under `smtp_options` key:
+- `host` - the mail server's hostname or IP address
+- `port` - the mail server's port
+- `connection_config` - fill in the `username`, `password` and `ssl` keys with the login details of the email used in `from` above
+
+Note: all other keys can be left as is.
+
+```php
+<?php
+
+return [
+    'dot_mail' => [
+        'default' => [
+            //...
+            'transport' => Laminas\Mail\Transport\Smtp::class,
+            'message_options' => [
+                'from' => '',
+                //...
+            ],
+            'smtp_options' => [
+                'host' => '',
+                'port' => 25,
+                'connection_config' => [
+                    'username' => '',
+                    'password' => '',
+                    'ssl' => '',
+                ]
+            ]
+            //...
+        ]
+    ]
+]
+```
+
+In `config/autoload/local.php` add under `contact` => `message_receivers` => `to` key *string* values with the emails that should receive contact messages
+
+Note: **Please add at least 1 email address in order for contact message to reach someone**
+
+Also feel free to add as many cc as you want under `contact` => `message_receivers` => `cc` key
 
 ### Testing if an e-mail message is valid
 After sending an e-mail you can check if the message was valid or not.
