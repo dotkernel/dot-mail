@@ -1,3 +1,21 @@
+## 4.0.3 - 2022-08-31
+
+### Changed
+* Improved email storage handling
+* Updated readme
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
 ## 4.0.2 - 2022-08-23
 
 ### Changed
@@ -47,6 +65,91 @@
 
 ### Removed
 * Nothing
+
+### Fixed
+* Nothing
+
+## 3.4.5 - 2022-08-30
+
+### Changed
+* Updated readme
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.4.4 - 2022-08-26
+
+### Changed
+* Nothing
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Updated check for storage
+
+## 3.4.3 - 2022-08-25
+
+### Changed
+* Improved email storage handling
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.4.2 - 2022-08-23
+
+### Changed
+* Updated mail.global.php.dist
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* Nothing
+
+## 3.4.1 - 2022-08-12
+
+### Changed
+* Nothing
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* laminas/laminas-dependency-plugin
 
 ### Fixed
 * Nothing

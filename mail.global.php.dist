@@ -130,6 +130,10 @@ return [
                 //],
             ],
         ],
+        // option to log the SENT emails
+        'log' => [
+          'sent' => getcwd() . '/log/mail/sent.log'
+        ],
 
         /**
          * You can define other mail services here, with the same structure as the default block
