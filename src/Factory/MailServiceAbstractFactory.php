@@ -19,7 +19,6 @@ use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
 use Interop\Container\ContainerInterface;
 use Laminas\Mail\Message;
-use Laminas\Mail\Storage\Imap;
 use Laminas\Mail\Transport\File;
 use Laminas\Mail\Transport\Smtp;
 use Laminas\Mail\Transport\TransportInterface;
@@ -59,9 +58,8 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         $logService = $container->get(LogServiceInterface::class);
         $message = $this->createMessage();
         $transport = $this->createTransport($container);
-        $storage = $this->createStorage($container);
 
-        $mailService = new MailService($logService, $message, $transport, $storage, $this->mailOptions);
+        $mailService = new MailService($logService, $message, $transport, $this->mailOptions);
 
         //set subject
         $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
@@ -186,23 +184,6 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         }
 
         return $transport;
-    }
-
-    /**
-     * @param ContainerInterface $container
-     * @return Imap
-     */
-    protected function createStorage(ContainerInterface $container)
-    {
-        $host = $this->mailOptions->getSmtpOptions()->getHost();
-        $connectionConfig = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
-        $storage = new Imap([
-                                'host'     => $host,
-                                'user'     => $connectionConfig['username'],
-                                'password' => $connectionConfig['password'],
-                            ]);
-
-        return $storage;
     }
 
     /**
