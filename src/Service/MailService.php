@@ -88,6 +88,7 @@ class MailService implements
             $result = $this->createMailResultFromException($e);
             //trigger error event
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
+            throw new MailException($result->getMessage());
         }
 
         if ($result->isValid()) {
