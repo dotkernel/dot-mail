@@ -93,7 +93,7 @@ return [
                 'port' => 587,
 
                 //connection class used for authentication
-                //the calue can be one of smtp, plain, login or crammd5
+                //the value can be one of smtp, plain, login or crammd5
                 'connection_class' => 'login',
 
                 'connection_config' => [

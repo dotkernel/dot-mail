@@ -11,6 +11,11 @@ DotKernel mail component based on [laminas-mail](https://github.com/laminas/lami
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/blob/4.0/LICENSE.md)
 
+[![Build Static](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml)
+
+[![SymfonyInsight](https://insight.symfony.com/projects/1995ea7c-3b34-4eee-ac48-3571860d0307/big.svg)](https://insight.symfony.com/projects/1995ea7c-3b34-4eee-ac48-3571860d0307)
+
+
 ### Configuration
 
 #### Mail - Sendmail
