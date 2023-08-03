@@ -1,38 +1,33 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-mail/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-mail/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Mail\Factory;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class AbstractMailFactory
- * @package Dot\Mail\Factory
- */
+use function array_key_exists;
+use function count;
+use function explode;
+use function is_array;
+
 abstract class AbstractMailFactory implements AbstractFactoryInterface
 {
-    const DOT_MAIL_PART = 'dot-mail';
-    const SPECIFIC_PART = '';
+    public const DOT_MAIL_PART = 'dot-mail';
+    public const SPECIFIC_PART = '';
 
-    /** @var string */
-    protected $configKey = 'dot_mail';
-
-    /** @var  array */
-    protected $config = [];
+    protected string $configKey = 'dot_mail';
+    protected array $config     = [];
 
     /**
-     * @param ContainerInterface $container
      * @param string $requestedName
-     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function canCreate(ContainerInterface $container, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName): bool
     {
         $parts = explode('.', $requestedName);
         if (count($parts) !== 3) {
@@ -44,15 +39,15 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
         }
 
         $specificServiceName = $parts[2];
-        $config = $this->getConfig($container);
+        $config              = $this->getConfig($container);
         return array_key_exists($specificServiceName, $config);
     }
 
     /**
-     * @param ContainerInterface $container
-     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function getConfig(ContainerInterface $container): array
+    public function getConfig(ContainerInterface $container): array
     {
         $config = $container->get('config');
         if (isset($config[$this->configKey]) && is_array($config[$this->configKey])) {

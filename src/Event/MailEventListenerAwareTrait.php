@@ -1,42 +1,24 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-mail/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-mail/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Mail\Event;
 
 use Laminas\EventManager\EventManagerAwareTrait;
 
-/**
- * Class MailListenerAwareTrait
- * @package Dot\Mail\Event
- */
 trait MailEventListenerAwareTrait
 {
     use EventManagerAwareTrait;
 
-    /** @var MailEventListenerInterface[] */
-    protected $listeners = [];
+    protected array $listeners = [];
 
-    /**
-     * @param MailEventListenerInterface $listener
-     * @param int $priority
-     */
-    public function attachListener(MailEventListenerInterface $listener, $priority = 1)
+    public function attachListener(MailEventListenerInterface $listener, int $priority = 1): void
     {
-
         $listener->attach($this->getEventManager(), $priority);
         $this->listeners[] = $listener;
     }
 
-    /**
-     * @param MailEventListenerInterface $listener
-     */
-    public function detachListener(MailEventListenerInterface $listener)
+    public function detachListener(MailEventListenerInterface $listener): void
     {
         $listener->detach($this->getEventManager());
 
@@ -52,10 +34,7 @@ trait MailEventListenerAwareTrait
         unset($this->listeners[$idx]);
     }
 
-    /**
-     * Detach an clear listeners array
-     */
-    public function clearListeners()
+    public function clearListeners(): void
     {
         foreach ($this->listeners as $listener) {
             $listener->detach($this->getEventManager());

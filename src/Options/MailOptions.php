@@ -1,11 +1,6 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-mail/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-mail/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Mail\Options;
 
@@ -18,66 +13,42 @@ use Laminas\Mail\Transport\SmtpOptions;
 use Laminas\Mail\Transport\TransportInterface;
 use Laminas\Stdlib\AbstractOptions;
 
-/**
- * Class MailOptions
- * @package Dot\Mail\Options
- */
+use function array_key_exists;
+use function class_exists;
+use function is_string;
+use function strtolower;
+
 class MailOptions extends AbstractOptions
 {
-    /** @var array */
-    protected $transportMap = [
-        'sendmail' => [Sendmail::class],
-        'smtp' => [Smtp::class],
+    protected array $eventListeners                = [];
+    protected array $saveSentMessageFolder         = [];
+    protected TransportInterface|string $transport = Sendmail::class;
+    protected array $transportMap                  = [
+        'sendmail'  => [Sendmail::class],
+        'smtp'      => [Smtp::class],
         'in_memory' => [InMemory::class],
-        'file' => [File::class],
+        'file'      => [File::class],
     ];
+    protected MessageOptions $messageOptions;
+    protected SmtpOptions $smtpOptions;
+    protected FileOptions $fileOptions;
 
-    /** @var  TransportInterface|string */
-    protected $transport = Sendmail::class;
-
-    /** @var  MessageOptions */
-    protected $messageOptions;
-
-    /** @var  SmtpOptions */
-    protected $smtpOptions;
-
-    /** @var  FileOptions */
-    protected $fileOptions;
-
-    /** @var array */
-    protected $eventListeners = [];
-
-    /** @var array */
-    protected $saveSentMessageFolder;
-
-    /**
-     * @return array
-     */
     public function getTransportMap(): array
     {
         return $this->transportMap;
     }
 
-    /**
-     * @param array $transportMap
-     */
-    public function setTransportMap(array $transportMap)
+    public function setTransportMap(array $transportMap): void
     {
         $this->transportMap = $transportMap;
     }
 
-    /**
-     * @return string
-     */
-    public function getTransport(): string
+    public function getTransport(): string|TransportInterface
     {
         return $this->transport;
     }
 
-    /**
-     * @param string $transport
-     */
-    public function setTransport(string $transport)
+    public function setTransport(string|TransportInterface $transport): void
     {
         if (is_string($transport) && array_key_exists(strtolower($transport), $this->transportMap)) {
             $transport = $this->transportMap[$transport];
@@ -92,93 +63,51 @@ class MailOptions extends AbstractOptions
         $this->transport = $transport;
     }
 
-    /**
-     * @return MessageOptions
-     */
     public function getMessageOptions(): MessageOptions
     {
-        if (!isset($this->messageOptions)) {
-            $this->setMessageOptions([]);
-        }
-
         return $this->messageOptions;
     }
 
-    /**
-     * @param array $messageOptions
-     */
-    public function setMessageOptions(array $messageOptions)
+    public function setMessageOptions(array $messageOptions): void
     {
         $this->messageOptions = new MessageOptions($messageOptions);
     }
 
-    /**
-     * @return SmtpOptions
-     */
     public function getSmtpOptions(): SmtpOptions
     {
-        if (!isset($this->smtpOptions)) {
-            $this->setSmtpOptions([]);
-        }
-
         return $this->smtpOptions;
     }
 
-    /**
-     * @param array $smtpOptions
-     */
-    public function setSmtpOptions(array $smtpOptions)
+    public function setSmtpOptions(array $smtpOptions): void
     {
         $this->smtpOptions = new SmtpOptions($smtpOptions);
     }
 
-    /**
-     * @return FileOptions
-     */
     public function getFileOptions(): FileOptions
     {
-        if (!isset($this->fileOptions)) {
-            $this->setFileOptions([]);
-        }
-
         return $this->fileOptions;
     }
 
-    /**
-     * @param array $fileOptions
-     */
-    public function setFileOptions(array $fileOptions)
+    public function setFileOptions(array $fileOptions): void
     {
         $this->fileOptions = new FileOptions($fileOptions);
     }
 
-    /**
-     * @return array
-     */
     public function getEventListeners(): array
     {
         return $this->eventListeners;
     }
 
-    /**
-     * @param array $eventListeners
-     */
-    public function setEventListeners(array $eventListeners)
+    public function setEventListeners(array $eventListeners): void
     {
         $this->eventListeners = $eventListeners;
     }
 
-    /**
-     * @return array
-     */
-    public function getSaveSentMessageFolder()
+    public function getSaveSentMessageFolder(): array
     {
         return $this->saveSentMessageFolder;
     }
 
-    /**
-     * @param array $saveSentMessageFolder
-     */
     public function setSaveSentMessageFolder(array $saveSentMessageFolder): void
     {
         $this->saveSentMessageFolder = $saveSentMessageFolder;
