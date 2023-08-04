@@ -8,9 +8,9 @@ use Laminas\EventManager\ListenerAggregateInterface;
 
 interface MailEventListenerInterface extends ListenerAggregateInterface
 {
-    public function onPreSend(MailEvent $e);
+    public function onPreSend(MailEvent $e): void;
 
-    public function onPostSend(MailEvent $e);
+    public function onPostSend(MailEvent $e): void;
 
-    public function onSendError(MailEvent $e);
+    public function onSendError(MailEvent $e): void;
 }
