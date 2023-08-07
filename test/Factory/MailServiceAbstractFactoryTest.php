@@ -70,30 +70,30 @@ class MailServiceAbstractFactoryTest extends TestCase
     {
         $requestedName = 'dot-mail.service.default';
 
-        $this->attachmentsOptions->expects(self::any())
+        $this->attachmentsOptions->expects($this->any())
             ->method('getFiles')
             ->willReturn(['testPdfAttachment.pdf', 'testXlsAttachment.xls']);
-        $this->attachmentsOptions->expects(self::any())
+        $this->attachmentsOptions->expects($this->any())
             ->method('getDir')
             ->willReturn([
                 'iterate'   => true,
                 'path'      => $this->fileSystem->url() . '/data/mail/attachments',
                 'recursive' => true,
             ]);
-        $this->messageOptions->expects(self::any())
+        $this->messageOptions->expects($this->any())
             ->method('getAttachments')
             ->willReturn($this->attachmentsOptions);
-        $this->mailOptions->expects(self::any())
+        $this->mailOptions->expects($this->any())
             ->method('getMessageOptions')
             ->willReturn($this->messageOptions);
-        $this->mailOptions->expects(self::any())
+        $this->mailOptions->expects($this->any())
             ->method('getTransport')
             ->willReturn($this->createMock(Sendmail::class));
-        $this->mailOptions->expects(self::any())
+        $this->mailOptions->expects($this->any())
             ->method('getEventListeners')
             ->willReturn([AbstractMailEventListener::class]);
 
-        $this->container->expects(self::atLeastOnce())
+        $this->container->expects($this->atLeastOnce())
             ->method('get')
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
@@ -104,7 +104,7 @@ class MailServiceAbstractFactoryTest extends TestCase
                     },
                 ],
             ]);
-        $this->container->expects(self::once())
+        $this->container->expects($this->once())
             ->method('has')
             ->willReturn(true);
 
@@ -122,30 +122,30 @@ class MailServiceAbstractFactoryTest extends TestCase
     {
         $requestedName = 'dot-mail.service.default';
 
-        $this->attachmentsOptions->expects(self::any())
+        $this->attachmentsOptions->expects($this->any())
             ->method('getFiles')
             ->willReturn(['testPdfAttachment.pdf', 'testXlsAttachment.xls']);
-        $this->attachmentsOptions->expects(self::any())
+        $this->attachmentsOptions->expects($this->any())
             ->method('getDir')
             ->willReturn([
                 'iterate'   => AttachmentsOptions::DEFAULT_ITERATE,
                 'path'      => AttachmentsOptions::DEFAULT_PATH,
                 'recursive' => AttachmentsOptions::DEFAULT_RECURSIVE,
             ]);
-        $this->messageOptions->expects(self::any())
+        $this->messageOptions->expects($this->any())
             ->method('getAttachments')
             ->willReturn($this->attachmentsOptions);
-        $this->mailOptions->expects(self::any())
+        $this->mailOptions->expects($this->any())
             ->method('getMessageOptions')
             ->willReturn($this->messageOptions);
-        $this->mailOptions->expects(self::any())
+        $this->mailOptions->expects($this->any())
             ->method('getTransport')
             ->willReturn(Smtp::class);
-        $this->mailOptions->expects(self::any())
+        $this->mailOptions->expects($this->any())
             ->method('getEventListeners')
             ->willReturn(['Invalid Listener Test']);
 
-        $this->container->expects(self::atLeastOnce())
+        $this->container->expects($this->atLeastOnce())
             ->method('get')
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
@@ -153,7 +153,7 @@ class MailServiceAbstractFactoryTest extends TestCase
                 [Smtp::class, new Smtp()],
                 ['Invalid Listener Test', 'Invalid Listener provided'],
             ]);
-        $this->container->expects(self::any())
+        $this->container->expects($this->any())
             ->method('has')
             ->willReturnMap([
                 [Smtp::class, true],

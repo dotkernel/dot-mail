@@ -26,6 +26,8 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use function array_shift;
+
 class MailServiceTest extends TestCase
 {
     use CommonTrait;
@@ -144,7 +146,7 @@ class MailServiceTest extends TestCase
     public function testSendFailureTriggersErrorEvent(): void
     {
         $exception = new RuntimeException("Test Error Message");
-        $this->transportInterface->expects(self::once())
+        $this->transportInterface->expects($this->once())
             ->method('send')
             ->willThrowException($exception);
 
@@ -170,23 +172,28 @@ class MailServiceTest extends TestCase
     public function testGetFolderNames(): void
     {
         $childFolder = $this->createMock(Folder::class);
-        $childFolder->expects(self::once())
+        $childFolder->expects($this->once())
             ->method('getGlobalName')
             ->willReturn('rootFolderName.childFolderName');
 
         $rootFolder = $this->createMock(Folder::class);
-        $rootFolder->expects(self::once())
+        $rootFolder->expects($this->once())
             ->method('getChildren')
             ->willReturn([$childFolder]);
 
-        $rootFolder->expects(self::once())
+        $rootFolder->expects($this->once())
             ->method('getGlobalName')
             ->willReturn('rootFolderName');
 
+        $tree = [
+            [$rootFolder],
+            $rootFolder,
+        ];
+
         $storage = $this->createMock(Imap::class);
-        $storage->expects(self::exactly(2))
-            ->method('getFolders')
-            ->willReturnOnConsecutiveCalls([$rootFolder], $rootFolder);
+        $storage->method('getFolders')->willReturnCallback(function () use (&$tree) {
+            return array_shift($tree);
+        });
 
         $this->mailService->setStorage($storage);
         $result = $this->mailService->getFolderGlobalNames();
@@ -202,11 +209,11 @@ class MailServiceTest extends TestCase
     public function testCreateStorageThrowsRuntimeExceptionWithInvalidConfig(): void
     {
         $smtpOptions = $this->createMock(SmtpOptions::class);
-        $smtpOptions->expects(self::once())
+        $smtpOptions->expects($this->once())
             ->method('getHost')
             ->willReturn('127.0.0.1');
 
-        $smtpOptions->expects(self::once())
+        $smtpOptions->expects($this->once())
             ->method('getConnectionConfig')
             ->willReturn([
                 'username' => 'testUsername',
@@ -214,7 +221,7 @@ class MailServiceTest extends TestCase
                 'ssl'      => 'ssl',
             ]);
 
-        $this->mailOptions->expects(self::atMost(2))
+        $this->mailOptions->expects($this->atMost(2))
             ->method('getSmtpOptions')
             ->willReturn($smtpOptions);
 
@@ -229,7 +236,7 @@ class MailServiceTest extends TestCase
     {
         $imap        = $this->createMock(Imap::class);
         $mailService = $this->createPartialMock(MailService::class, ['createStorage']);
-        $mailService->expects(self::once())
+        $mailService->expects($this->once())
             ->method('createStorage')
             ->willReturn($imap);
 

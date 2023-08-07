@@ -67,13 +67,13 @@ class LogServiceTest extends TestCase
         $bccAddress = new AddressList();
         $bccAddress->addFromString('testBcc@dotkernel.com');
 
-        $message->expects(self::once())->method('getSubject')
+        $message->expects($this->once())->method('getSubject')
             ->willReturn('testSubject@dotkernel.com');
-        $message->expects(self::once())->method('getTo')
+        $message->expects($this->once())->method('getTo')
             ->willReturn($toAddress);
-        $message->expects(self::once())->method('getCc')
+        $message->expects($this->once())->method('getCc')
             ->willReturn($ccAddress);
-        $message->expects(self::once())->method('getBcc')
+        $message->expects($this->once())->method('getBcc')
             ->willReturn($bccAddress);
 
         $this->logService->sent($message);

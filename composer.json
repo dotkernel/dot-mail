@@ -19,8 +19,8 @@
             "email": "team@dotkernel.com"
         }
     ],
-    "sort-packages": true,
     "config": {
+        "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }

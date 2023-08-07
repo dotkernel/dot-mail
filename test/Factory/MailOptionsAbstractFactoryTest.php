@@ -46,7 +46,7 @@ class MailOptionsAbstractFactoryTest extends TestCase
         $defaultName = 'dot-mail.options.default';
         $container   = $this->createMock(ContainerInterface::class);
 
-        $container->expects(self::once())
+        $container->expects($this->once())
             ->method('get')
             ->with('config')
             ->willReturn($this->config);

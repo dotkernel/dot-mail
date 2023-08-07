@@ -58,7 +58,7 @@ class AbstractMailFactoryTest extends TestCase
     {
         $container     = $this->createMock(ContainerInterface::class);
         $requestedName = 'dot-mail.testPart.default';
-        $container->expects(self::once())->method('get')->willReturn($this->config);
+        $container->expects($this->once())->method('get')->willReturn($this->config);
 
         $result = $this->subject->canCreate($container, $requestedName);
         $this->assertTrue($result);
