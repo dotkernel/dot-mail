@@ -40,7 +40,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
     protected TransportInterface $transport;
     protected MailOptions $mailOptions;
     protected array $attachments = [];
-    protected ?Imap $storage;
+    protected ?Imap $storage     = null;
 
     public function __construct(
         LogServiceInterface $logService,
@@ -71,7 +71,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             //attach files before sending
             $this->attachFiles();
 
-            $this->transport->send($this->message);
+            $this->getTransport()->send($this->getMessage());
 
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_POST_SEND, $result));
         } catch (Exception $e) {
@@ -82,7 +82,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
         }
 
         if ($result->isValid()) {
-            $this->logService->sent($this->message);
+            $this->logService->sent($this->getMessage());
         }
 
         //save copy of sent message to folders
@@ -93,7 +93,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             $this->storage = $this->createStorage();
             if ($this->storage) {
                 foreach ($this->mailOptions->getSaveSentMessageFolder() as $folder) {
-                    $this->storage->appendMessage($this->message->toString(), $folder);
+                    $this->storage->appendMessage($this->getMessage()->toString(), $folder);
                 }
             }
         }
@@ -261,17 +261,20 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
 
     public function getFolderGlobalNames(): array|false
     {
-        $this->storage = $this->createStorage();
+        $this->storage ?? $this->createStorage();
         if (! $this->storage) {
             return false;
         }
         $folderGlobalNames = [];
-        foreach ($this->storage->getFolders() as $folder) {
+
+        foreach ($this->getStorage()->getFolders() as $folder) {
             $folderGlobalNames[] = $folder->getGlobalName();
         }
-        foreach ($this->storage->getFolders()->getChildren() as $folder) {
+
+        foreach ($this->getStorage()->getFolders()->getChildren() as $folder) {
             $folderGlobalNames[] = $folder->getGlobalName();
         }
+
         return $folderGlobalNames;
     }
 }

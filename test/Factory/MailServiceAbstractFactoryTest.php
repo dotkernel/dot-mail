@@ -109,7 +109,6 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturn(true);
 
         $mailService = (new Subject())($this->container, $requestedName);
-
         $this->assertInstanceOf(MailService::class, $mailService);
         $this->assertInstanceOf(Sendmail::class, $mailService->getTransport());
     }
@@ -167,5 +166,6 @@ class MailServiceAbstractFactoryTest extends TestCase
 
         $this->assertInstanceOf(MailService::class, $mailService);
         $this->assertInstanceOf(Smtp::class, $mailService->getTransport());
+        $this->assertCount(2, $mailService->getAttachments());
     }
 }

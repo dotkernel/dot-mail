@@ -13,6 +13,7 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Service\LogServiceInterface;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
+use FilesystemIterator;
 use Laminas\Mail\Message;
 use Laminas\Mail\Transport\File;
 use Laminas\Mail\Transport\Smtp;
@@ -83,7 +84,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
                 ? new RecursiveIteratorIterator(
                     new RecursiveDirectoryIterator(
                         $dir['path'],
-                        RecursiveDirectoryIterator::SKIP_DOTS
+                        FilesystemIterator::SKIP_DOTS
                     ),
                     RecursiveIteratorIterator::CHILD_FIRST
                 )
@@ -184,6 +185,10 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         return $transport;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function attachMailListeners(
         MailEventListenerAwareInterface $service,
         ContainerInterface $container

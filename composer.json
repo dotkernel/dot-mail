@@ -19,6 +19,7 @@
             "email": "team@dotkernel.com"
         }
     ],
+    "sort-packages": true,
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
@@ -33,11 +34,10 @@
         "dotkernel/dot-event": "^3.2.0"
     },
     "require-dev": {
+        "laminas/laminas-coding-standard": "^2.5",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^10.2.6",
-        "squizlabs/php_codesniffer": "^3.7.1",
-        "vimeo/psalm": "^5.13.1",
-        "laminas/laminas-coding-standard": "^2.5"
+        "vimeo/psalm": "^5.13.1"
     },
     "autoload": {
         "psr-4": {

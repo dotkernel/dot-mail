@@ -9,6 +9,7 @@ use DotTest\Mail\CommonTrait;
 use Laminas\Mail\AddressList;
 use Laminas\Mail\Message;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 use function file_get_contents;
@@ -53,6 +54,9 @@ class LogServiceTest extends TestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testSentMailIsLogged(): void
     {
         $message   = $this->createMock(Message::class);

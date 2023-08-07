@@ -13,10 +13,16 @@ use Dot\Mail\Service\MailService;
 use DotTest\Mail\CommonTrait;
 use Laminas\Mail\Exception\RuntimeException;
 use Laminas\Mail\Message;
+use Laminas\Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException;
+use Laminas\Mail\Storage\Folder;
+use Laminas\Mail\Storage\Imap;
+use Laminas\Mail\Transport\Sendmail;
+use Laminas\Mail\Transport\SmtpOptions;
 use Laminas\Mail\Transport\TransportInterface;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Part;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -25,20 +31,22 @@ class MailServiceTest extends TestCase
     use CommonTrait;
 
     private MailService $mailService;
-    private LogServiceInterface|MockObject $logServiceInterface;
     private Message|MockObject $message;
     private TransportInterface|MockObject $transportInterface;
     private MailOptions|MockObject $mailOptions;
 
+    /**
+     * @throws Exception
+     */
     public function setUp(): void
     {
-        $this->logServiceInterface = $this->createMock(LogServiceInterface::class);
-        $this->message             = new Message();
-        $this->transportInterface  = $this->createMock(TransportInterface::class);
-        $this->mailOptions         = $this->createMock(MailOptions::class);
+        $this->message            = new Message();
+        $this->transportInterface = $this->createMock(TransportInterface::class);
+        $this->mailOptions        = $this->createMock(MailOptions::class);
+        $logServiceInterface      = $this->createMock(LogServiceInterface::class);
 
         $this->mailService = new MailService(
-            $this->logServiceInterface,
+            $logServiceInterface,
             $this->message,
             $this->transportInterface,
             $this->mailOptions
@@ -58,6 +66,25 @@ class MailServiceTest extends TestCase
         ]);
 
         $this->config = $this->generateConfig();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGettersAndSetters(): void
+    {
+        $attachments = ['/testAttachment.pdf', '/testDirectory/testAttachment2.xls'];
+        $storage     = $this->createMock(Imap::class);
+        $transport   = $this->createMock(Sendmail::class);
+
+        $this->mailService->setAttachments($attachments);
+        $this->mailService->setStorage($storage);
+        $this->mailService->setTransport($transport);
+
+        $this->assertSame($attachments, $this->mailService->getAttachments());
+        $this->assertContains('/testAttachment.pdf', $this->mailService->getAttachments());
+        $this->assertSame($storage, $this->mailService->getStorage());
+        $this->assertSame($transport, $this->mailService->getTransport());
     }
 
     public function testCreateMailEvent(): void
@@ -87,6 +114,8 @@ class MailServiceTest extends TestCase
         $result = $this->mailService->attachFiles();
         $this->assertInstanceOf(Message::class, $result);
         $this->assertSame('Test Subject', $result->getSubject());
+        $this->assertCount(2, $this->mailService->getAttachments());
+        $this->assertArrayHasKey('spreadsheetName', $this->mailService->getAttachments());
     }
 
     public function testAttachFilesToMimeMessageBody(): void
@@ -122,5 +151,88 @@ class MailServiceTest extends TestCase
         $this->expectException(MailException::class);
         $this->expectExceptionMessage("Test Error Message");
         $this->mailService->send();
+    }
+
+    public function testMailResultCreatedFromException(): void
+    {
+        $customException = new RuntimeException('Custom exception test');
+
+        $mailResult = $this->mailService->createMailResultFromException($customException);
+
+        $this->assertInstanceOf(MailResult::class, $mailResult);
+        $this->assertSame($customException, $mailResult->getException());
+        $this->assertSame('Custom exception test', $mailResult->getMessage());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetFolderNames(): void
+    {
+        $childFolder = $this->createMock(Folder::class);
+        $childFolder->expects(self::once())
+            ->method('getGlobalName')
+            ->willReturn('rootFolderName.childFolderName');
+
+        $rootFolder = $this->createMock(Folder::class);
+        $rootFolder->expects(self::once())
+            ->method('getChildren')
+            ->willReturn([$childFolder]);
+
+        $rootFolder->expects(self::once())
+            ->method('getGlobalName')
+            ->willReturn('rootFolderName');
+
+        $storage = $this->createMock(Imap::class);
+        $storage->expects(self::exactly(2))
+            ->method('getFolders')
+            ->willReturnOnConsecutiveCalls([$rootFolder], $rootFolder);
+
+        $this->mailService->setStorage($storage);
+        $result = $this->mailService->getFolderGlobalNames();
+
+        $this->assertCount(2, $result);
+        $this->assertContains('rootFolderName', $result);
+        $this->assertContains('rootFolderName.childFolderName', $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testCreateStorageThrowsRuntimeExceptionWithInvalidConfig(): void
+    {
+        $smtpOptions = $this->createMock(SmtpOptions::class);
+        $smtpOptions->expects(self::once())
+            ->method('getHost')
+            ->willReturn('127.0.0.1');
+
+        $smtpOptions->expects(self::once())
+            ->method('getConnectionConfig')
+            ->willReturn([
+                'username' => 'testUsername',
+                'password' => 'testPassword',
+                'ssl'      => 'ssl',
+            ]);
+
+        $this->mailOptions->expects(self::atMost(2))
+            ->method('getSmtpOptions')
+            ->willReturn($smtpOptions);
+
+        $this->expectException(ProtocolRuntimeException::class);
+        $this->mailService->createStorage();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testCreateStorageReturnsImap(): void
+    {
+        $imap        = $this->createMock(Imap::class);
+        $mailService = $this->createPartialMock(MailService::class, ['createStorage']);
+        $mailService->expects(self::once())
+            ->method('createStorage')
+            ->willReturn($imap);
+
+        $this->assertInstanceOf(Imap::class, $mailService->createStorage());
     }
 }

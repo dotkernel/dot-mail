@@ -22,6 +22,9 @@ class MailEventTest extends TestCase
         $this->mailService = $this->createMock(MailServiceInterface::class);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testMailEventCanBeCreated(): void
     {
         $defaultMailEvent = new MailEvent($this->mailService);

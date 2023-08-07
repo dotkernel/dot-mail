@@ -26,7 +26,6 @@ trait MailEventListenerTrait
      */
     public function onPreSend(MailEvent $e): void
     {
-        //NO-OP: left to implementors
     }
 
     /**
@@ -34,7 +33,6 @@ trait MailEventListenerTrait
      */
     public function onPostSend(MailEvent $e): void
     {
-        //NO-OP: left to implementors
     }
 
     /**
@@ -42,6 +40,5 @@ trait MailEventListenerTrait
      */
     public function onSendError(MailEvent $e): void
     {
-        //NO-OP: left to implementors
     }
 }

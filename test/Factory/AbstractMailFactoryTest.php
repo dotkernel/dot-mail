@@ -8,8 +8,11 @@ use Dot\Mail\Factory\AbstractMailFactory;
 use Dot\Mail\Options\MailOptions;
 use DotTest\Mail\CommonTrait;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AbstractMailFactoryTest extends TestCase
 {
@@ -46,6 +49,11 @@ class AbstractMailFactoryTest extends TestCase
         };
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
     public function testCanCreateRequestedService(): void
     {
         $container     = $this->createMock(ContainerInterface::class);
