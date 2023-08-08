@@ -1,70 +1,60 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-mail/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-mail/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
 use Dot\Mail\Event\MailEvent;
 use Dot\Mail\Event\MailEventListenerAwareInterface;
 use Dot\Mail\Event\MailEventListenerAwareTrait;
-use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
+use Exception;
+use finfo;
 use Laminas\Mail\Message;
 use Laminas\Mail\Storage\Imap;
+use Laminas\Mail\Transport\Smtp;
 use Laminas\Mail\Transport\TransportInterface;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Mime;
 use Laminas\Mime\Part as MimePart;
 
-/**
- * Class MailService
- * @package Dot\Mail\Service
- */
-class MailService implements
-    MailServiceInterface,
-    MailEventListenerAwareInterface
+use function array_merge;
+use function basename;
+use function count;
+use function fopen;
+use function is_file;
+use function is_string;
+use function strip_tags;
+
+use const FILEINFO_MIME_TYPE;
+
+class MailService implements MailServiceInterface, MailEventListenerAwareInterface
 {
     use MailEventListenerAwareTrait;
 
     protected LogServiceInterface $logService;
-
     protected Message $message;
-
     protected TransportInterface $transport;
-
     protected MailOptions $mailOptions;
-
     protected array $attachments = [];
+    protected ?Imap $storage     = null;
 
-    /**
-     * MailService constructor.
-     * @param LogServiceInterface $logService
-     * @param Message $message
-     * @param TransportInterface $transport
-     * @param MailOptions $mailOptions
-     */
     public function __construct(
         LogServiceInterface $logService,
         Message $message,
         TransportInterface $transport,
         MailOptions $mailOptions
     ) {
-        $this->logService = $logService;
-        $this->message = $message;
-        $this->transport = $transport;
+        $this->logService  = $logService;
+        $this->message     = $message;
+        $this->transport   = $transport;
         $this->mailOptions = $mailOptions;
     }
 
     /**
-     * @return ResultInterface
      * @throws MailException
      */
     public function send(): ResultInterface
@@ -81,10 +71,10 @@ class MailService implements
             //attach files before sending
             $this->attachFiles();
 
-            $this->transport->send($this->message);
+            $this->getTransport()->send($this->getMessage());
 
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_POST_SEND, $result));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $result = $this->createMailResultFromException($e);
             //trigger error event
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
@@ -92,16 +82,18 @@ class MailService implements
         }
 
         if ($result->isValid()) {
-            $this->logService->sent($this->message);
+            $this->logService->sent($this->getMessage());
         }
 
         //save copy of sent message to folders
-        if ($this->mailOptions->getTransport() == \Laminas\Mail\Transport\Smtp::class &&
-            $this->mailOptions->getSaveSentMessageFolder()) {
+        if (
+            $this->mailOptions->getTransport() === Smtp::class
+            && $this->mailOptions->getSaveSentMessageFolder()
+        ) {
             $this->storage = $this->createStorage();
             if ($this->storage) {
                 foreach ($this->mailOptions->getSaveSentMessageFolder() as $folder) {
-                    $this->storage->appendMessage($this->message->toString(), $folder);
+                    $this->storage->appendMessage($this->getMessage()->toString(), $folder);
                 }
             }
         }
@@ -109,35 +101,28 @@ class MailService implements
         return $result;
     }
 
-    /**
-     * @return Imap|null
-     */
-    protected function createStorage(): ?Imap
+    public function createStorage(): ?Imap
     {
         $host = $this->mailOptions->getSmtpOptions()->getHost();
         if (empty($host)) {
             return null;
         }
         $connectionConfig = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
+
         if (empty($connectionConfig['username']) || empty($connectionConfig['password'])) {
             return null;
         }
 
         return new Imap([
-                            'host'     => $host,
-                            'user'     => $connectionConfig['username'],
-                            'password' => $connectionConfig['password'],
-                        ]);
+            'host'     => $host,
+            'user'     => $connectionConfig['username'],
+            'password' => $connectionConfig['password'],
+        ]);
     }
 
-    /**
-     * @param string $name
-     * @param ResultInterface|null $result
-     * @return MailEvent
-     */
-    protected function createMailEvent(
-        $name = MailEvent::EVENT_MAIL_PRE_SEND,
-        ResultInterface $result = null
+    public function createMailEvent(
+        string $name = MailEvent::EVENT_MAIL_PRE_SEND,
+        ?ResultInterface $result = null
     ): MailEvent {
         $event = new MailEvent($this, $name);
         if (isset($result)) {
@@ -146,19 +131,17 @@ class MailService implements
         return $event;
     }
 
-    /**
-     * Attach the files to the message before sending it
-     */
-    protected function attachFiles()
+    public function attachFiles(): false|Message
     {
         if (count($this->attachments) === 0) {
-            return;
+            return false;
         }
 
         $mimeMessage = $this->message->getBody();
+
         if (is_string($mimeMessage)) {
-            $originalBodyPart = new MimePart($mimeMessage);
-            $originalBodyPart->type = $mimeMessage != strip_tags($mimeMessage)
+            $originalBodyPart       = new MimePart($mimeMessage);
+            $originalBodyPart->type = $mimeMessage !== strip_tags($mimeMessage)
                 ? Mime::TYPE_HTML
                 : Mime::TYPE_TEXT;
 
@@ -170,42 +153,37 @@ class MailService implements
 
         //generate a new Part for each attachment
         $attachmentParts = [];
-        $info = new \finfo(FILEINFO_MIME_TYPE);
+        $info            = new finfo(FILEINFO_MIME_TYPE);
+
         foreach ($this->attachments as $key => $attachment) {
-            if (!is_file($attachment)) {
+            if (! is_file($attachment)) {
                 continue;
             }
-
-            $basename = is_string($key) ? $key : basename($attachment);
-
-            $part = new MimePart(fopen($attachment, 'r'));
-            $part->id = $basename;
-            $part->filename = $basename;
-            $part->type = $info->file($attachment);
-            $part->encoding = Mime::ENCODING_BASE64;
+            $basename          = is_string($key) ? $key : basename($attachment);
+            $part              = new MimePart(fopen($attachment, 'r'));
+            $part->id          = $basename;
+            $part->filename    = $basename;
+            $part->type        = $info->file($attachment);
+            $part->encoding    = Mime::ENCODING_BASE64;
             $part->disposition = Mime::DISPOSITION_ATTACHMENT;
             $attachmentParts[] = $part;
         }
-
         $body = new MimeMessage();
         $body->setParts(array_merge($oldParts, $attachmentParts));
-        $this->message->setBody($body);
+
+        return $this->message->setBody($body);
     }
 
-    /**
-     * @param mixed $body
-     * @param string|null $charset
-     */
-    public function setBody($body, string $charset = null)
+    public function setBody(string|MimePart $body, ?string $charset = null): void
     {
         if (is_string($body)) {
             //create a mime\part and wrap it into a mime\message
-            $mimePart = new MimePart($body);
-            $mimePart->type = $body != strip_tags($body) ? Mime::TYPE_HTML : Mime::TYPE_TEXT;
+            $mimePart          = new MimePart($body);
+            $mimePart->type    = $body !== strip_tags($body) ? Mime::TYPE_HTML : Mime::TYPE_TEXT;
             $mimePart->charset = $charset ?: self::DEFAULT_CHARSET;
-            $body = new MimeMessage();
+            $body              = new MimeMessage();
             $body->setParts([$mimePart]);
-        } elseif ($body instanceof MimePart) {
+        } else {
             if (isset($charset)) {
                 $body->charset = $charset;
             }
@@ -215,15 +193,6 @@ class MailService implements
             $body = $mimeMessage;
         }
 
-        //if the body is not a string or mime message at this point, it is not a valid argument
-        if (!is_string($body) && !$body instanceof MimeMessage) {
-            throw new InvalidArgumentException(sprintf(
-                'Provided body is not valid. It should be one of "%s". %s provided',
-                implode('", "', ['string', 'Laminas\Mime\Part', 'Laminas\Mime\Message']),
-                is_object($body) ? get_class($body) : gettype($body)
-            ));
-        }
-
         // The headers Content-type and Content-transfer-encoding are duplicated every time the body is set.
         // Removing them before setting the body prevents this error
         $this->message->getHeaders()->removeHeader('content-type');
@@ -231,36 +200,22 @@ class MailService implements
         $this->message->setBody($body);
     }
 
-    /**
-     * @param \Exception $e
-     * @return ResultInterface
-     */
-    protected function createMailResultFromException(\Exception $e): ResultInterface
+    public function createMailResultFromException(Exception $e): ResultInterface
     {
         return new MailResult(false, $e->getMessage(), $e);
     }
 
-    /**
-     * @return Message
-     */
     public function getMessage(): Message
     {
         return $this->message;
     }
 
-    /**
-     * @param string $subject
-     */
-    public function setSubject(string $subject)
+    public function setSubject(string $subject): void
     {
         $this->message->setSubject($subject);
     }
 
-    /**
-     * @param string $path
-     * @param string $filename
-     */
-    public function addAttachment(string $path, string $filename = null)
+    public function addAttachment(string $path, ?string $filename = null): void
     {
         if (isset($filename)) {
             $this->attachments[$filename] = $path;
@@ -269,62 +224,57 @@ class MailService implements
         }
     }
 
-    /**
-     * @param array $paths
-     */
-    public function addAttachments(array $paths)
+    public function addAttachments(array $paths): void
     {
         $this->setAttachments(array_merge($this->attachments, $paths));
     }
 
-    /**
-     * @return array
-     */
     public function getAttachments(): array
     {
         return $this->attachments;
     }
 
-    /**
-     * @param array $paths
-     */
-    public function setAttachments(array $paths)
+    public function setAttachments(array $paths): void
     {
         $this->attachments = $paths;
     }
 
-    /**
-     * @return TransportInterface
-     */
     public function getTransport(): TransportInterface
     {
         return $this->transport;
     }
 
-    /**
-     * @param TransportInterface $transport
-     */
-    public function setTransport(TransportInterface $transport)
+    public function setTransport(TransportInterface $transport): void
     {
         $this->transport = $transport;
     }
 
-    /**
-     * @return array|false
-     */
-    public function getFolderGlobalNames()
+    public function getStorage(): ?Imap
     {
-        $this->storage = $this->createStorage();
-        if (!$this->storage) {
+        return $this->storage;
+    }
+
+    public function setStorage(?Imap $storage): void
+    {
+        $this->storage = $storage;
+    }
+
+    public function getFolderGlobalNames(): array|false
+    {
+        $this->storage ?? $this->createStorage();
+        if (! $this->storage) {
             return false;
         }
         $folderGlobalNames = [];
-        foreach ($this->storage->getFolders() as $folder) {
+
+        foreach ($this->getStorage()->getFolders() as $folder) {
             $folderGlobalNames[] = $folder->getGlobalName();
         }
-        foreach ($this->storage->getFolders()->getChildren() as $folder) {
+
+        foreach ($this->getStorage()->getFolders()->getChildren() as $folder) {
             $folderGlobalNames[] = $folder->getGlobalName();
         }
+
         return $folderGlobalNames;
     }
 }

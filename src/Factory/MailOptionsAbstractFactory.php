@@ -1,39 +1,37 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-mail/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-mail/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Mail\Factory;
 
 use Dot\Mail\Options\MailOptions;
-use Interop\Container\ContainerInterface;
 use Laminas\Stdlib\ArrayUtils;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class MailOptionsAbstractFactory
- * @package Dot\Mail\Factory
- */
+use function array_key_exists;
+use function explode;
+use function is_array;
+use function is_string;
+use function trim;
+
 class MailOptionsAbstractFactory extends AbstractMailFactory
 {
-    const SPECIFIC_PART = 'options';
+    public const SPECIFIC_PART = 'options';
 
     /**
-     * @param ContainerInterface $container
      * @param string $requestedName
-     * @param array|null $options
-     * @return MailOptions
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): MailOptions
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): MailOptions
     {
         $specificServiceName = explode('.', $requestedName)[2];
 
-        $config = $this->getConfig($container);
+        $config         = $this->getConfig($container);
         $specificConfig = $config[$specificServiceName];
-        if (!is_array($specificConfig)) {
+        if (! is_array($specificConfig)) {
             $specificConfig = [];
         }
 
@@ -47,13 +45,14 @@ class MailOptionsAbstractFactory extends AbstractMailFactory
 
             unset($specificConfig['extends']);
 
-            if (!is_null($extendsConfigKey)
+            if (
+                $extendsConfigKey !== null
                 && array_key_exists($extendsConfigKey, $config)
                 && is_array($config[$extendsConfigKey])
             ) {
                 $specificConfig = ArrayUtils::merge($config[$extendsConfigKey], $specificConfig);
             }
-        } while ($extendsConfigKey != null);
+        } while ($extendsConfigKey !== null);
 
         return new MailOptions($specificConfig);
     }

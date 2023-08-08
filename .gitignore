@@ -5,6 +5,8 @@
 
 # User-specific stuff:
 .idea
+.phpunit.result.cache
+.phpcs-cache
 
 ## File-based project format:
 *.iws

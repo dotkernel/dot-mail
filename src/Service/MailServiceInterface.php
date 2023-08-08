@@ -1,70 +1,37 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-mail/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-mail/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
 use Dot\Mail\Result\ResultInterface;
 use Laminas\Mail\Message;
 use Laminas\Mail\Transport\TransportInterface;
+use Laminas\Mime\Part as MimePart;
 
-/**
- * Interface MailServiceInterface
- * @package Dot\Mail\Service
- */
 interface MailServiceInterface
 {
-    const DEFAULT_CHARSET = 'utf-8';
+    public const DEFAULT_CHARSET = 'utf-8';
 
-    /**
-     * @return ResultInterface
-     */
     public function send(): ResultInterface;
 
-    /**
-     * @return Message
-     */
     public function getMessage(): Message;
 
-    /**
-     * @return TransportInterface
-     */
     public function getTransport(): TransportInterface;
 
-    /**
-     * @param mixed $body
-     * @param string $charset
-     */
-    public function setBody($body, string $charset = null);
+    public function setBody(string|MimePart $body, ?string $charset = null): void;
 
-    /**
-     * @param string $subject
-     */
-    public function setSubject(string $subject);
+    public function setSubject(string $subject): void;
 
-    /**
-     * @param string $path
-     * @param string|null $filename
-     */
-    public function addAttachment(string $path, string $filename = null);
+    public function addAttachment(string $path, ?string $filename = null): void;
 
-    /**
-     * @param array $paths
-     */
-    public function addAttachments(array $paths);
+    public function addAttachments(array $paths): void;
 
-    /**
-     * @return array
-     */
     public function getAttachments(): array;
 
-    /**
-     * @param array $paths
-     */
-    public function setAttachments(array $paths);
+    public function setAttachments(array $paths): void;
+
+    public function setTransport(TransportInterface $transport): void;
+
+    public function getFolderGlobalNames(): array|false;
 }
