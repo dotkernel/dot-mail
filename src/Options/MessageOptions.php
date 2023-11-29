@@ -6,6 +6,10 @@ namespace Dot\Mail\Options;
 
 use Laminas\Stdlib\AbstractOptions;
 
+/**
+ * @template TValue
+ * @template-extends AbstractOptions<TValue>
+ */
 class MessageOptions extends AbstractOptions
 {
     protected string $from        = '';

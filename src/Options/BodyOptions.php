@@ -7,6 +7,10 @@ namespace Dot\Mail\Options;
 use Dot\Mail\Service\MailServiceInterface;
 use Laminas\Stdlib\AbstractOptions;
 
+/**
+ * @template TValue
+ * @template-extends AbstractOptions<TValue>
+ */
 class BodyOptions extends AbstractOptions
 {
     protected string $content = '';

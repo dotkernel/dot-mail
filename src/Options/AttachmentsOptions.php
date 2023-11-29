@@ -8,6 +8,10 @@ use Laminas\Stdlib\AbstractOptions;
 
 use function array_merge;
 
+/**
+ * @template TValue
+ * @template-extends AbstractOptions<TValue>
+ */
 class AttachmentsOptions extends AbstractOptions
 {
     public const DEFAULT_ITERATE   = false;
