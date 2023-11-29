@@ -18,6 +18,10 @@ use function class_exists;
 use function is_string;
 use function strtolower;
 
+/**
+ * @template TValue
+ * @template-extends AbstractOptions<TValue>
+ */
 class MailOptions extends AbstractOptions
 {
     protected array $eventListeners                = [];
