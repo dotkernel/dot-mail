@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="description" content="DotKernel's mail service">
+        
+        
+
+        
+        
+            
+        
+        <meta name="docsearch:version" content="4.0.0,latest">
+        <meta name="docsearch:language" content="en">
+        <meta name="docsearch:component" content="dot-mail">
+
+        
+        <link rel="canonical" href="https://docs.dotkernel.org/dot-mail/v4/transports/">
+        
+        
+        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_logomark.svg">
+        
+
+        <title>Transports - dot-mail - DotKernel Documentation</title>
+
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/docs.css">
+        <script src="https://docs.dotkernel.org//js/bootstrap.js" defer></script>
+        <script src="https://docs.dotkernel.org//js/docs.js" defer></script>
+        <script src="https://docs.dotkernel.org//js/scripts.js" defer></script>
+    </head>
+    <body data-bs-spy="scroll" data-bs-target=".toc" data-bs-offset="100">
+
+        
+        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light dk-nav py-3" data-bs-theme="light">
+    <div class="container justify-content-between">
+        <div class="dk-nav-icon d-flex align-items-center">
+            <a class="navbar-brand" href="https://docs.dotkernel.org/">
+                <img src="https://docs.dotkernel.org//img/dk_logomark_white.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+            </a>
+
+            <div class="dk-nav-icon-items">
+                <span style="font-size: 12px; line-height: 13px">DotKernel Documentation</span>
+
+                <div class="dropdown" data-bs-theme="light">
+                    <span class="fw-bold dropdown-toggle dk-pkg-name" data-bs-toggle="dropdown" aria-expanded="false">Packages</span>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/api/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">API</span>
+                                    <span>DotKernel API</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/admin/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Admin</span>
+                                    <span>DotKernel admin application</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/frontend/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Frontend</span>
+                                    <span>DotKernel frontend application</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item bg-light">
+                            <a href="https://docs.dotkernel.org/packages/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Packages</span>
+                                    <span>DotKernel packages</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+<!--                <li class="nav-item">-->
+<!--                    <a href="#" class="nav-link fw-bold text-white" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal" title="Open search">-->
+<!--                        <i class="bi bi-search"></i> Search-->
+<!--                    </a>-->
+<!--                </li>-->
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-white" href="https://github.com/dotkernel/dot-mail" title="Go to dot-mail repository" target="_blank">
+                        <i class="bi bi-github"></i>
+                        GitHub
+                    </a>
+                </li>
+                <li class="nav-item">
+                    
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+        
+        <div class="container">
+    <nav aria-label="breadcrumb" class="nav_breadcrumb">
+        <ol class="breadcrumb">
+            
+                <li class="breadcrumb-item"><a href="https://docs.dotkernel.org/">Overview</a></li>
+                <li class="breadcrumb-item"><a href="https://docs.dotkernel.org/packages/">Packages</a></li>
+
+                
+                    <li class="breadcrumb-item"><a href="../..">dot-mail</a></li>
+
+                    
+                        
+                            
+                            
+                        
+                    
+
+                    <li class="breadcrumb-item active" aria-current="page">Transports</li>
+                
+            
+        </ol>
+    </nav>
+</div>
+
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 right_sidebar">
+                    
+                    
+    <div class="subnavigation hidden-print">
+<!--        <h4 class="subnavigation__title">-->
+<!--            <a href="../..">dot-mail</a>-->
+<!--        </h4>-->
+
+        <h5 class="subnavigation__title">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+                    
+                        
+    <li class="subnavigation__list-item ">
+        <a href="../overview/" class="subnavigation__link">Overview</a>
+    </li>
+
+                    
+                        
+    <li class="subnavigation__list-item ">
+        <a href="../installation/" class="subnavigation__link">Installation</a>
+    </li>
+
+                    
+                        
+    <li class="subnavigation__list-item ">
+        <a href="../configuration/" class="subnavigation__link">Configuration</a>
+    </li>
+
+                    
+                        
+    <li class="subnavigation__list-item ">
+        <a href="../usage/" class="subnavigation__link">Usage</a>
+    </li>
+
+                    
+                        
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Transports</a>
+    </li>
+
+                    
+                
+            
+        </ul>
+    </div>
+
+                    
+
+                    
+                    
+                    
+    
+
+    
+    
+
+                    
+                </div>
+                <div class="col-lg-9 main_docs">
+                    
+                    
+
+
+
+
+    
+    
+
+    <h1 id="transports">Transports</h1>
+<p><code>dot-mail</code> can use any transport class that implements <code>Laminas\Mail\Transport\TransportInterface</code>, with the four standard transports available being:</p>
+<ul>
+<li><code>Laminas\Mail\Transport\Sendmail</code> - the default transport set in the config file</li>
+<li><code>Laminas\Mail\Transport\Smtp</code></li>
+<li><code>Laminas\Mail\Transport\File</code></li>
+<li>
+<p><code>Laminas\Mail\Transport\InMemory</code></p>
+</li>
+<li>
+<p>Note: feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
+</li>
+</ul>
+<p><code>Sendmail</code> is a wrapper over PHP's <code>mail()</code> function, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
+<ul>
+<li>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</li>
+</ul>
+<p><code>Smtp</code> connects to the configured SMTP host in order to handle sending emails. Saving a copy of an outgoing mail into a folder is possible for this transport only, and is done by uncommenting <code>save_sent_message_folder</code> in the config file <code>mail.local.php</code> under <code>dot_mail.default</code>.</p>
+<ul>
+<li>Common folder names are <code>INBOX</code>, <code>INBOX.Archive</code>, <code>INBOX.Drafts</code>, <code>INBOX.Sent</code>, <code>INBOX.Spam</code>, <code>INBOX.Trash</code>. If you have <code>MailService</code> available in your class, you can call <code>$this-&gt;mailService-&gt;getFolderGlobalNames()</code> to list the folder global names for the email you are using.</li>
+<li>Multiple folders can be added to the <code>save_sent_message_folder</code> key to save a copy of the outgoing email in each folder.</li>
+</ul>
+<p><code>File</code> writes each message individually in a file named after the configured format, placed in the configured directory. From here the files may be used for sending via another transport mechanism, or simply as logs.</p>
+<p><code>InMemory</code> saves the message in memory, allowing access to the last "sent" message via the <code>getLastMessage()</code> function.</p>
+<ul>
+<li>As the email is not sent, this transport can be helpful in development, with the access to the message being potentially useful in tests as well</li>
+</ul>
+<pre class="highlight"><code class="language-php">$this-&gt;mailService-&gt;setBody('First email body');
+$this-&gt;mailService-&gt;setSubject('First email subject');
+$this-&gt;mailService-&gt;getMessage()-&gt;setTo('email@example.com');
+// The email is not sent to the email, instead it is stored in memory
+$this-&gt;mailService-&gt;send();
+
+$this-&gt;mailService-&gt;setBody('Second email body');
+$this-&gt;mailService-&gt;setSubject('Second email subject');
+$this-&gt;mailService-&gt;getMessage()-&gt;setTo('email@example.com');
+
+// The email is not sent to the email either, it overwrites the previously "sent" email in memory
+$this-&gt;mailService-&gt;send();
+
+// Returns the second email's Laminas\Mail\Message object from memory
+$lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();</code></pre>
+
+
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../usage/">
+                    <small class="page-nav__label">Previous</small>
+                    <i class="bi bi-chevron-left"></i>
+                    Usage
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+                    
+                </div>
+            </div>
+        </div>
+
+        
+        <footer class="footer">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="footer_head">
+                    <p>DotKernel</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Frontend</p>
+                        <a href="https://docs.dotkernel.org/frontend/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for frontend applications
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel API</p>
+                        <a href="https://docs.dotkernel.org/api/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for building RESTful APIs
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Admin</p>
+
+                        <a href="https://docs.dotkernel.org/admin/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for admin applications
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Packages</p>
+                        <a href="https://docs.dotkernel.org/packages/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel packages offering a wide range of tools
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="footer_head">
+                    <p>Support</p>
+                </div>
+                <ul class="support__list">
+                    <li class="support__list-item">
+                        <a href="https://github.com/dotkernel" class="support__link" title="GitHub" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://dotkernel.slack.com" class="support__link" title="Slack" target="_blank">
+                            <i class="bi bi-slack"></i> Slack
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://twitter.com/dotkernel" class="support__link" title="X (Twitter)" target="_blank">
+                            <i class="bi bi-twitter-x"></i> Twitter
+                        </a>
+                    </li>
+
+                    <li class="support__list-item">
+                        <a href="https://www.dotkernel.com/blog/" class="support__link" title="Blog" target="_blank">
+                            <i class="bi bi-file-post"></i> Blog
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://www.dotkernel.com/feed/" class="support__link" title="Blog feed" target="_blank">
+                            <i class="bi bi-rss-fill"></i> Feed
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer_copy">
+            &#169; 2024 by <a href="https://www.dotkernel.com/" target="_blank">DotKernel</a> a collection of PSR-7 Middleware applications and libraries
+        </div>
+    </div>
+</footer>
+
+        <script>
+            let base_url = '../..',
+                project  = "packages",
+                siteName = 'dot-mail';
+        </script>
+<!--        -->
+<!--        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search in dot-mail" id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+        </div>
+    </div>
+</div>-->
+    </body>
+</html>
