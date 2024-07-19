@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > dot-mail is a wrapper on top of [laminas-mail](https://github.com/laminas/laminas-mail)
 >
-> ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Flaminas%2Flaminas-mail%2Fproperties%2Fvalues&query=%24%5B%3F(%40.property_name%3D%3D%22maintenance-mode%22)%5D.value&label=Maintenance%20Mode&color=%23d43442)
+> ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Flaminas%2Flaminas-mail%2Fproperties%2Fvalues&query=%24%5B%3F(%40.property_name%3D%3D%22maintenance-mode%22)%5D.value&label=Maintenance%20Mode)
 
 ## dot-mail badges
 
