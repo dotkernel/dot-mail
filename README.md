@@ -16,7 +16,7 @@
 [![Build Static](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-mail/branch/4.0/graph/badge.svg?token=G51NEHYKD3)](https://codecov.io/gh/dotkernel/dot-mail)
 
-# Installation
+## Installation
 
 Install `dotkernel/dot-mail` by executing the following Composer command:
 
