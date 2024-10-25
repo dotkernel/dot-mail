@@ -14,7 +14,7 @@ nav:
       - Usage: v4/usage.md
       - Transports: v4/transports.md
 site_name: dot-mail
-site_description: "DotKernel's mail service"
+site_description: "Dotkernel's mail service"
 repo_url: "https://github.com/dotkernel/dot-mail"
 plugins:
   - search
