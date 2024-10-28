@@ -1,7 +1,7 @@
 {
     "name": "dotkernel/dot-mail",
     "type": "library",
-    "description": "DotKernel mail component based on laminas-mail",
+    "description": "Dotkernel mail component based on laminas-mail",
     "license": "MIT",
     "homepage": "https://github.com/dotkernel/dot-mail",
     "keywords": [
@@ -15,7 +15,7 @@
     ],
     "authors": [
         {
-            "name": "DotKernel Team",
+            "name": "Dotkernel Team",
             "email": "team@dotkernel.com"
         }
     ],
@@ -34,7 +34,7 @@
         "dotkernel/dot-event": "^3.4"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "^2.5",
+        "laminas/laminas-coding-standard": "^3.0",
         "mikey179/vfsstream": "^v1.6.11",
         "phpunit/phpunit": "^10.5",
         "vimeo/psalm": "^5.23"

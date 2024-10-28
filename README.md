@@ -2,13 +2,11 @@
 
 > [!IMPORTANT]
 > dot-mail is a wrapper on top of [laminas-mail](https://github.com/laminas/laminas-mail)
->
-> ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Flaminas%2Flaminas-mail%2Fproperties%2Fvalues&query=%24%5B%3F(%40.property_name%3D%3D%22maintenance-mode%22)%5D.value&label=Maintenance%20Mode&color=%23d43442)
 
 ## dot-mail badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.1.1)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
@@ -18,7 +16,13 @@
 [![Build Static](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-mail/branch/4.0/graph/badge.svg?token=G51NEHYKD3)](https://codecov.io/gh/dotkernel/dot-mail)
 
-[![SymfonyInsight](https://insight.symfony.com/projects/1995ea7c-3b34-4eee-ac48-3571860d0307/big.svg)](https://insight.symfony.com/projects/1995ea7c-3b34-4eee-ac48-3571860d0307)
+## Installation
+
+Install `dotkernel/dot-mail` by executing the following Composer command:
+
+```shell
+composer require dotkernel/dot-mail
+```
 
 ## Configuration
 

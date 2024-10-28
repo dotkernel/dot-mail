@@ -5,7 +5,7 @@
 
 | Version | Supported          | PHP Version                                                                                              |
 |---------|--------------------|----------------------------------------------------------------------------------------------------------|
-| 4.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.1.1) |
+| 4.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0) |
 | <= 3.x  | :x:                |                                                                                                          |
 
 
