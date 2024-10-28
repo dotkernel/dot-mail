@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
-        <meta name="description" content="DotKernel's mail service">
+        <meta name="description" content="Dotkernel's mail service">
         
         
 
@@ -60,7 +60,7 @@
                         </li>
                         
                         <li class="dropdown-item ">
-                            <a href="https://docs.dotkernel.org/admin/" class="nav-link d-flex gap-4 align-items-center">
+                            <a href="https://docs.dotkernel.org/admin-documentation/" class="nav-link d-flex gap-4 align-items-center">
                                 <img alt="DotKernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
                                 <div>
                                     <span class="fw-bold d-block">Admin</span>
@@ -70,11 +70,21 @@
                         </li>
                         
                         <li class="dropdown-item ">
-                            <a href="https://docs.dotkernel.org/frontend/" class="nav-link d-flex gap-4 align-items-center">
+                            <a href="https://docs.dotkernel.org/frontend-documentation/" class="nav-link d-flex gap-4 align-items-center">
                                 <img alt="DotKernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
                                 <div>
                                     <span class="fw-bold d-block">Frontend</span>
                                     <span>DotKernel Frontend application</span>
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="dropdown-item ">
+                            <a href="https://docs.dotkernel.org/light-documentation/" class="nav-link d-flex gap-4 align-items-center">
+                                <img alt="DotKernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
+                                <div>
+                                    <span class="fw-bold d-block">Light</span>
+                                    <span>DotKernel Light application</span>
                                 </div>
                             </a>
                         </li>
@@ -85,6 +95,16 @@
                                 <div>
                                     <span class="fw-bold d-block">Packages</span>
                                     <span>DotKernel packages</span>
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="dropdown-item ">
+                            <a href="https://docs.dotkernel.org/development/" class="nav-link d-flex gap-4 align-items-center">
+                                <img alt="DotKernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
+                                <div>
+                                    <span class="fw-bold d-block">Development</span>
+                                    <span>WSL2 Development Environment</span>
                                 </div>
                             </a>
                         </li>
@@ -295,54 +315,74 @@ $lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();<
         
         <footer class="footer">
     <div class="container">
-
         <div class="row">
             <div class="col-md-9">
                 <div class="footer_head">
-                    <p>DotKernel</p>
+                    <p>Dotkernel</p>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 dk_widget">
-                        <p>DotKernel Frontend</p>
-                        <a href="https://docs.dotkernel.org/frontend/" target="_blank">
+                        <p>Dotkernel API</p>
+
+                        <a href="https://docs.dotkernel.org/api-documentation/">
                             <i class="bi bi-arrow-return-right"></i>
-                            DotKernel web starter project suitable for frontend applications
+                            Dotkernel web starter project suitable for building RESTful APIs
                         </a>
                     </div>
 
                     <div class="col-md-6 dk_widget">
-                        <p>DotKernel API</p>
-                        <a href="https://docs.dotkernel.org/api-documentation/" target="_blank">
+                        <p>Dotkernel Admin</p>
+
+                        <a href="https://docs.dotkernel.org/admin-documentation/">
                             <i class="bi bi-arrow-return-right"></i>
-                            DotKernel web starter project suitable for building RESTful APIs
+                            Dotkernel web starter project suitable for admin applications
                         </a>
                     </div>
 
                     <div class="col-md-6 dk_widget">
-                        <p>DotKernel Admin</p>
+                        <p>Dotkernel Frontend</p>
 
-                        <a href="https://docs.dotkernel.org/admin/" target="_blank">
+                        <a href="https://docs.dotkernel.org/frontend-documentation/">
                             <i class="bi bi-arrow-return-right"></i>
-                            DotKernel web starter project suitable for admin applications
+                            Dotkernel web starter project suitable for frontend applications
                         </a>
                     </div>
 
                     <div class="col-md-6 dk_widget">
-                        <p>DotKernel Packages</p>
-                        <a href="https://docs.dotkernel.org/packages/" target="_blank">
+                        <p>Dotkernel Light</p>
+
+                        <a href="https://docs.dotkernel.org/light-documentation/">
                             <i class="bi bi-arrow-return-right"></i>
-                            DotKernel packages offering a wide range of tools
+                            Dotkernel web starter project suitable for generating a simple website
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>Dotkernel Packages</p>
+
+                        <a href="https://docs.dotkernel.org/packages/">
+                            <i class="bi bi-arrow-return-right"></i>
+                            Dotkernel packages offering a wide range of tools
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>Dotkernel environment</p>
+
+                        <a href="https://docs.dotkernel.org/development/">
+                            <i class="bi bi-arrow-return-right"></i>
+                            Install PHP, Apache, MariaDB, Composer, PhpMyAdmin, Node.js and Git on WSL2
                         </a>
                     </div>
                 </div>
-
             </div>
 
             <div class="col-md-3">
                 <div class="footer_head">
                     <p>Support</p>
                 </div>
+
                 <ul class="support__list">
                     <li class="support__list-item">
                         <a href="https://github.com/dotkernel" class="support__link" title="GitHub" target="_blank">
@@ -350,7 +390,7 @@ $lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();<
                         </a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://dotkernel.slack.com" class="support__link" title="Slack" target="_blank">
+                        <a href="https://dotkernel.slack.com" class="support__link" title="Chat" target="_blank">
                             <i class="bi bi-slack"></i> Slack
                         </a>
                     </li>
@@ -375,7 +415,7 @@ $lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();<
         </div>
 
         <div class="footer_copy">
-            &#169; 2024 by <a href="https://www.dotkernel.com/" target="_blank">DotKernel</a> a collection of PSR-7 Middleware applications and libraries
+            &#169; 2024 Dotkernel
         </div>
     </div>
 </footer>
