@@ -1,14 +1,14 @@
 {
     "name": "dotkernel/dot-mail",
     "type": "library",
-    "description": "Dotkernel mail component based on laminas-mail",
+    "description": "Dotkernel mail component based on symfony mailer",
     "license": "MIT",
     "homepage": "https://github.com/dotkernel/dot-mail",
     "keywords": [
         "mail",
         "services",
-        "laminas",
-        "laminas-mail",
+        "symfony",
+        "mailer",
         "event",
         "dot-event",
         "laminas-dependency"
@@ -30,8 +30,8 @@
         "ext-fileinfo": "*",
         "ext-json": "*",
         "laminas/laminas-servicemanager": "^3.22",
-        "laminas/laminas-mail": "^2.25",
-        "dotkernel/dot-event": "^3.4"
+        "dotkernel/dot-event": "^3.4",
+        "symfony/mailer": "v7.1.6"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^3.0",

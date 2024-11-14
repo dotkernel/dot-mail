@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dot\Mail\Factory;
 
 use DirectoryIterator;
+use Dot\Mail\Email;
 use Dot\Mail\Event\MailEventListenerAwareInterface;
 use Dot\Mail\Event\MailEventListenerInterface;
 use Dot\Mail\Exception\InvalidArgumentException;
@@ -14,15 +15,14 @@ use Dot\Mail\Service\LogServiceInterface;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
 use FilesystemIterator;
-use Laminas\Mail\Message;
-use Laminas\Mail\Transport\File;
-use Laminas\Mail\Transport\Smtp;
-use Laminas\Mail\Transport\TransportInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
 use function explode;
 use function gettype;
@@ -70,6 +70,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
 
         $body = $this->mailOptions->getMessageOptions()->getBody();
+
         $mailService->setBody($body->getContent(), $body->getCharset());
 
         //attach files
@@ -103,14 +104,14 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         return $mailService;
     }
 
-    protected function createMessage(): Message
+    protected function createMessage(): Email
     {
         $options = $this->mailOptions->getMessageOptions();
-        $message = new Message();
+        $message = new Email();
 
         $from = $options->getFrom();
         if (! empty($from)) {
-            $message->setFrom($from, $options->getFromName());
+            $message->addFrom($from);
         }
 
         $replyTo = $options->getReplyTo();
@@ -159,7 +160,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             }
         }
 
-        //check is the adapter is one of Laminas's default adapters
+        //check is the adapter is Symfony default adapter
         if (is_subclass_of($adapter, TransportInterface::class)) {
             return $this->setupTransportConfig(new $adapter());
         }
@@ -176,10 +177,13 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
     protected function setupTransportConfig(TransportInterface $transport): TransportInterface
     {
-        if ($transport instanceof Smtp) {
-            $transport->setOptions($this->mailOptions->getSmtpOptions());
-        } elseif ($transport instanceof File) {
-            $transport->setOptions($this->mailOptions->getFileOptions());
+        if ($transport instanceof SmtpTransport) {
+            $user = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['username'];
+            $pass = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['password'];
+            $port = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['port'];
+            $host = $this->mailOptions->getSmtpOptions()->getHost();
+
+            $transport = Transport::fromDsn('smtp://' . $user . ':' . $pass . '@' . $host . ':' . $port);
         }
 
         return $transport;

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
-use Laminas\Mail\AddressList;
-use Laminas\Mail\Message;
+use Dot\Mail\Email;
 
 use function date;
 use function dirname;
@@ -28,7 +27,7 @@ class LogService implements LogServiceInterface
         $this->config = $config;
     }
 
-    public function sent(Message $message): false|int|null
+    public function sent(Email $message): false|int|null
     {
         /**
          * If empty: logging is disabled
@@ -65,11 +64,11 @@ class LogService implements LogServiceInterface
         return file_put_contents($target, $data, FILE_APPEND);
     }
 
-    public function extractAddresses(AddressList $addressList): array
+    public function extractAddresses(array $addressList): array
     {
         $addresses = [];
         foreach ($addressList as $address) {
-            $addresses[] = sprintf('%s <%s>', trim($address->getName() ?? ''), trim($address->getEmail()));
+            $addresses[] = sprintf('%s <%s>', trim($address->getName() ?? ''), trim($address->getAddress()));
         }
         return $addresses;
     }

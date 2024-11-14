@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
+use Dot\Mail\Email;
 use Dot\Mail\Result\ResultInterface;
-use Laminas\Mail\Message;
-use Laminas\Mail\Transport\TransportInterface;
-use Laminas\Mime\Part as MimePart;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
 interface MailServiceInterface
 {
@@ -15,11 +14,11 @@ interface MailServiceInterface
 
     public function send(): ResultInterface;
 
-    public function getMessage(): Message;
+    public function getMessage(): Email;
 
     public function getTransport(): TransportInterface;
 
-    public function setBody(string|MimePart $body, ?string $charset = null): void;
+    public function setBody(string $body, ?string $charset = null): void;
 
     public function setSubject(string $subject): void;
 
@@ -32,6 +31,4 @@ interface MailServiceInterface
     public function setAttachments(array $paths): void;
 
     public function setTransport(TransportInterface $transport): void;
-
-    public function getFolderGlobalNames(): array|false;
 }

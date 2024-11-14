@@ -1,12 +1,12 @@
 # dot-mail
 
 > [!IMPORTANT]
-> dot-mail is a wrapper on top of [laminas-mail](https://github.com/laminas/laminas-mail)
+> dot-mail is a wrapper on top of [symfony mailer](https://github.com/symfony/mailer)
 
 ## dot-mail badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
@@ -36,7 +36,7 @@ return [
     'dot_mail' => [
         'default' => [
             //...
-            'transport' => Laminas\Mail\Transport\Sendmail::class,
+            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
             //...
         ]
     ]
@@ -65,7 +65,7 @@ return [
     'dot_mail' => [
         'default' => [
             //...
-            'transport' => Laminas\Mail\Transport\Smtp::class,
+            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
             'message_options' => [
                 'from' => '',
                 //...
@@ -165,26 +165,3 @@ return [
 ```
 
 To disable it, set the value of `sent` to `null`.
-
-### Saving a copy of an outgoing mail into a folder
-
-### Valid only for SMTP Transport
-
-First, make sure the `save_sent_message_folder` key is present in config file `mail.local.php` under `dot_mail.default`. Below you can see its placement and default value.
-
-```php
-<?php
-
-return [
-    'dot_mail' => [
-        'default' => [
-        ...
-            'save_sent_message_folder' => ['INBOX.Sent']
-        ],
-    ],
-];
-```
-
-Common folder names are `INBOX`, `INBOX.Archive`, `INBOX.Drafts`, `INBOX.Sent`, `INBOX.Spam`, `INBOX.Trash`. If you have `MailService` available in your class, you can call `$this->mailService->getFolderGlobalNames()` to list the folder global names for the email you are using.
-
-Multiple folders can be added to the `save_sent_message_folder` key to save a copy of the outgoing email in each folder.

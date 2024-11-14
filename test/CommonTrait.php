@@ -94,28 +94,18 @@ trait CommonTrait
 
                     //options that will be used only if Laminas\Mail\Transport\Smtp adapter is used
                     'smtp_options' => [
-                        'host'              => '',
+                        'host'              => 'qwd',
                         'port'              => 587,
                         'connection_class'  => 'login',
                         'connection_config' => [
 
                             //the smtp authentication identity
-                            //'username' => '',
+                            'username' => 'qwd',
 
                             //the smtp authentication credential
-                            //'password' => '',
-                            'ssl' => 'tls',
+                            'password' => 'qwd',
+                            'ssl'      => 'tls',
                         ],
-                    ],
-
-                    //file options that will be used only if the adapter is Laminas\Mail\Transport\File
-                    'file_options' => [
-                        'path' => $this->fileSystem->url() . '/data/mail/output',
-
-                        //a callable that will get the Laminas\Mail\Transport\File object as an argument and should
-                        // return the filename
-                        //if null is used, and empty callable will be used
-                        //'callback' => null,
                     ],
 
                     //listeners to register with the mail service, for mail events
