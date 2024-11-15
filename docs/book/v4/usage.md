@@ -50,7 +50,7 @@ if (! $result->isValid()) {
 }
 ```
 
-**Note : Invalid e-mail messages will not be sent.**
+> Invalid e-mail messages will not be sent.
 
 ## Logging outgoing emails
 

@@ -1,7 +1,7 @@
 # Configuration
 
 Register `dot-mail` in you project by adding `Dot\Mail\ConfigProvider::class` to your configuration aggregator (to `config/config.php` for example).
-After registering the `ConfigProvider` load the configuration file (`config/mail.global.php.dist`) by removing it's `.dist` extension and adding it to the `config/autoload` folder.
+After registering the `ConfigProvider` copy the configuration file `config/mail.global.php.dist` into your project's `config/autoload/` directory as `mail.global.php`.
 
 The resulting `mail.global.php` contains the necessary configurations for all available transport types, message options and logging options in one place. The config file provides a set of default values available to all mails under the `dot-mail.default` key.
 
@@ -30,12 +30,12 @@ The `dot_mail.default.save_sent_message_folder` key may be uncommented when usin
 
 Using `Laminas\Mail\Transport\File` as the transport will require uncommenting the `dot-mail.default.file_options` key.
 
-- Note: the configured path must be a writable directory
+> The configured path must be a writable directory
 
 ```php
 'file_options' => [
-        'path' => 'data/mail/output',
-        //'callback' => null,
+    'path' => 'data/mail/output',
+    //'callback' => null,
 ],
 ```
 

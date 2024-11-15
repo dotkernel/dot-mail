@@ -1,26 +1,14 @@
 # Transports
 
-`dot-mail` can use any transport class that implements `symfony\Component\Mailer\Transport\TransportInterface`, with the standard transport available being:
+`dot-mail` can use any transport class that implements `Symfony\Component\Mailer\Transport\TransportInterface`, with the standard transport available being:
 
-- `Laminas\Mail\Transport\Smtp`
+- `Symfony\Component\Mailer\Transport\Smtp\SmtpTransport,`
+- `Symfony\Component\Mailer\Transport\SendmailTransport,`
 
-- Note: feel free to use any custom transport you desire, provided it implements the mentioned `TransportInterface`.
+> Feel free to use any custom transport you desire, provided it implements the mentioned `TransportInterface`.
+
+`Sendmail` is a wrapper over PHP's `mail()` function, and as such has a different behaviour on Windows than on *nix systems. Using sendmail on Windows **will not work in combination with** `addBcc()`.
+
+- Note: emails sent using the sendmail transport will be more often delivered to SPAM.
 
 `Smtp` connects to the configured SMTP host in order to handle sending emails.
-
-- As the email is not sent, this transport can be helpful in development, with the access to the message being potentially useful in tests as well
-
-```php
-$this->mailService->setBody('First email body');
-$this->mailService->setSubject('First email subject');
-$this->mailService->getMessage()->setTo('email@example.com');
-// The email is not sent to the email, instead it is stored in memory
-$this->mailService->send();
-
-$this->mailService->setBody('Second email body');
-$this->mailService->setSubject('Second email subject');
-$this->mailService->getMessage()->setTo('email@example.com');
-
-// The email is not sent to the email either, it overwrites the previously "sent" email in memory
-$this->mailService->send();
-```

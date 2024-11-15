@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace DotTest\Mail;
 
-use Laminas\Mail\Transport\Smtp;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
 
 trait CommonTrait
 {
@@ -50,17 +50,15 @@ trait CommonTrait
 
                     /**
                      * the mail transport to use
-                     * can be any class implementing Laminas\Mail\Transport\TransportInterface
+                     * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
                      *
                      * for standard mail transports, you can use these aliases
-                     * - sendmail => Laminas\Mail\Transport\Sendmail
-                     * - smtp => Laminas\Mail\Transport\Smtp
-                     * - file => Laminas\Mail\Transport\File
-                     * - in_memory => Laminas\Mail\Transport\InMemory
+                     * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
+                     * - smtp     => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
                      *
                      * defaults to sendmail
                      **/
-                    'transport' => Smtp::class,
+                    'transport' => SmtpTransport::class,
 
                     // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
                     // Valid only if the Transport is SMTP
@@ -92,7 +90,8 @@ trait CommonTrait
                         ],
                     ],
 
-                    //options that will be used only if Laminas\Mail\Transport\Smtp adapter is used
+                    //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
+                    // adapter is used
                     'smtp_options' => [
                         'host'              => 'qwd',
                         'port'              => 587,

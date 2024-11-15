@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dot\Mail\Options;
 
 use Laminas\Stdlib\AbstractOptions;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
@@ -22,7 +23,10 @@ class MailOptions extends AbstractOptions
     protected array $eventListeners                = [];
     protected array $saveSentMessageFolder         = [];
     protected TransportInterface|string $transport = SmtpTransport::class;
-    protected array $transportMap                  = ['smtp' => [SmtpTransport::class]];
+    protected array $transportMap                  = [
+        'smtp'     => [SmtpTransport::class],
+        'sendmail' => [SendmailTransport::class],
+    ];
     protected MessageOptions $messageOptions;
     protected SmtpOptions $smtpOptions;
 

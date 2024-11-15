@@ -11,6 +11,7 @@
         "mailer",
         "event",
         "dot-event",
+        "laminas",
         "laminas-dependency"
     ],
     "authors": [
