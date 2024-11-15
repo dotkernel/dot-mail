@@ -180,7 +180,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         if ($transport instanceof SmtpTransport) {
             $user = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['username'];
             $pass = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['password'];
-            $port = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['port'];
+            $port = $this->mailOptions->getSmtpOptions()->getPort();
             $host = $this->mailOptions->getSmtpOptions()->getHost();
 
             $transport = Transport::fromDsn('smtp://' . $user . ':' . $pass . '@' . $host . ':' . $port);
