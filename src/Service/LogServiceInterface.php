@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
-use Laminas\Mail\Message;
+use Dot\Mail\Email;
 
 interface LogServiceInterface
 {
-    public function sent(Message $message): false|int|null;
+    public function sent(Email $message): false|int|null;
 }

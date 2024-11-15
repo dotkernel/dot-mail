@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace DotTest\Mail\Service;
 
+use Dot\Mail\Email;
 use Dot\Mail\Service\LogService;
 use DotTest\Mail\CommonTrait;
-use Laminas\Mail\AddressList;
-use Laminas\Mail\Message;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mime\Address;
 
 use function file_get_contents;
 use function is_file;
@@ -42,9 +42,11 @@ class LogServiceTest extends TestCase
 
     public function testExtractAddresses(): void
     {
-        $addressList = (new AddressList())->add('test1@dotkernel.com', '  dot test     ')
-            ->add('test2@dotkernel.com', ' mail test     ')
-            ->add('test3@dotkernel.com');
+        $addressList = [
+            new Address('test1@dotkernel.com', 'dot test'),
+            new Address('test2@dotkernel.com', 'mail test'),
+            new Address('test3@dotkernel.com'),
+        ];
 
         $results = $this->logService->extractAddresses($addressList);
 
@@ -59,13 +61,10 @@ class LogServiceTest extends TestCase
      */
     public function testSentMailIsLogged(): void
     {
-        $message   = $this->createMock(Message::class);
-        $toAddress = new AddressList();
-        $toAddress->addFromString('testTo@dotkernel.com');
-        $ccAddress = new AddressList();
-        $ccAddress->addFromString('testCc@dotkernel.com');
-        $bccAddress = new AddressList();
-        $bccAddress->addFromString('testBcc@dotkernel.com');
+        $message    = $this->createMock(Email::class);
+        $toAddress  = [new Address('testTo@dotkernel.com')];
+        $ccAddress  = [new Address('testCc@dotkernel.com')];
+        $bccAddress = [new Address('testBcc@dotkernel.com')];
 
         $message->expects($this->once())->method('getSubject')
             ->willReturn('testSubject@dotkernel.com');

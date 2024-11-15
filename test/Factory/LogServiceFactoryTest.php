@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace DotTest\Mail\Factory;
 
+use Dot\Mail\Email;
 use Dot\Mail\Factory\LogServiceFactory;
 use Dot\Mail\Service\LogService;
-use Laminas\Mail\Message;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
@@ -22,7 +22,7 @@ class LogServiceFactoryTest extends TestCase
      */
     public function testServiceCreatedWithoutValidConfig(): void
     {
-        $message    = $this->createMock(Message::class);
+        $message    = $this->createMock(Email::class);
         $container  = $this->createMock(ContainerInterface::class);
         $logService = (new LogServiceFactory())($container);
 

@@ -1,14 +1,12 @@
 # dot-mail
 
 > [!IMPORTANT]
-> dot-mail is a wrapper on top of [laminas-mail](https://github.com/laminas/laminas-mail)
->
-> ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Flaminas%2Flaminas-mail%2Fproperties%2Fvalues&query=%24%5B%3F(%40.property_name%3D%3D%22maintenance-mode%22)%5D.value&label=Maintenance%20Mode&color=%23d43442)
+> dot-mail is a wrapper on top of [symfony mailer](https://github.com/symfony/mailer)
 
 ## dot-mail badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.1.1)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
@@ -18,7 +16,13 @@
 [![Build Static](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-mail/branch/4.0/graph/badge.svg?token=G51NEHYKD3)](https://codecov.io/gh/dotkernel/dot-mail)
 
-[![SymfonyInsight](https://insight.symfony.com/projects/1995ea7c-3b34-4eee-ac48-3571860d0307/big.svg)](https://insight.symfony.com/projects/1995ea7c-3b34-4eee-ac48-3571860d0307)
+## Installation
+
+Install `dotkernel/dot-mail` by executing the following Composer command:
+
+```shell
+composer require dotkernel/dot-mail
+```
 
 ## Configuration
 
@@ -32,7 +36,7 @@ return [
     'dot_mail' => [
         'default' => [
             //...
-            'transport' => Laminas\Mail\Transport\Sendmail::class,
+            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
             //...
         ]
     ]
@@ -61,7 +65,7 @@ return [
     'dot_mail' => [
         'default' => [
             //...
-            'transport' => Laminas\Mail\Transport\Smtp::class,
+            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
             'message_options' => [
                 'from' => '',
                 //...
@@ -137,7 +141,7 @@ if (! $result->isValid()) {
 }
 ```
 
-**Note : Invalid e-mail messages will not be sent.**
+> Invalid e-mail messages will not be sent.
 
 ### Logging outgoing emails
 
@@ -161,26 +165,3 @@ return [
 ```
 
 To disable it, set the value of `sent` to `null`.
-
-### Saving a copy of an outgoing mail into a folder
-
-### Valid only for SMTP Transport
-
-First, make sure the `save_sent_message_folder` key is present in config file `mail.local.php` under `dot_mail.default`. Below you can see its placement and default value.
-
-```php
-<?php
-
-return [
-    'dot_mail' => [
-        'default' => [
-        ...
-            'save_sent_message_folder' => ['INBOX.Sent']
-        ],
-    ],
-];
-```
-
-Common folder names are `INBOX`, `INBOX.Archive`, `INBOX.Drafts`, `INBOX.Sent`, `INBOX.Spam`, `INBOX.Trash`. If you have `MailService` available in your class, you can call `$this->mailService->getFolderGlobalNames()` to list the folder global names for the email you are using.
-
-Multiple folders can be added to the `save_sent_message_folder` key to save a copy of the outgoing email in each folder.

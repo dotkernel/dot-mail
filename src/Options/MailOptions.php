@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Options;
 
-use Laminas\Mail\Transport\File;
-use Laminas\Mail\Transport\FileOptions;
-use Laminas\Mail\Transport\InMemory;
-use Laminas\Mail\Transport\Sendmail;
-use Laminas\Mail\Transport\Smtp;
-use Laminas\Mail\Transport\SmtpOptions;
-use Laminas\Mail\Transport\TransportInterface;
 use Laminas\Stdlib\AbstractOptions;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
+use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
 use function array_key_exists;
 use function class_exists;
@@ -26,16 +22,13 @@ class MailOptions extends AbstractOptions
 {
     protected array $eventListeners                = [];
     protected array $saveSentMessageFolder         = [];
-    protected TransportInterface|string $transport = Sendmail::class;
+    protected TransportInterface|string $transport = SmtpTransport::class;
     protected array $transportMap                  = [
-        'sendmail'  => [Sendmail::class],
-        'smtp'      => [Smtp::class],
-        'in_memory' => [InMemory::class],
-        'file'      => [File::class],
+        'smtp'     => [SmtpTransport::class],
+        'sendmail' => [SendmailTransport::class],
     ];
     protected MessageOptions $messageOptions;
     protected SmtpOptions $smtpOptions;
-    protected FileOptions $fileOptions;
 
     public function getTransportMap(): array
     {
@@ -85,16 +78,6 @@ class MailOptions extends AbstractOptions
     public function setSmtpOptions(array $smtpOptions): void
     {
         $this->smtpOptions = new SmtpOptions($smtpOptions);
-    }
-
-    public function getFileOptions(): FileOptions
-    {
-        return $this->fileOptions;
-    }
-
-    public function setFileOptions(array $fileOptions): void
-    {
-        $this->fileOptions = new FileOptions($fileOptions);
     }
 
     public function getEventListeners(): array

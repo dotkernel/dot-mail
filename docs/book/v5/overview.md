@@ -1,6 +1,6 @@
 # Overview
 
-> dot-mail is a wrapper on top of [laminas-mail](https://github.com/laminas/laminas-mail)
+> dot-mail is a wrapper on top of [symfony mailer](https://github.com/symfony/mailer)
 
 ## Extra features
 

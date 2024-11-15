@@ -21,14 +21,9 @@ $this->mailService->getMessage()->addTo("receiver@email.com");
 ## Transport configuration
 
 `dot-mail` uses the `transport` key under the main `dot_mail` configuration key to select the email transport.
-It has four email transport classes available by default (`Sendmail`, `Smtp`, `File`, `InMemory`), one of which is to be added under the `dot_mail.transport` key for use.
-
-Both `Sendmail` and `InMemory` transports requires no specific configuration to use by default.
+It has four email transport classes available by default (`SmtpTransport`), one of which is to be added under the `dot_mail.transport` key for use.
 
 Sending email with the `Smtp` transport requires valid data for the values under `dot-mail.default.smtp_options`, which is only used in this case.
-The `dot_mail.default.save_sent_message_folder` key may be uncommented when using this transport, saving a copy of all sent email to a certain IMAP folder.
-
-Using `Laminas\Mail\Transport\File` as the transport will require uncommenting the `dot-mail.default.file_options` key.
 
 > The configured path must be a writable directory
 
@@ -37,13 +32,6 @@ Using `Laminas\Mail\Transport\File` as the transport will require uncommenting t
     'path' => 'data/mail/output',
     //'callback' => null,
 ],
-```
-
-- If no callback is provided to specify a new file name format, the messages will be saved in files using the default format set in `Laminas\Mail\Transport\FileOptions`.
-
-```php
-// Example of a custom format
-'callback' => static fn() => sprintf('DotMail%d_%s.log', time(), 'customFormat'),
 ```
 
 ## Logging configuration

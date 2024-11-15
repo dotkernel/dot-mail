@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
+use Dot\Mail\Email;
 use Dot\Mail\Event\MailEvent;
 use Dot\Mail\Event\MailEventListenerAwareInterface;
 use Dot\Mail\Event\MailEventListenerAwareTrait;
@@ -12,39 +13,31 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
 use Exception;
-use finfo;
-use Laminas\Mail\Message;
-use Laminas\Mail\Storage\Imap;
-use Laminas\Mail\Transport\Smtp;
-use Laminas\Mail\Transport\TransportInterface;
-use Laminas\Mime\Message as MimeMessage;
-use Laminas\Mime\Mime;
-use Laminas\Mime\Part as MimePart;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\Part\AbstractPart;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\MixedPart;
 
 use function array_merge;
 use function basename;
 use function count;
-use function fopen;
 use function is_file;
 use function is_string;
-use function strip_tags;
-
-use const FILEINFO_MIME_TYPE;
 
 class MailService implements MailServiceInterface, MailEventListenerAwareInterface
 {
     use MailEventListenerAwareTrait;
 
     protected LogServiceInterface $logService;
-    protected Message $message;
+    protected Email $message;
     protected TransportInterface $transport;
     protected MailOptions $mailOptions;
     protected array $attachments = [];
-    protected ?Imap $storage     = null;
 
     public function __construct(
         LogServiceInterface $logService,
-        Message $message,
+        Email $message,
         TransportInterface $transport,
         MailOptions $mailOptions
     ) {
@@ -55,22 +48,18 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
     }
 
     /**
-     * @throws MailException
+     * @throws MailException|TransportExceptionInterface
      */
     public function send(): ResultInterface
     {
         $result = new MailResult();
-        /*
-         * Enforce the UTF-8 encoding to message body
-         * @see https://github.com/dotkernel/dot-mail/issues/9
-        */
+
         $this->message->setEncoding('utf-8');
         try {
             $this->getEventManager()->triggerEvent($this->createMailEvent());
 
             //attach files before sending
             $this->attachFiles();
-
             $this->getTransport()->send($this->getMessage());
 
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_POST_SEND, $result));
@@ -85,39 +74,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             $this->logService->sent($this->getMessage());
         }
 
-        //save copy of sent message to folders
-        if (
-            $this->mailOptions->getTransport() === Smtp::class
-            && $this->mailOptions->getSaveSentMessageFolder()
-        ) {
-            $this->storage = $this->createStorage();
-            if ($this->storage) {
-                foreach ($this->mailOptions->getSaveSentMessageFolder() as $folder) {
-                    $this->storage->appendMessage($this->getMessage()->toString(), $folder);
-                }
-            }
-        }
-
         return $result;
-    }
-
-    public function createStorage(): ?Imap
-    {
-        $host = $this->mailOptions->getSmtpOptions()->getHost();
-        if (empty($host)) {
-            return null;
-        }
-        $connectionConfig = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
-
-        if (empty($connectionConfig['username']) || empty($connectionConfig['password'])) {
-            return null;
-        }
-
-        return new Imap([
-            'host'     => $host,
-            'user'     => $connectionConfig['username'],
-            'password' => $connectionConfig['password'],
-        ]);
     }
 
     public function createMailEvent(
@@ -131,7 +88,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
         return $event;
     }
 
-    public function attachFiles(): false|Message
+    public function attachFiles(): false|Email
     {
         if (count($this->attachments) === 0) {
             return false;
@@ -139,65 +96,28 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
 
         $mimeMessage = $this->message->getBody();
 
-        if (is_string($mimeMessage)) {
-            $originalBodyPart       = new MimePart($mimeMessage);
-            $originalBodyPart->type = $mimeMessage !== strip_tags($mimeMessage)
-                ? Mime::TYPE_HTML
-                : Mime::TYPE_TEXT;
-
-            $this->setBody($originalBodyPart);
-            $mimeMessage = $this->message->getBody();
-        }
-
-        $oldParts = $mimeMessage->getParts();
-
         //generate a new Part for each attachment
-        $attachmentParts = [];
-        $info            = new finfo(FILEINFO_MIME_TYPE);
-
         foreach ($this->attachments as $key => $attachment) {
             if (! is_file($attachment)) {
                 continue;
             }
-            $basename          = is_string($key) ? $key : basename($attachment);
-            $part              = new MimePart(fopen($attachment, 'r'));
-            $part->id          = $basename;
-            $part->filename    = $basename;
-            $part->type        = $info->file($attachment);
-            $part->encoding    = Mime::ENCODING_BASE64;
-            $part->disposition = Mime::DISPOSITION_ATTACHMENT;
-            $attachmentParts[] = $part;
-        }
-        $body = new MimeMessage();
-        $body->setParts(array_merge($oldParts, $attachmentParts));
+            $basename     = is_string($key) ? $key : basename($attachment);
+            $attachedFile = new DataPart($attachment, $basename, null);
+            $mimeMessage  = new MixedPart($mimeMessage, $attachedFile);
 
-        return $this->message->setBody($body);
+            $this->message->setBody($mimeMessage);
+        }
+
+        return $this->message;
     }
 
-    public function setBody(string|MimePart $body, ?string $charset = null): void
+    public function setBody(string|AbstractPart $body, ?string $charset = null): void
     {
         if (is_string($body)) {
-            //create a mime\part and wrap it into a mime\message
-            $mimePart          = new MimePart($body);
-            $mimePart->type    = $body !== strip_tags($body) ? Mime::TYPE_HTML : Mime::TYPE_TEXT;
-            $mimePart->charset = $charset ?: self::DEFAULT_CHARSET;
-            $body              = new MimeMessage();
-            $body->setParts([$mimePart]);
+            $this->message->html($body);
         } else {
-            if (isset($charset)) {
-                $body->charset = $charset;
-            }
-
-            $mimeMessage = new MimeMessage();
-            $mimeMessage->setParts([$body]);
-            $body = $mimeMessage;
+            $this->message->setBody($body);
         }
-
-        // The headers Content-type and Content-transfer-encoding are duplicated every time the body is set.
-        // Removing them before setting the body prevents this error
-        $this->message->getHeaders()->removeHeader('content-type');
-        $this->message->getHeaders()->removeHeader('content-transfer-encoding');
-        $this->message->setBody($body);
     }
 
     public function createMailResultFromException(Exception $e): ResultInterface
@@ -205,14 +125,14 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
         return new MailResult(false, $e->getMessage(), $e);
     }
 
-    public function getMessage(): Message
+    public function getMessage(): Email
     {
         return $this->message;
     }
 
     public function setSubject(string $subject): void
     {
-        $this->message->setSubject($subject);
+        $this->message->subject($subject);
     }
 
     public function addAttachment(string $path, ?string $filename = null): void
@@ -247,34 +167,5 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
     public function setTransport(TransportInterface $transport): void
     {
         $this->transport = $transport;
-    }
-
-    public function getStorage(): ?Imap
-    {
-        return $this->storage;
-    }
-
-    public function setStorage(?Imap $storage): void
-    {
-        $this->storage = $storage;
-    }
-
-    public function getFolderGlobalNames(): array|false
-    {
-        $this->storage ?? $this->createStorage();
-        if (! $this->storage) {
-            return false;
-        }
-        $folderGlobalNames = [];
-
-        foreach ($this->getStorage()->getFolders() as $folder) {
-            $folderGlobalNames[] = $folder->getGlobalName();
-        }
-
-        foreach ($this->getStorage()->getFolders()->getChildren() as $folder) {
-            $folderGlobalNames[] = $folder->getGlobalName();
-        }
-
-        return $folderGlobalNames;
     }
 }

@@ -3,7 +3,7 @@
 return [
 
     /**
-     * DotKernel mail module configuration
+     * Dotkernel mail module configuration
      * Note that many of these options can be set programmatically too, when sending mail messages
      * actually that is what you'll usually do, these config provide just default and options that remain the same for all mails
      */
@@ -16,18 +16,16 @@ return [
 
             /**
              * the mail transport to use
-             * can be any class implementing Laminas\Mail\Transport\TransportInterface
+             * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
              *
              * for standard mail transports, you can use these aliases
-             * - sendmail => Laminas\Mail\Transport\Sendmail
-             * - smtp => Laminas\Mail\Transport\Smtp
-             * - file => Laminas\Mail\Transport\File
-             * - in_memory => Laminas\Mail\Transport\InMemory
+             * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
+             * - smtp     => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
              *
              * defaults to sendmail
              **/
 
-            'transport' => \Laminas\Mail\Transport\Sendmail::class,
+            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
 
             // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
             // Valid only if the Transport is SMTP
@@ -79,7 +77,7 @@ return [
                 ],
             ],
 
-            //options that will be used only if Laminas\Mail\Transport\Smtp adapter is used
+            //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\SmtpTransport adapter is used
             'smtp_options' => [
 
                 //hostname or IP address of the mail server
@@ -105,18 +103,6 @@ return [
                     'ssl' => 'tls',
                 ]
             ],
-
-            //file options that will be used only if the adapter is Laminas\Mail\Transport\File
-            /*'file_options' => [
-
-                //this is the folder where the file is going to be saved
-                //default value is 'data/mail/output'
-                'path' => 'data/mail/output',
-
-                //a callable that will get the Laminas\Mail\Transport\File object as an argument and should return the filename
-                //if null is used, and empty callable will be used
-                //'callback' => null,
-            ],*/
 
             //listeners to register with the mail service, for mail events
             'event_listeners' => [
