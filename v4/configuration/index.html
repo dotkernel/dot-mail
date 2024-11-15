@@ -132,6 +132,35 @@
                 </li>
                 <li class="nav-item">
                     
+<div class="version-selector">
+    <div class="btn-group">
+        <button type="button" class="btn dropdown-toggle bg-light" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
+            
+                v4
+            
+        </button>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
+            
+                
+                    <a href="../../v5/overview/" class="dropdown-item">
+                        
+                            v5
+                        
+                    </a>
+                
+            
+                
+                    <a href="../overview/" class="dropdown-item active">
+                        
+                            v4 (latest)
+                        
+                    </a>
+                
+            
+        </div>
+    </div>
+</div>
+
                 </li>
             </ul>
         </div>
@@ -214,6 +243,14 @@
                     
                 
             
+
+                
+                
+
+                    
+                    
+                
+            
         </ul>
     </div>
 
@@ -256,7 +293,7 @@
 
     <h1 id="configuration">Configuration</h1>
 <p>Register <code>dot-mail</code> in you project by adding <code>Dot\Mail\ConfigProvider::class</code> to your configuration aggregator (to <code>config/config.php</code> for example).
-After registering the <code>ConfigProvider</code> load the configuration file (<code>config/mail.global.php.dist</code>) by removing it's <code>.dist</code> extension and adding it to the <code>config/autoload</code> folder.</p>
+After registering the <code>ConfigProvider</code> copy the configuration file <code>config/mail.global.php.dist</code> into your project's <code>config/autoload/</code> directory as <code>mail.global.php</code>.</p>
 <p>The resulting <code>mail.global.php</code> contains the necessary configurations for all available transport types, message options and logging options in one place. The config file provides a set of default values available to all mails under the <code>dot-mail.default</code> key.</p>
 <p>Many of these options can be programmatically set when sending the actual email.</p>
 <p>An example of this is the <code>dot-mail.default.message_options</code> key, which can be filled in with default message values to be available to all emails.
@@ -273,12 +310,12 @@ It has four email transport classes available by default (<code>Sendmail</code>,
 <p>Sending email with the <code>Smtp</code> transport requires valid data for the values under <code>dot-mail.default.smtp_options</code>, which is only used in this case.
 The <code>dot_mail.default.save_sent_message_folder</code> key may be uncommented when using this transport, saving a copy of all sent email to a certain IMAP folder.</p>
 <p>Using <code>Laminas\Mail\Transport\File</code> as the transport will require uncommenting the <code>dot-mail.default.file_options</code> key.</p>
-<ul>
-<li>Note: the configured path must be a writable directory</li>
-</ul>
+<blockquote>
+<p>The configured path must be a writable directory</p>
+</blockquote>
 <pre class="highlight"><code class="language-php">'file_options' =&gt; [
-        'path' =&gt; 'data/mail/output',
-        //'callback' =&gt; null,
+    'path' =&gt; 'data/mail/output',
+    //'callback' =&gt; null,
 ],</code></pre>
 <ul>
 <li>If no callback is provided to specify a new file name format, the messages will be saved in files using the default format set in <code>Laminas\Mail\Transport\FileOptions</code>.</li>

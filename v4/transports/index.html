@@ -132,6 +132,35 @@
                 </li>
                 <li class="nav-item">
                     
+<div class="version-selector">
+    <div class="btn-group">
+        <button type="button" class="btn dropdown-toggle bg-light" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
+            
+                v4
+            
+        </button>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
+            
+                
+                    <a href="../../v5/overview/" class="dropdown-item">
+                        
+                            v5
+                        
+                    </a>
+                
+            
+                
+                    <a href="../overview/" class="dropdown-item active">
+                        
+                            v4 (latest)
+                        
+                    </a>
+                
+            
+        </div>
+    </div>
+</div>
+
                 </li>
             </ul>
         </div>
@@ -214,6 +243,14 @@
                     
                 
             
+
+                
+                
+
+                    
+                    
+                
+            
         </ul>
     </div>
 
@@ -245,13 +282,11 @@
 <li><code>Laminas\Mail\Transport\Sendmail</code> - the default transport set in the config file</li>
 <li><code>Laminas\Mail\Transport\Smtp</code></li>
 <li><code>Laminas\Mail\Transport\File</code></li>
-<li>
-<p><code>Laminas\Mail\Transport\InMemory</code></p>
-</li>
-<li>
-<p>Note: feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
-</li>
+<li><code>Laminas\Mail\Transport\InMemory</code></li>
 </ul>
+<blockquote>
+<p>Feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
+</blockquote>
 <p><code>Sendmail</code> is a wrapper over PHP's <code>mail()</code> function, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
 <ul>
 <li>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</li>
@@ -300,6 +335,12 @@ $lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();<
 
         
         <li class="page-nav__item">
+            
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../../v5/overview/">
+                    <small class="page-nav__label">Next</small>
+                    Overview
+                    <i class="bi bi-chevron-right"></i>
+                </a>
             
         </li>
     </ul>

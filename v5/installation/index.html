@@ -18,11 +18,11 @@
         <meta name="docsearch:component" content="dot-mail">
 
         
-        <link rel="canonical" href="https://docs.dotkernel.org/dot-mail/v4/usage/">
+        <link rel="canonical" href="https://docs.dotkernel.org/dot-mail/v5/installation/">
         
         <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_docs_favicon_white.svg">
 
-        <title>Usage - dot-mail - DotKernel Documentation</title>
+        <title>Installation - dot-mail - DotKernel Documentation</title>
 
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
@@ -136,13 +136,13 @@
     <div class="btn-group">
         <button type="button" class="btn dropdown-toggle bg-light" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
             
-                v4
+                v5
             
         </button>
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
             
                 
-                    <a href="../../v5/overview/" class="dropdown-item">
+                    <a href="../overview/" class="dropdown-item active">
                         
                             v5
                         
@@ -150,7 +150,7 @@
                 
             
                 
-                    <a href="../overview/" class="dropdown-item active">
+                    <a href="../../v4/overview/" class="dropdown-item">
                         
                             v4 (latest)
                         
@@ -185,7 +185,7 @@
                         
                     
 
-                    <li class="breadcrumb-item active" aria-current="page">Usage</li>
+                    <li class="breadcrumb-item active" aria-current="page">Installation</li>
                 
             
         </ol>
@@ -210,6 +210,14 @@
 
                 
                 
+
+                    
+                    
+                
+            
+
+                
+                
                     
                         
 <li class="subnavigation__list-item ">
@@ -218,8 +226,8 @@
 
                     
                         
-<li class="subnavigation__list-item ">
-    <a href="../installation/" class="subnavigation__link">Installation</a>
+<li class="subnavigation__list-item subnavigation__list-item--active">
+    <a href="./" class="subnavigation__link">Installation</a>
 </li>
 
                     
@@ -230,8 +238,8 @@
 
                     
                         
-<li class="subnavigation__list-item subnavigation__list-item--active">
-    <a href="./" class="subnavigation__link">Usage</a>
+<li class="subnavigation__list-item ">
+    <a href="../usage/" class="subnavigation__link">Usage</a>
 </li>
 
                     
@@ -240,14 +248,6 @@
     <a href="../transports/" class="subnavigation__link">Transports</a>
 </li>
 
-                    
-                
-            
-
-                
-                
-
-                    
                     
                 
             
@@ -263,29 +263,6 @@
 
     
     
-        <div class="toc">
-            <h6 class="toc__headline">On this page</h6>
-            <ul class="toc__list">
-            
-                <li class="toc__entry">
-                    <a href="#sending-an-e-mail" class="toc__link nav-link">Sending an e-mail</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#testing-if-an-e-mail-message-is-valid" class="toc__link nav-link">Testing if an e-mail message is valid</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#logging-outgoing-emails" class="toc__link nav-link">Logging outgoing emails</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#transport-usage" class="toc__link nav-link">Transport usage</a>
-                </li>
-            
-            </ul>
-        </div>
-    
 
                     
                 </div>
@@ -293,55 +270,23 @@
                     
                     
 
+    <div class="alert alert-danger" role="alert">
+        <h4>Caution</h4>
+        <p>
+            The documentation you are viewing is for an older version of this component.<br>
+            <a href="../..">Switch to the latest (v4) version.</a>
+        </p>
+    </div>
+
 
 
 
     
     
 
-    <h1 id="usage">Usage</h1>
-<h2 id="sending-an-e-mail">Sending an e-mail</h2>
-<p>Below is an example of how to use the email in the most basic way. You can add your own code to it e.g. to get the user data from a User object or from a config file, to use a template for the body.</p>
-<p>Note that <code>addTo</code> is only one of the methods available for the <code>Message</code> class returned by <code>getMessage()</code>. Other useful methods that were not included in the example are <code>addCc()</code>, <code>addBcc()</code>, <code>addReplyTo()</code>.</p>
-<p>The returned type is boolean, but if the <code>isValid()</code> method is removed, the returned type becomes <code>MailResult</code> which allows the use of <code>getMessage()</code> for a more detailed error message. See the <code>Testing if an e-mail message is valid</code> section below.</p>
-<pre class="highlight"><code class="language-php">public function sendBasicMail()
-{
-    $this-&gt;mailService-&gt;setBody('Email body');
-    $this-&gt;mailService-&gt;setSubject('Email subject');
-    $this-&gt;mailService-&gt;getMessage()-&gt;addTo('email@example.com', 'User name');
-    $this-&gt;mailService-&gt;getMessage()-&gt;setEncoding('utf-8');
-    return $this-&gt;mailService-&gt;send()-&gt;isValid();
-}</code></pre>
-<p>It's optional, but recommended to call the above function in a <code>try-catch</code> block to display helpful error messages. The next example calls the <code>sendBasicMail</code> function from within <code>UserController</code>, but you can implement it in other controllers, just make sure that the controller's construct also includes the <code>FlashMessenger</code> parameter <code>$messenger</code>.</p>
-<pre class="highlight"><code class="language-php">try {
-    $this-&gt;userService-&gt;sendBasicMail();
-    $this-&gt;messenger-&gt;addSuccess('The mail was sent successfully', 'user-login');
-    //more code...
-} catch (Exception $exception) {
-    $this-&gt;messenger-&gt;addError($exception-&gt;getMessage(), 'user-login');
-    //more code...
-}</code></pre>
-<h2 id="testing-if-an-e-mail-message-is-valid">Testing if an e-mail message is valid</h2>
-<p>After sending an e-mail you can check if the message was valid or not.
-The <code>$this-&gt;mailService-&gt;send()-&gt;isValid()</code> method call will return a boolean value.
-If the returned result is <code>true</code>, the e-mail was valid, otherwise the e-mail was invalid.
-In case your e-mail was invalid, you can check for any errors using <code>$this-&gt;mailService-&gt;send()-&gt;getMessage()</code>.</p>
-<p>Using the below logic will let you determine if a message was valid or not and log it.
-You can implement your own custom error logging logic.</p>
-<pre class="highlight"><code class="language-php">$result = $this-&gt;mailService-&gt;send();
-if (! $result-&gt;isValid()) {
-    //log the error
-    error_log($result-&gt;getMessage());
-}</code></pre>
-<blockquote>
-<p>Invalid e-mail messages will not be sent.</p>
-</blockquote>
-<h2 id="logging-outgoing-emails">Logging outgoing emails</h2>
-<p>Optionally, you can keep a log of each successfully sent email. This might be useful when you need to know if/when a specific email has been sent out to a recipient.</p>
-<p>Logs are stored in the following format: <code>[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account &lt;test@dotkernel.com&gt;"],"cc":[],"bcc":[]}</code>.</p>
-<p>Each email is saved via the <code>dotkernel/dot-log</code> component in the shown <code>JSON</code> format, in the single file configured under the <code>dot-mail.log.sent</code> key. To disable it, set the value of <code>dot-mail.log.sent</code> to <code>null</code>.</p>
-<h2 id="transport-usage">Transport usage</h2>
-<p><a href="../transports/">Transports</a></p>
+    <h1 id="installation">Installation</h1>
+<p>Install <code>dotkernel/dot-mail</code> by executing the following Composer command:</p>
+<pre class="highlight"><code class="language-shell">composer require dotkernel/dot-mail</code></pre>
 
 
 
@@ -351,10 +296,10 @@ if (! $result-&gt;isValid()) {
         
         <li class="page-nav__item">
             
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../configuration/">
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../overview/">
                     <small class="page-nav__label">Previous</small>
                     <i class="bi bi-chevron-left"></i>
-                    Configuration
+                    Overview
                 </a>
             
         </li>
@@ -362,9 +307,9 @@ if (! $result-&gt;isValid()) {
         
         <li class="page-nav__item">
             
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../transports/">
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../configuration/">
                     <small class="page-nav__label">Next</small>
-                    Transports
+                    Configuration
                     <i class="bi bi-chevron-right"></i>
                 </a>
             
