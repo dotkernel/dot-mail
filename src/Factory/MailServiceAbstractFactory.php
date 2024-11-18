@@ -111,7 +111,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
         $from = $options->getFrom();
         if (! empty($from)) {
-            $message->addFrom($from);
+            $message->addFrom($from, $options->getFromName());
         }
 
         $replyTo = $options->getReplyTo();
