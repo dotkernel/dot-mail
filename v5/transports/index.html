@@ -293,7 +293,7 @@
 <blockquote>
 <p>Feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
 </blockquote>
-<p><code>Sendmail</code> is a wrapper over PHP's <code>mail()</code> function, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
+<p>PHP's <code>mail()</code> function is a wrapper over <code>Sendmail</code>, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
 <ul>
 <li>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</li>
 </ul>

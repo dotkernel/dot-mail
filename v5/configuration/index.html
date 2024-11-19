@@ -318,10 +318,6 @@ It has four email transport classes available by default (<code>SmtpTransport</c
 <blockquote>
 <p>The configured path must be a writable directory</p>
 </blockquote>
-<pre class="highlight"><code class="language-php">'file_options' =&gt; [
-    'path' =&gt; 'data/mail/output',
-    //'callback' =&gt; null,
-],</code></pre>
 <h2 id="logging-configuration">Logging configuration</h2>
 <p>Uncommenting the <code>dot-mail.log</code> key will save a copy of all sent emails' subject, recipient addresses, cc and bcc addresses alongside a timestamp.
 In order to enable it, make sure that your <code>mail.local.php</code> has the below <code>log</code> configuration under the <code>dot_mail</code> key:</p>
