@@ -27,13 +27,6 @@ Sending email with the `Smtp` transport requires valid data for the values under
 
 > The configured path must be a writable directory
 
-```php
-'file_options' => [
-    'path' => 'data/mail/output',
-    //'callback' => null,
-],
-```
-
 ## Logging configuration
 
 Uncommenting the `dot-mail.log` key will save a copy of all sent emails' subject, recipient addresses, cc and bcc addresses alongside a timestamp.

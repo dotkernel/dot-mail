@@ -60,11 +60,6 @@ trait CommonTrait
                      **/
                     'transport' => SmtpTransport::class,
 
-                    // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
-                    // Valid only if the Transport is SMTP
-                    // 'save_sent_message_folder' => ['INBOX.Sent'],
-
-                    // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
                     // Valid only if the Transport is SMTP
                     'save_sent_message_folder' => ['INBOX.Sent'],
                     'message_options'          => [
@@ -105,14 +100,6 @@ trait CommonTrait
                             'password' => 'qwd',
                             'ssl'      => 'tls',
                         ],
-                    ],
-
-                    //listeners to register with the mail service, for mail events
-                    'event_listeners' => [
-                        //[
-                        //'type' => 'service or class name',
-                        //'priority' => 1
-                        //],
                     ],
                 ],
                 // option to log the SENT emails

@@ -25,11 +25,7 @@ return [
              * defaults to sendmail
              **/
 
-            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
-
-            // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
-            // Valid only if the Transport is SMTP
-            //'save_sent_message_folder' => ['INBOX.Sent'],
+            'transport' => Symfony\Component\Mailer\Transport\SendmailTransport::class,
 
             //message configuration
             'message_options' => [
@@ -102,14 +98,6 @@ return [
                     //null should be used to disable SSL
                     'ssl' => 'tls',
                 ]
-            ],
-
-            //listeners to register with the mail service, for mail events
-            'event_listeners' => [
-                //[
-                    //'type' => 'service or class name',
-                    //'priority' => 1
-                //],
             ],
         ],
         // option to log the SENT emails
