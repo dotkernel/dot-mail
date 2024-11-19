@@ -25,7 +25,7 @@ return [
              * defaults to sendmail
              **/
 
-            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
+            'transport' => Symfony\Component\Mailer\Transport\SendmailTransport::class,
 
             //message configuration
             'message_options' => [
@@ -98,14 +98,6 @@ return [
                     //null should be used to disable SSL
                     'ssl' => 'tls',
                 ]
-            ],
-
-            //listeners to register with the mail service, for mail events
-            'event_listeners' => [
-                //[
-                    //'type' => 'service or class name',
-                    //'priority' => 1
-                //],
             ],
         ],
         // option to log the SENT emails
