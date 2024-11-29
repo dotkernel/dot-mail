@@ -89,10 +89,10 @@ return [
                 'connection_config' => [
 
                     //the smtp authentication identity
-                    //'username' => '',
+                    'username' => '',
 
                     //the smtp authentication credential
-                    //'password' => '',
+                    'password' => '',
 
                     //the encryption type to be used, ssl or tls
                     //null should be used to disable SSL
