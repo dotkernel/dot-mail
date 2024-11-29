@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /**
@@ -57,17 +59,15 @@ return [
                 //body options - content can be plain text, HTML
                 'body' => [
                     'content' => '',
-
                     'charset' => 'utf-8',
                 ],
 
                 //attachments config
                 'attachments' => [
                     'files' => [],
-
-                    'dir' => [
-                        'iterate' => false,
-                        'path' => 'data/mail/attachments',
+                    'dir'   => [
+                        'iterate'   => false,
+                        'path'      => 'data/mail/attachments',
                         'recursive' => false,
                     ]
                 ],
