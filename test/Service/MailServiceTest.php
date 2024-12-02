@@ -120,7 +120,7 @@ class MailServiceTest extends TestCase
 
         $mimeMessage = new TextPart($stringMessage);
         $this->mailService->setSubject('Test Subject');
-        $this->message->setBody($mimeMessage);
+        $this->mailService->setBody($mimeMessage);
         $this->mailService->addAttachments([
             $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf',
             $this->fileSystem->url() . '/data/mail/attachments/testXlsAttachment.xls',

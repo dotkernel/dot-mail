@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DotTest\Mail\Factory;
 
 use Dot\Mail\Event\AbstractMailEventListener;
+use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Exception\RuntimeException;
 use Dot\Mail\Factory\MailServiceAbstractFactory as Subject;
 use Dot\Mail\Options\AttachmentsOptions;
@@ -201,5 +202,62 @@ class MailServiceAbstractFactoryTest extends TestCase
         $this->assertInstanceOf(MailService::class, $mailService);
         $this->assertInstanceOf(SmtpTransport::class, $mailService->getTransport());
         $this->assertCount(2, $mailService->getAttachments());
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testGenerateServiceInvalidAdapter(): void
+    {
+        $requestedName = 'dot-mail.service.default';
+
+        $this->mailOptions->expects($this->any())
+            ->method('getTransport')
+            ->willReturn('test');
+
+        $this->container->expects($this->atLeastOnce())
+            ->method('get')
+            ->willReturnMap([
+                ['dot-mail.options.default', $this->mailOptions],
+                [LogServiceInterface::class, $this->createMock(LogService::class)],
+                ['Invalid Listener Test', 'Invalid Listener provided'],
+            ]);
+
+        $this->expectException(InvalidArgumentException::class);
+        (new Subject())($this->container, $requestedName);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testGenerateServiceThrowException(): void
+    {
+        $requestedName = 'dot-mail.service.default';
+
+        $this->mailOptions->expects($this->any())
+            ->method('getTransport')
+            ->willReturn(InvalidArgumentException::class);
+
+        $this->container->expects($this->atLeastOnce())
+            ->method('get')
+            ->willReturnMap([
+                ['dot-mail.options.default', $this->mailOptions],
+                [LogServiceInterface::class, $this->createMock(LogService::class)],
+                [SmtpTransport::class, new SmtpTransport()],
+                ['Invalid Listener Test', 'Invalid Listener provided'],
+            ]);
+        $this->container->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                [InvalidArgumentException::class, true],
+                ['Invalid Listener Test', true],
+            ]);
+
+        $this->expectException(InvalidArgumentException::class);
+        (new Subject())($this->container, $requestedName);
     }
 }
