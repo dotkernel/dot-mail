@@ -30,11 +30,8 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
     public function canCreate(ContainerInterface $container, $requestedName): bool
     {
         $parts = explode('.', $requestedName);
-        if (count($parts) !== 3) {
-            return false;
-        }
 
-        if ($parts[0] !== self::DOT_MAIL_PART || $parts[1] !== static::SPECIFIC_PART) {
+        if ($parts[0] !== self::DOT_MAIL_PART || $parts[1] !== static::SPECIFIC_PART || count($parts) !== 3) {
             return false;
         }
 
