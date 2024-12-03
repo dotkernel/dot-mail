@@ -63,4 +63,18 @@ class AbstractMailFactoryTest extends TestCase
         $result = $this->subject->canCreate($container, $requestedName);
         $this->assertTrue($result);
     }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testWillNotCreateRequestedNameFromWrongParts(): void
+    {
+        $container     = $this->createMock(ContainerInterface::class);
+        $requestedName = 'dot-mail.testPart.default.test';
+
+        $result = $this->subject->canCreate($container, $requestedName);
+        $this->assertFalse($result);
+    }
 }

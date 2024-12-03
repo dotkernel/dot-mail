@@ -88,20 +88,22 @@ trait CommonTrait
                     //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
                     // adapter is used
                     'smtp_options' => [
-                        'host'              => 'qwd',
+                        'host'              => 'testHost',
                         'port'              => 587,
                         'connection_class'  => 'login',
                         'connection_config' => [
 
                             //the smtp authentication identity
-                            'username' => 'qwd',
+                            'username' => 'test',
 
                             //the smtp authentication credential
-                            'password' => 'qwd',
+                            'password' => 'testPassword',
                             'ssl'      => 'tls',
                         ],
                     ],
                 ],
+                'test'    => 'string test',
+
                 // option to log the SENT emails
                 'log' => [
                     'sent' => $this->fileSystem->url() . '/log/mail/sent.log',

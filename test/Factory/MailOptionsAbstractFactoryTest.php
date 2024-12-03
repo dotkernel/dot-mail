@@ -55,4 +55,24 @@ class MailOptionsAbstractFactoryTest extends TestCase
 
         $this->assertInstanceOf(MailOptions::class, $subject);
     }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testIsSpecificConfigArray(): void
+    {
+        $defaultName = 'dot-mail.options.test';
+        $container   = $this->createMock(ContainerInterface::class);
+
+        $container->expects($this->once())
+            ->method('get')
+            ->with('config')
+            ->willReturn($this->config);
+
+        $subject = (new MailOptionsAbstractFactory())($container, $defaultName);
+
+        $this->assertInstanceOf(MailOptions::class, $subject);
+    }
 }
