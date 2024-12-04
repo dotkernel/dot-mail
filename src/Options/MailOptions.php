@@ -21,7 +21,6 @@ use function strtolower;
 class MailOptions extends AbstractOptions
 {
     protected array $eventListeners                = [];
-    protected array $saveSentMessageFolder         = [];
     protected TransportInterface|string $transport = SmtpTransport::class;
     protected array $transportMap                  = [
         'smtp'     => [SmtpTransport::class],
