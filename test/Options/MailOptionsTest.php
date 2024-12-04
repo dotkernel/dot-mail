@@ -17,11 +17,11 @@ class MailOptionsTest extends TestCase
     {
         $subject = new MailOptions();
 
-        $transport             = 'smtp';
-        $transportMap          = ['test' => 'array'];
-        $messageOptions        = ['from' => '', 'to' => []];
-        $smtpOptions           = ['host' => '', 'port' => 587];
-        $eventListeners        = [AbstractMailEventListener::class];
+        $transport      = 'smtp';
+        $transportMap   = ['test' => 'array'];
+        $messageOptions = ['from' => '', 'to' => []];
+        $smtpOptions    = ['host' => '', 'port' => 587];
+        $eventListeners = [AbstractMailEventListener::class];
 
         $subject->setTransport($transport);
         $subject->setTransportMap($transportMap);
