@@ -23,7 +23,6 @@ class SmtpOptionsTest extends TestCase
         $this->assertIsString($subject->getName());
         $this->assertIsArray($subject->getConnectionConfig());
         $this->assertIsString($subject->getHost());
-        $this->assertIsString($subject->getConnectionClass());
         $this->assertIsInt($subject->getPort());
         $this->assertIsInt($subject->getConnectionTimeLimit());
 

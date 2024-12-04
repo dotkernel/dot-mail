@@ -89,14 +89,4 @@ class MailOptions extends AbstractOptions
     {
         $this->eventListeners = $eventListeners;
     }
-
-    public function getSaveSentMessageFolder(): array
-    {
-        return $this->saveSentMessageFolder;
-    }
-
-    public function setSaveSentMessageFolder(array $saveSentMessageFolder): void
-    {
-        $this->saveSentMessageFolder = $saveSentMessageFolder;
-    }
 }

@@ -58,11 +58,8 @@ trait CommonTrait
                      *
                      * defaults to sendmail
                      **/
-                    'transport' => SmtpTransport::class,
-
-                    // Valid only if the Transport is SMTP
-                    'save_sent_message_folder' => ['INBOX.Sent'],
-                    'message_options'          => [
+                    'transport'       => SmtpTransport::class,
+                    'message_options' => [
                         'from'          => '',
                         'from_name'     => '',
                         'reply_to'      => '',
@@ -84,21 +81,16 @@ trait CommonTrait
                             ],
                         ],
                     ],
-
                     //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
                     // adapter is used
                     'smtp_options' => [
                         'host'              => 'testHost',
                         'port'              => 587,
-                        'connection_class'  => 'login',
                         'connection_config' => [
-
                             //the smtp authentication identity
                             'username' => 'test',
-
                             //the smtp authentication credential
                             'password' => 'testPassword',
-                            'ssl'      => 'tls',
                         ],
                     ],
                 ],
@@ -108,11 +100,6 @@ trait CommonTrait
                 'log' => [
                     'sent' => $this->fileSystem->url() . '/log/mail/sent.log',
                 ],
-
-                /**
-                 * You can define other mail services here, with the same structure as the default block
-                 * you can even extend from the default block, and overwrite only the differences
-                 */
             ],
         ];
     }

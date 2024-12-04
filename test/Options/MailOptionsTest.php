@@ -22,20 +22,17 @@ class MailOptionsTest extends TestCase
         $messageOptions        = ['from' => '', 'to' => []];
         $smtpOptions           = ['host' => '', 'port' => 587];
         $eventListeners        = [AbstractMailEventListener::class];
-        $saveSentMessageFolder = ['INBOX.Sent'];
 
         $subject->setTransport($transport);
         $subject->setTransportMap($transportMap);
         $subject->setMessageOptions($messageOptions);
         $subject->setSmtpOptions($smtpOptions);
         $subject->setEventListeners($eventListeners);
-        $subject->setSaveSentMessageFolder($saveSentMessageFolder);
 
         $this->assertSame(SmtpTransport::class, $subject->getTransport());
         $this->assertSame($transportMap, $subject->getTransportMap());
         $this->assertInstanceOf(MessageOptions::class, $subject->getMessageOptions());
         $this->assertInstanceOf(SmtpOptions::class, $subject->getSmtpOptions());
         $this->assertSame($eventListeners, $subject->getEventListeners());
-        $this->assertSame($saveSentMessageFolder, $subject->getSaveSentMessageFolder());
     }
 }

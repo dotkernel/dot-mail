@@ -15,7 +15,6 @@ use function sprintf;
 class SmtpOptions extends AbstractOptions
 {
     protected string $name            = 'localhost';
-    protected string $connectionClass = 'smtp';
     protected array $connectionConfig = [];
     protected string $host            = '127.0.0.1';
     protected int $port               = 25;
@@ -33,23 +32,6 @@ class SmtpOptions extends AbstractOptions
     public function setName(string $name): static
     {
         $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * Get connection class
-     */
-    public function getConnectionClass(): string
-    {
-        return $this->connectionClass;
-    }
-
-    /**
-     * Set connection class
-     */
-    public function setConnectionClass(string $connectionClass): static
-    {
-        $this->connectionClass = $connectionClass;
         return $this;
     }
 
