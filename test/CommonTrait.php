@@ -88,7 +88,7 @@ trait CommonTrait
                             'username' => 'test',
                             //the smtp authentication credential
                             'password' => 'testPassword',
-                            'tsl'      => null,
+                            'tls'      => null,
                         ],
                     ],
                 ],

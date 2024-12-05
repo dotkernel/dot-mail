@@ -23,7 +23,7 @@ $this->mailService->getMessage()->addTo("receiver@email.com");
 `dot-mail` uses the `transport` key under the main `dot_mail` configuration key to select the email transport.
 It has two email transport classes available (by default `sendmail`), one of which is to be added under the `dot_mail.transport` key for use.
 
-Sending email with the `Esmtp` transport requires valid data for the values under `dot-mail.default.smtp_options`, which is only used in this case.
+Sending email with the `esmtp` transport requires valid data for the values under `dot-mail.default.smtp_options`, which is only used in this case.
 
 > The configured path must be a writable directory
 
