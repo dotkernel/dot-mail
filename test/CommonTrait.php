@@ -6,7 +6,6 @@ namespace DotTest\Mail;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
 
 trait CommonTrait
 {
@@ -46,17 +45,6 @@ trait CommonTrait
         return [
             'dot_mail' => [
                 'default' => [
-                    /**
-                     * the mail transport to use
-                     * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
-                     *
-                     * for standard mail transports, you can use these aliases
-                     * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
-                     * - smtp     => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
-                     *
-                     * defaults to sendmail
-                     **/
-                    'transport'       => SmtpTransport::class,
                     'message_options' => [
                         'from'          => '',
                         'from_name'     => '',
@@ -79,7 +67,18 @@ trait CommonTrait
                             ],
                         ],
                     ],
-                    //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
+                    /**
+                     * the mail transport to use
+                     * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
+                     *
+                     * for standard mail transports, you can use these aliases
+                     * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
+                     * - esmtp     => Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
+                     *
+                     * defaults to sendmail
+                     **/
+                    'transport' => 'esmtp',
+                    //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
                     // adapter is used
                     'smtp_options' => [
                         'host'              => 'testHost',
@@ -89,11 +88,11 @@ trait CommonTrait
                             'username' => 'test',
                             //the smtp authentication credential
                             'password' => 'testPassword',
+                            'tsl'      => null,
                         ],
                     ],
                 ],
                 'test'    => 'string test',
-
                 // option to log the SENT emails
                 'log' => [
                     'sent' => $this->fileSystem->url() . '/log/mail/sent.log',

@@ -9,7 +9,7 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Options\MessageOptions;
 use Dot\Mail\Options\SmtpOptions;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 
 class MailOptionsTest extends TestCase
 {
@@ -17,7 +17,7 @@ class MailOptionsTest extends TestCase
     {
         $subject = new MailOptions();
 
-        $transport      = 'smtp';
+        $transport      = 'esmtp';
         $transportMap   = ['test' => 'array'];
         $messageOptions = ['from' => '', 'to' => []];
         $smtpOptions    = ['host' => '', 'port' => 587];
@@ -29,7 +29,7 @@ class MailOptionsTest extends TestCase
         $subject->setSmtpOptions($smtpOptions);
         $subject->setEventListeners($eventListeners);
 
-        $this->assertSame(SmtpTransport::class, $subject->getTransport());
+        $this->assertSame(EsmtpTransport::class, $subject->getTransport());
         $this->assertSame($transportMap, $subject->getTransportMap());
         $this->assertInstanceOf(MessageOptions::class, $subject->getMessageOptions());
         $this->assertInstanceOf(SmtpOptions::class, $subject->getSmtpOptions());

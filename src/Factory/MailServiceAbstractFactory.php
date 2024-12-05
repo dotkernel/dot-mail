@@ -21,7 +21,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
 use function explode;
@@ -177,13 +177,14 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
     protected function setupTransportConfig(TransportInterface $transport): TransportInterface
     {
-        if ($transport instanceof SmtpTransport) {
-            $user = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['username'];
-            $pass = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['password'];
-            $port = $this->mailOptions->getSmtpOptions()->getPort();
-            $host = $this->mailOptions->getSmtpOptions()->getHost();
-
-            $transport = Transport::fromDsn('smtp://' . $user . ':' . $pass . '@' . $host . ':' . $port);
+        if ($transport instanceof EsmtpTransport) {
+            $user      = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['username'];
+            $pass      = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['password'];
+            $tls       = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['tls'] === false ? 'false' : null;
+            $port      = $this->mailOptions->getSmtpOptions()->getPort();
+            $host      = $this->mailOptions->getSmtpOptions()->getHost();
+            $transport = Transport::fromDsn('smtp://' . $user . ':' . $pass . '@' . $host . ':' . $port
+                . '?auto_tls=' . $tls);
         }
 
         return $transport;

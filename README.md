@@ -36,14 +36,14 @@ return [
     'dot_mail' => [
         'default' => [
             //...
-            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
+            'transport' => 'sendmail',
             //...
         ]
     ]
 ]
 ```
 
-### Mail - SMTP
+### Mail - ESMTP
 
 If you want your application to send mails on e.g. registration, contact, then edit the file `config/autoload/mail.local.php`.  Set the `transport`, `message_options` and `smtp_options` keys like below.
 
@@ -55,7 +55,8 @@ Under `smtp_options` key:
 
 - `host` - the mail server's hostname or IP address
 - `port` - the mail server's port
-- `connection_config` - fill in the `username`, `password` and `ssl` keys with the login details of the email used in `from` above
+- `connection_config` - fill in the `username` and `password` keys with the login details of the email used in `from` above
+- if you want to disable auto_tls set `tls` key to false
 
 Note: all other keys can be left as is.
 
@@ -65,7 +66,7 @@ return [
     'dot_mail' => [
         'default' => [
             //...
-            'transport' => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport::class,
+            'transport' => 'esmtp'
             'message_options' => [
                 'from' => '',
                 //...
@@ -76,7 +77,7 @@ return [
                 'connection_config' => [
                     'username' => '',
                     'password' => '',
-                    'ssl' => '',
+                    'tls' => null,
                 ]
             ]
             //...

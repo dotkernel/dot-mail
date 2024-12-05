@@ -17,7 +17,7 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\Part\TextPart;
 
@@ -68,7 +68,7 @@ class MailServiceTest extends TestCase
     public function testGettersAndSetters(): void
     {
         $attachments = ['/testAttachment.pdf', '/testDirectory/testAttachment2.xls'];
-        $transport   = $this->createMock(SmtpTransport::class);
+        $transport   = $this->createMock(EsmtpTransport::class);
 
         $this->mailService->setAttachments($attachments);
         $this->mailService->setTransport($transport);
