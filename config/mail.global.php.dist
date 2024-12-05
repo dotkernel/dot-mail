@@ -14,8 +14,6 @@ return [
     'dot_mail' => [
         //the key is the mail service name, this is the default one, which does not extends any configuration
         'default' => [
-            //tells which other mail service configuration to extend
-            'extends' => null,
             /**
              * the mail transport to use
              * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface

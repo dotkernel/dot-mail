@@ -46,8 +46,6 @@ trait CommonTrait
         return [
             'dot_mail' => [
                 'default' => [
-                    'extends' => null,
-
                     /**
                      * the mail transport to use
                      * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
