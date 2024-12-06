@@ -313,8 +313,8 @@ $this-&gt;mailService-&gt;getMessage()-&gt;setTo("receiver@email.com");
 $this-&gt;mailService-&gt;getMessage()-&gt;addTo("receiver@email.com");</code></pre>
 <h2 id="transport-configuration">Transport configuration</h2>
 <p><code>dot-mail</code> uses the <code>transport</code> key under the main <code>dot_mail</code> configuration key to select the email transport.
-It has four email transport classes available by default (<code>SmtpTransport</code>), one of which is to be added under the <code>dot_mail.transport</code> key for use.</p>
-<p>Sending email with the <code>Smtp</code> transport requires valid data for the values under <code>dot-mail.default.smtp_options</code>, which is only used in this case.</p>
+It has two email transport classes available (by default <code>sendmail</code>), one of which is to be added under the <code>dot_mail.transport</code> key for use.</p>
+<p>Sending email with the <code>esmtp</code> transport requires valid data for the values under <code>dot-mail.default.smtp_options</code>, which is only used in this case.</p>
 <blockquote>
 <p>The configured path must be a writable directory</p>
 </blockquote>

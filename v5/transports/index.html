@@ -287,17 +287,17 @@
     <h1 id="transports">Transports</h1>
 <p><code>dot-mail</code> can use any transport class that implements <code>Symfony\Component\Mailer\Transport\TransportInterface</code>, with the standard transport available being:</p>
 <ul>
-<li><code>Symfony\Component\Mailer\Transport\Smtp\SmtpTransport,</code></li>
-<li><code>Symfony\Component\Mailer\Transport\SendmailTransport,</code></li>
+<li><code>esmtp,</code></li>
+<li><code>sendmail,</code></li>
 </ul>
 <blockquote>
 <p>Feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
 </blockquote>
-<p>PHP's <code>mail()</code> function is a wrapper over <code>Sendmail</code>, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
+<p>PHP's <code>mail()</code> function is a wrapper over <code>sendmail</code>, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
 <ul>
 <li>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</li>
 </ul>
-<p><code>Smtp</code> connects to the configured SMTP host in order to handle sending emails.</p>
+<p><code>esmtp</code> connects to the configured SMTP host in order to handle sending emails.</p>
 
 
 
