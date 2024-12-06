@@ -6,7 +6,6 @@ namespace DotTest\Mail;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
 
 trait CommonTrait
 {
@@ -46,23 +45,7 @@ trait CommonTrait
         return [
             'dot_mail' => [
                 'default' => [
-                    'extends' => null,
-
-                    /**
-                     * the mail transport to use
-                     * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
-                     *
-                     * for standard mail transports, you can use these aliases
-                     * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
-                     * - smtp     => Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
-                     *
-                     * defaults to sendmail
-                     **/
-                    'transport' => SmtpTransport::class,
-
-                    // Valid only if the Transport is SMTP
-                    'save_sent_message_folder' => ['INBOX.Sent'],
-                    'message_options'          => [
+                    'message_options' => [
                         'from'          => '',
                         'from_name'     => '',
                         'reply_to'      => '',
@@ -84,35 +67,36 @@ trait CommonTrait
                             ],
                         ],
                     ],
-
-                    //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\SmtpTransport
+                    /**
+                     * the mail transport to use
+                     * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
+                     *
+                     * for standard mail transports, you can use these aliases
+                     * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
+                     * - esmtp     => Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
+                     *
+                     * defaults to sendmail
+                     **/
+                    'transport' => 'esmtp',
+                    //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
                     // adapter is used
                     'smtp_options' => [
                         'host'              => 'testHost',
                         'port'              => 587,
-                        'connection_class'  => 'login',
                         'connection_config' => [
-
                             //the smtp authentication identity
                             'username' => 'test',
-
                             //the smtp authentication credential
                             'password' => 'testPassword',
-                            'ssl'      => 'tls',
+                            'tls'      => null,
                         ],
                     ],
                 ],
                 'test'    => 'string test',
-
                 // option to log the SENT emails
                 'log' => [
                     'sent' => $this->fileSystem->url() . '/log/mail/sent.log',
                 ],
-
-                /**
-                 * You can define other mail services here, with the same structure as the default block
-                 * you can even extend from the default block, and overwrite only the differences
-                 */
             ],
         ];
     }

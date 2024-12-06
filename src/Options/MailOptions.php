@@ -6,7 +6,7 @@ namespace Dot\Mail\Options;
 
 use Laminas\Stdlib\AbstractOptions;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
-use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
 use function array_key_exists;
@@ -21,10 +21,9 @@ use function strtolower;
 class MailOptions extends AbstractOptions
 {
     protected array $eventListeners                = [];
-    protected array $saveSentMessageFolder         = [];
-    protected TransportInterface|string $transport = SmtpTransport::class;
+    protected TransportInterface|string $transport = EsmtpTransport::class;
     protected array $transportMap                  = [
-        'smtp'     => [SmtpTransport::class],
+        'esmtp'    => [EsmtpTransport::class],
         'sendmail' => [SendmailTransport::class],
     ];
     protected MessageOptions $messageOptions;
@@ -88,15 +87,5 @@ class MailOptions extends AbstractOptions
     public function setEventListeners(array $eventListeners): void
     {
         $this->eventListeners = $eventListeners;
-    }
-
-    public function getSaveSentMessageFolder(): array
-    {
-        return $this->saveSentMessageFolder;
-    }
-
-    public function setSaveSentMessageFolder(array $saveSentMessageFolder): void
-    {
-        $this->saveSentMessageFolder = $saveSentMessageFolder;
     }
 }

@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 
 class MailServiceAbstractFactoryTest extends TestCase
 {
@@ -91,7 +91,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturn($this->messageOptions);
         $this->mailOptions->expects($this->any())
             ->method('getTransport')
-            ->willReturn($this->createMock(SmtpTransport::class));
+            ->willReturn($this->createMock(EsmtpTransport::class));
         $this->mailOptions->expects($this->any())
             ->method('getEventListeners')
             ->willReturn([AbstractMailEventListener::class]);
@@ -116,7 +116,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturn([
                 'username' => 'test',
                 'password' => 'testPassword',
-                'port'     => 587,
+                'tls'      => null,
             ]);
 
         $this->smtpOptions->expects($this->once())
@@ -129,7 +129,7 @@ class MailServiceAbstractFactoryTest extends TestCase
 
         $mailService = (new Subject())($this->container, $requestedName);
         $this->assertInstanceOf(MailService::class, $mailService);
-        $this->assertInstanceOf(SmtpTransport::class, $mailService->getTransport());
+        $this->assertInstanceOf(EsmtpTransport::class, $mailService->getTransport());
     }
 
     /**
@@ -159,7 +159,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturn($this->messageOptions);
         $this->mailOptions->expects($this->any())
             ->method('getTransport')
-            ->willReturn(SmtpTransport::class);
+            ->willReturn(EsmtpTransport::class);
         $this->mailOptions->expects($this->any())
             ->method('getEventListeners')
             ->willReturn(['Invalid Listener Test']);
@@ -169,13 +169,13 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
                 [LogServiceInterface::class, $this->createMock(LogService::class)],
-                [SmtpTransport::class, new SmtpTransport()],
+                [EsmtpTransport::class, new EsmtpTransport()],
                 ['Invalid Listener Test', 'Invalid Listener provided'],
             ]);
         $this->container->expects($this->any())
             ->method('has')
             ->willReturnMap([
-                [SmtpTransport::class, true],
+                [EsmtpTransport::class, true],
                 ['Invalid Listener Test', true],
             ]);
 
@@ -184,7 +184,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturn([
                 'username' => 'test',
                 'password' => 'testPassword',
-                'port'     => 587,
+                'tls'      => false,
             ]);
 
         $this->smtpOptions->expects($this->once())
@@ -200,7 +200,7 @@ class MailServiceAbstractFactoryTest extends TestCase
         $mailService = (new Subject())($this->container, $requestedName);
 
         $this->assertInstanceOf(MailService::class, $mailService);
-        $this->assertInstanceOf(SmtpTransport::class, $mailService->getTransport());
+        $this->assertInstanceOf(EsmtpTransport::class, $mailService->getTransport());
         $this->assertCount(2, $mailService->getAttachments());
     }
 
@@ -247,7 +247,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
                 [LogServiceInterface::class, $this->createMock(LogService::class)],
-                [SmtpTransport::class, new SmtpTransport()],
+                [EsmtpTransport::class, new EsmtpTransport()],
                 ['Invalid Listener Test', 'Invalid Listener provided'],
             ]);
         $this->container->expects($this->any())
