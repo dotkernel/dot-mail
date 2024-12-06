@@ -3,14 +3,13 @@
 declare(strict_types=1);
 
 return [
-
     /**
      * Dotkernel mail module configuration
      * Note that many of these options can be set programmatically too, when sending mail messages actually that is
-     * what you'll usually do, these config provide just default and options that remain the same for all mails
+     * what you'll usually do, these configs provide just defaults and options that remain the same for all mails
      */
     'dot_mail' => [
-        //the key is the mail service name, this is the default one, which does not extends any configuration
+        //the key is the mail service name, this is the default one, which does not extend any configuration
         'default' => [
             //message configuration
             'message_options' => [
@@ -46,17 +45,17 @@ return [
                 ],
             ],
             /**
-             * the mail transport to use
-             * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
+             * the mail transport to use can be any class implementing
+             * Symfony\Component\Mailer\Transport\TransportInterface
              *
-             * for standard mail transports, you can use these aliases
-             * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
+             * for standard mail transports, you can use these aliases:
+             * - sendmail  => Symfony\Component\Mailer\Transport\SendmailTransport
              * - esmtp     => Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
              *
              * defaults to sendmail
              **/
             'transport' => 'sendmail',
-            //options that will be used only if esmtp  adapter is used
+            //options that will be used only if esmtp adapter is used
             'smtp_options' => [
                 //hostname or IP address of the mail server
                 'host' => '',
@@ -68,7 +67,7 @@ return [
                     //the smtp authentication credential
                     'password' => '',
                     //to disable auto_tls set tls key to false
-                    //it's not recommended to disable TLS while connecting to an SMTP server over the Internet
+                    //it's not recommended to disable TLS while connecting to an SMTP server
                     'tls' => null,
                 ],
             ],
