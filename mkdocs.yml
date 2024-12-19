@@ -4,8 +4,8 @@ extra:
   project: Packages
   current_version: v5
   versions:
-    - v4
     - v5
+    - v4
 nav:
   - Home: index.md
   - v4:
