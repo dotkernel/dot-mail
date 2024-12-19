@@ -56,7 +56,11 @@ if (! $result->isValid()) {
 
 Optionally, you can keep a log of each successfully sent email. This might be useful when you need to know if/when a specific email has been sent out to a recipient.
 
-Logs are stored in the following format: `[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account <test@dotkernel.com>"],"cc":[],"bcc":[]}`.
+Logs are stored in the following format:
+
+```text
+[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account <test@dotkernel.com>"],"cc":[],"bcc":[]}.
+```
 
 Each email is saved via the `dotkernel/dot-log` component in the shown `JSON` format, in the single file configured under the `dot-mail.log.sent` key. To disable it, set the value of `dot-mail.log.sent` to `null`.
 

@@ -58,7 +58,7 @@ Under `smtp_options` key:
 - `connection_config` - fill in the `username` and `password` keys with the login details of the email used in `from` above
 - if you want to disable auto_tls set `tls` key to false
 
-Note: all other keys can be left as is.
+> Note: all other keys can be left as is.
 
 ```php
 <?php
@@ -88,7 +88,7 @@ return [
 
 In `config/autoload/local.php` add under `contact` => `message_receivers` => `to` key *string* values with the emails that should receive contact messages
 
-Note: **Please add at least 1 email address in order for contact message to reach someone**
+> Note: **Please add at least 1 email address in order for contact message to reach someone**
 
 Also feel free to add as many cc as you want under `contact` => `message_receivers` => `cc` key
 
@@ -148,7 +148,11 @@ if (! $result->isValid()) {
 
 Optionally, you can keep a log of each successfully sent email. This might be useful when you need to know if/when a specific email has been sent out to a recipient.
 
-Logs are stored in the following format: `[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account <test@dotkernel.com>"],"cc":[],"bcc":[]}`.
+Logs are stored in the following format:
+
+```text
+[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account <test@dotkernel.com>"],"cc":[],"bcc":[]}.
+```
 
 In order to enable it, make sure that your `config/autoload/mail.local.php` has the below `log` configuration under the `dot_mail` key:
 
