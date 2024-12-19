@@ -13,7 +13,7 @@
         
             
         
-        <meta name="docsearch:version" content="4.0.0,latest">
+        <meta name="docsearch:version" content="5.0.0,latest">
         <meta name="docsearch:language" content="en">
         <meta name="docsearch:component" content="dot-mail">
 
@@ -144,7 +144,7 @@
                 
                     <a href="../overview/" class="dropdown-item active">
                         
-                            v5
+                            v5 (latest)
                         
                     </a>
                 
@@ -152,7 +152,7 @@
                 
                     <a href="../../v4/overview/" class="dropdown-item">
                         
-                            v4 (latest)
+                            v4
                         
                     </a>
                 
@@ -293,14 +293,6 @@
                     
                     
 
-    <div class="alert alert-danger" role="alert">
-        <h4>Caution</h4>
-        <p>
-            The documentation you are viewing is for an older version of this component.<br>
-            <a href="../..">Switch to the latest (v4) version.</a>
-        </p>
-    </div>
-
 
 
 
@@ -346,7 +338,8 @@ if (! $result-&gt;isValid()) {
 </blockquote>
 <h2 id="logging-outgoing-emails">Logging outgoing emails</h2>
 <p>Optionally, you can keep a log of each successfully sent email. This might be useful when you need to know if/when a specific email has been sent out to a recipient.</p>
-<p>Logs are stored in the following format: <code>[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account &lt;test@dotkernel.com&gt;"],"cc":[],"bcc":[]}</code>.</p>
+<p>Logs are stored in the following format:</p>
+<pre class="highlight"><code class="language-text">[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account &lt;test@dotkernel.com&gt;"],"cc":[],"bcc":[]}.</code></pre>
 <p>Each email is saved via the <code>dotkernel/dot-log</code> component in the shown <code>JSON</code> format, in the single file configured under the <code>dot-mail.log.sent</code> key. To disable it, set the value of <code>dot-mail.log.sent</code> to <code>null</code>.</p>
 <h2 id="transport-usage">Transport usage</h2>
 <p><a href="../transports/">Transports</a></p>

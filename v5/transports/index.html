@@ -13,7 +13,7 @@
         
             
         
-        <meta name="docsearch:version" content="4.0.0,latest">
+        <meta name="docsearch:version" content="5.0.0,latest">
         <meta name="docsearch:language" content="en">
         <meta name="docsearch:component" content="dot-mail">
 
@@ -144,7 +144,7 @@
                 
                     <a href="../overview/" class="dropdown-item active">
                         
-                            v5
+                            v5 (latest)
                         
                     </a>
                 
@@ -152,7 +152,7 @@
                 
                     <a href="../../v4/overview/" class="dropdown-item">
                         
-                            v4 (latest)
+                            v4
                         
                     </a>
                 
@@ -270,14 +270,6 @@
                     
                     
 
-    <div class="alert alert-danger" role="alert">
-        <h4>Caution</h4>
-        <p>
-            The documentation you are viewing is for an older version of this component.<br>
-            <a href="../..">Switch to the latest (v4) version.</a>
-        </p>
-    </div>
-
 
 
 
@@ -287,16 +279,16 @@
     <h1 id="transports">Transports</h1>
 <p><code>dot-mail</code> can use any transport class that implements <code>Symfony\Component\Mailer\Transport\TransportInterface</code>, with the standard transport available being:</p>
 <ul>
-<li><code>esmtp,</code></li>
-<li><code>sendmail,</code></li>
+<li><code>esmtp</code></li>
+<li><code>sendmail</code></li>
 </ul>
 <blockquote>
 <p>Feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
 </blockquote>
 <p>PHP's <code>mail()</code> function is a wrapper over <code>sendmail</code>, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
-<ul>
-<li>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</li>
-</ul>
+<blockquote>
+<p>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</p>
+</blockquote>
 <p><code>esmtp</code> connects to the configured SMTP host in order to handle sending emails.</p>
 
 
