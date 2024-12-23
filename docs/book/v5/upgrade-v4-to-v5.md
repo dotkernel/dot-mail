@@ -109,7 +109,7 @@ Make sure to use **ONE** of the below transporters, based on your server configu
 'transport' => 'sendmail',
 ```
 
-**OR**
+OR
 
 ```php
 'transport' => 'esmtp',
