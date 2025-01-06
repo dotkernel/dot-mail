@@ -18,11 +18,11 @@
         <meta name="docsearch:component" content="dot-mail">
 
         
-        <link rel="canonical" href="https://docs.dotkernel.org/dot-mail/v5/usage/">
+        <link rel="canonical" href="https://docs.dotkernel.org/dot-mail/v5/upgrade-v4-to-v5/">
         
         <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_docs_favicon_white.svg">
 
-        <title>Usage - dot-mail - DotKernel Documentation</title>
+        <title>Upgrade from V4 to v5 - dot-mail - DotKernel Documentation</title>
 
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
@@ -185,7 +185,7 @@
                         
                     
 
-                    <li class="breadcrumb-item active" aria-current="page">Usage</li>
+                    <li class="breadcrumb-item active" aria-current="page">Upgrade from V4 to v5</li>
                 
             
         </ol>
@@ -238,8 +238,8 @@
 
                     
                         
-<li class="subnavigation__list-item subnavigation__list-item--active">
-    <a href="./" class="subnavigation__link">Usage</a>
+<li class="subnavigation__list-item ">
+    <a href="../usage/" class="subnavigation__link">Usage</a>
 </li>
 
                     
@@ -250,8 +250,8 @@
 
                     
                         
-<li class="subnavigation__list-item ">
-    <a href="../upgrade-v4-to-v5/" class="subnavigation__link">Upgrade from V4 to v5</a>
+<li class="subnavigation__list-item subnavigation__list-item--active">
+    <a href="./" class="subnavigation__link">Upgrade from V4 to v5</a>
 </li>
 
                     
@@ -274,19 +274,7 @@
             <ul class="toc__list">
             
                 <li class="toc__entry">
-                    <a href="#sending-an-e-mail" class="toc__link nav-link">Sending an e-mail</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#testing-if-an-e-mail-message-is-valid" class="toc__link nav-link">Testing if an e-mail message is valid</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#logging-outgoing-emails" class="toc__link nav-link">Logging outgoing emails</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#transport-usage" class="toc__link nav-link">Transport usage</a>
+                    <a href="#technical-approach" class="toc__link nav-link">Technical approach</a>
                 </li>
             
             </ul>
@@ -305,50 +293,111 @@
     
     
 
-    <h1 id="usage">Usage</h1>
-<h2 id="sending-an-e-mail">Sending an e-mail</h2>
-<p>Below is an example of how to use the email in the most basic way. You can add your own code to it e.g. to get the user data from a User object or from a config file, to use a template for the body.</p>
-<p>Note that <code>addTo</code> is only one of the methods available for the <code>Message</code> class returned by <code>getMessage()</code>. Other useful methods that were not included in the example are <code>addCc()</code>, <code>addBcc()</code>, <code>addReplyTo()</code>.</p>
-<p>The returned type is boolean, but if the <code>isValid()</code> method is removed, the returned type becomes <code>MailResult</code> which allows the use of <code>getMessage()</code> for a more detailed error message. See the <code>Testing if an e-mail message is valid</code> section below.</p>
-<pre class="highlight"><code class="language-php">public function sendBasicMail()
-{
-    $this-&gt;mailService-&gt;setBody('Email body');
-    $this-&gt;mailService-&gt;setSubject('Email subject');
-    $this-&gt;mailService-&gt;getMessage()-&gt;addTo('email@example.com', 'User name');
-    $this-&gt;mailService-&gt;getMessage()-&gt;setEncoding('utf-8');
-    return $this-&gt;mailService-&gt;send()-&gt;isValid();
-}</code></pre>
-<p>It's optional, but recommended to call the above function in a <code>try-catch</code> block to display helpful error messages. The next example calls the <code>sendBasicMail</code> function from within <code>UserController</code>, but you can implement it in other controllers, just make sure that the controller's construct also includes the <code>FlashMessenger</code> parameter <code>$messenger</code>.</p>
-<pre class="highlight"><code class="language-php">try {
-    $this-&gt;userService-&gt;sendBasicMail();
-    $this-&gt;messenger-&gt;addSuccess('The mail was sent successfully', 'user-login');
-    //more code...
-} catch (Exception $exception) {
-    $this-&gt;messenger-&gt;addError($exception-&gt;getMessage(), 'user-login');
-    //more code...
-}</code></pre>
-<h2 id="testing-if-an-e-mail-message-is-valid">Testing if an e-mail message is valid</h2>
-<p>After sending an e-mail you can check if the message was valid or not.
-The <code>$this-&gt;mailService-&gt;send()-&gt;isValid()</code> method call will return a boolean value.
-If the returned result is <code>true</code>, the e-mail was valid, otherwise the e-mail was invalid.
-In case your e-mail was invalid, you can check for any errors using <code>$this-&gt;mailService-&gt;send()-&gt;getMessage()</code>.</p>
-<p>Using the below logic will let you determine if a message was valid or not and log it.
-You can implement your own custom error logging logic.</p>
-<pre class="highlight"><code class="language-php">$result = $this-&gt;mailService-&gt;send();
-if (! $result-&gt;isValid()) {
-    //log the error
-    error_log($result-&gt;getMessage());
-}</code></pre>
+    <h1 id="how-to-update-dotkerneldot-mail-from-v3v4-to-v5-in-your-projects">How to update <code>dotkernel/dot-mail</code> from v3/v4 to v5 in your projects</h1>
+<ul>
+<li>The first thing to do is download the new <a href="https://github.com/dotkernel/dot-mail/blob/5.0/config/mail.global.php.dist">mail configuration file</a>.</li>
+<li>Add the values you configured for your project, focusing on <code>transport</code>, <code>message_options</code> and <code>smtp_options</code>, then replace your old configuration file.</li>
+<li>In your <code>composer.json</code> update <code>"dotkernel/dot-mail": "^5.0.0",</code> and run <code>composer update</code> in the command line.</li>
+</ul>
+<p>At this moment, <code>mime</code> and <code>imap</code> related functionality is removed.</p>
+<h2 id="technical-approach">Technical approach</h2>
+<p>You can follow all the changes in this list of PRs:</p>
+<ul>
+<li><a href="https://github.com/dotkernel/dot-mail/pull/65/files">dot-mail PR 65</a></li>
+<li><a href="https://github.com/dotkernel/dot-mail/pull/66/files">dot-mail PR 66</a></li>
+<li><a href="https://github.com/dotkernel/dot-mail/pull/67/files">dot-mail PR 67</a></li>
+<li><a href="https://github.com/dotkernel/dot-mail/pull/69/files">dot-mail PR 69</a></li>
+</ul>
 <blockquote>
-<p>Invalid e-mail messages will not be sent.</p>
+<p>Function definition changes will not be covered in this article.</p>
 </blockquote>
-<h2 id="logging-outgoing-emails">Logging outgoing emails</h2>
-<p>Optionally, you can keep a log of each successfully sent email. This might be useful when you need to know if/when a specific email has been sent out to a recipient.</p>
-<p>Logs are stored in the following format:</p>
-<pre class="highlight"><code class="language-text">[YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account &lt;test@dotkernel.com&gt;"],"cc":[],"bcc":[]}.</code></pre>
-<p>Each email is saved via the <code>dotkernel/dot-log</code> component in the shown <code>JSON</code> format, in the single file configured under the <code>dot-mail.log.sent</code> key. To disable it, set the value of <code>dot-mail.log.sent</code> to <code>null</code>.</p>
-<h2 id="transport-usage">Transport usage</h2>
-<p><a href="../transports/">Transports</a></p>
+<p>When upgrading dotkernel/dot-mail from v4 to v5, the main focus is on the configuration file <code>mail.global.php</code>.
+It was revised to implement symfony/mailer, to remove features that are no longer available and to make dotkernel/dot-mail easier to configure.</p>
+<pre class="highlight"><code class="language-php">?php
+
+declare(strict_types=1);
+
+return [
+    /**
+     * Dotkernel mail module configuration
+     * Note that many of these options can be set programmatically too, when sending mail messages actually that is
+     * what you'll usually do, these configs provide just defaults and options that remain the same for all mails
+     */
+    'dot_mail' =&gt; [
+        //the key is the mail service name, this is the default one, which does not extend any configuration
+        'default' =&gt; [
+            //message configuration
+            'message_options' =&gt; [
+                //from email address of the email
+                'from' =&gt; '',
+                //from name to be displayed instead of from address
+                'from_name' =&gt; '',
+                //reply-to email address of the email
+                'reply_to' =&gt; '',
+                //replyTo name to be displayed instead of the address
+                'reply_to_name' =&gt; '',
+                //destination email address as string or a list of email addresses
+                'to' =&gt; [],
+                //copy destination addresses
+                'cc' =&gt; [],
+                //hidden copy destination addresses
+                'bcc' =&gt; [],
+                //email subject
+                'subject' =&gt; '',
+                //body options - content can be plain text, HTML
+                'body' =&gt; [
+                    'content' =&gt; '',
+                    'charset' =&gt; 'utf-8',
+                ],
+                //attachments config
+                'attachments' =&gt; [
+                    'files' =&gt; [],
+                    'dir'   =&gt; [
+                        'iterate'   =&gt; false,
+                        'path'      =&gt; 'data/mail/attachments',
+                        'recursive' =&gt; false,
+                    ],
+                ],
+            ],
+            /**
+             * the mail transport to use can be any class implementing
+             * Symfony\Component\Mailer\Transport\TransportInterface
+             *
+             * for standard mail transports, you can use these aliases:
+             * - sendmail  =&gt; Symfony\Component\Mailer\Transport\SendmailTransport
+             * - esmtp     =&gt; Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
+             *
+             * defaults to sendmail
+             **/
+            'transport' =&gt; 'sendmail',
+            //options that will be used only if esmtp adapter is used
+            'smtp_options' =&gt; [
+                //hostname or IP address of the mail server
+                'host' =&gt; '',
+                //port of the mail server - 587 or 465 for secure connections
+                'port'              =&gt; 587,
+                'connection_config' =&gt; [
+                    //the smtp authentication identity
+                    'username' =&gt; '',
+                    //the smtp authentication credential
+                    'password' =&gt; '',
+                    //to disable auto_tls set tls key to false
+                    //it's not recommended to disable TLS while connecting to an SMTP server
+                    'tls' =&gt; null,
+                ],
+            ],
+        ],
+        // option to log the SENT emails
+        'log' =&gt; [
+            'sent' =&gt; getcwd() . '/log/mail/sent.log',
+        ],
+    ],
+];</code></pre>
+<p>Make sure to use <strong>ONE</strong> of the below transporters, based on your server configuration.</p>
+<pre class="highlight"><code class="language-php">'transport' =&gt; 'sendmail',</code></pre>
+<p>OR</p>
+<pre class="highlight"><code class="language-php">'transport' =&gt; 'esmtp',</code></pre>
+<p>We set <strong>Sendmail</strong> to be the default.</p>
 
 
 
@@ -358,22 +407,16 @@ if (! $result-&gt;isValid()) {
         
         <li class="page-nav__item">
             
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../configuration/">
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../transports/">
                     <small class="page-nav__label">Previous</small>
                     <i class="bi bi-chevron-left"></i>
-                    Configuration
+                    Transports
                 </a>
             
         </li>
 
         
         <li class="page-nav__item">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../transports/">
-                    <small class="page-nav__label">Next</small>
-                    Transports
-                    <i class="bi bi-chevron-right"></i>
-                </a>
             
         </li>
     </ul>
