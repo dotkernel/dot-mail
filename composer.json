@@ -31,7 +31,7 @@
         "ext-fileinfo": "*",
         "ext-json": "*",
         "laminas/laminas-servicemanager": "^3.22 || ^4.0",
-        "dotkernel/dot-event": "^3.4",
+        "dotkernel/dot-event": "^4.0",
         "symfony/mailer": "v7.1.6"
     },
     "require-dev": {
@@ -54,7 +54,7 @@
         "check": [
             "@cs-check",
             "@test",
-            "static-analysis"
+            "@static-analysis"
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
