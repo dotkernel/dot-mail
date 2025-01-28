@@ -3,7 +3,8 @@
 Register `dot-mail` in you project by adding `Dot\Mail\ConfigProvider::class` to your configuration aggregator (to `config/config.php` for example).
 After registering the `ConfigProvider` copy the configuration file `config/mail.global.php.dist` into your project's `config/autoload/` directory as `mail.global.php`.
 
-The resulting `mail.global.php` contains the necessary configurations for all available transport types, message options and logging options in one place. The config file provides a set of default values available to all mails under the `dot-mail.default` key.
+The resulting `mail.global.php` contains the necessary configurations for all available transport types, message options and logging options in one place.
+The config file provides a set of default values available to all mails under the `dot-mail.default` key.
 
 Many of these options can be programmatically set when sending the actual email.
 
