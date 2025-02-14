@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
+use DateTimeImmutable;
 use Dot\Mail\Email;
 
-use function date;
 use function dirname;
 use function file_exists;
 use function file_put_contents;
@@ -56,7 +56,9 @@ class LogService implements LogServiceInterface
             'cc'      => $this->extractAddresses($message->getCc()),
             'bcc'     => $this->extractAddresses($message->getBcc()),
         ];
-        $data = sprintf('[%s]: %s' . PHP_EOL, date('Y-m-d H:i:s'), json_encode($data));
+
+        $date = new DateTimeImmutable();
+        $data = sprintf('[%s]: %s' . PHP_EOL, $date->format('Y-m-d H:i:s'), json_encode($data));
 
         /**
          * Write the log data and return the result
