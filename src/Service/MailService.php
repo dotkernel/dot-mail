@@ -22,6 +22,7 @@ use Symfony\Component\Mime\Part\Multipart\MixedPart;
 use function array_merge;
 use function basename;
 use function count;
+use function fopen;
 use function is_file;
 use function is_string;
 
