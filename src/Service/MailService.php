@@ -61,6 +61,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             //attach files before sending
             $this->attachFiles();
             $this->getTransport()->send($this->getMessage());
+            $this->getMessage()->setBody(null);
 
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_POST_SEND, $result));
         } catch (Exception $e) {
@@ -102,7 +103,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
                 continue;
             }
             $basename     = is_string($key) ? $key : basename($attachment);
-            $attachedFile = new DataPart($attachment, $basename, null);
+            $attachedFile = new DataPart(fopen($attachment, 'r'), $basename);
             $mimeMessage  = new MixedPart($mimeMessage, $attachedFile);
 
             $this->message->setBody($mimeMessage);
