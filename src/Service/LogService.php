@@ -7,7 +7,6 @@ namespace Dot\Mail\Service;
 use DateTimeImmutable;
 use Dot\Mail\Email;
 
-use function date;
 use function dirname;
 use function file_exists;
 use function file_put_contents;
