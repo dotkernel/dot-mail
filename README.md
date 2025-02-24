@@ -15,6 +15,7 @@
 
 [![Build Static](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-mail/branch/5.0/graph/badge.svg?token=G51NEHYKD3)](https://codecov.io/gh/dotkernel/dot-mail)
+[![PHPStan](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml/badge.svg?branch=5.2)](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml)
 
 ## Installation
 
