@@ -7,7 +7,7 @@
 
 Documentation is available at: https://docs.dotkernel.org/dot-mail/.
 
-## dot-mail badges
+## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
 ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.3.0)
