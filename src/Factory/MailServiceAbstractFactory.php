@@ -31,6 +31,7 @@ use function is_dir;
 use function is_object;
 use function is_string;
 use function is_subclass_of;
+use function rawurlencode;
 use function sprintf;
 
 class MailServiceAbstractFactory extends AbstractMailFactory
