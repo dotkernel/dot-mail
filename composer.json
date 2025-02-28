@@ -32,7 +32,7 @@
         "ext-json": "*",
         "laminas/laminas-servicemanager": "^3.22",
         "dotkernel/dot-event": "^3.4",
-        "symfony/mailer": "v7.1.6"
+        "symfony/mailer": "^v7.1.6"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^3.0",
