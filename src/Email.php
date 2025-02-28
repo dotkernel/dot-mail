@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\LogicException;
+use Symfony\Component\Mime\Header\MailboxListHeader;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\Multipart\AlternativePart;
@@ -46,13 +47,10 @@ class Email extends Message
     private ?string $textCharset = null;
     private ?string $html        = null;
 
-    private ?string $htmlCharset      = null;
-    private array $attachments        = [];
-    private ?AbstractPart $cachedBody = null;
+    private ?string $htmlCharset = null;
+    private array $attachments   = [];
+    private mixed $cachedBody;
 
-    /**
-     * @return $this
-     */
     public function subject(string $subject): static
     {
         return $this->setHeaderBody('Text', 'Subject', $subject);
@@ -63,9 +61,6 @@ class Email extends Message
         return $this->getHeaders()->getHeaderBody('Subject');
     }
 
-    /**
-     * @return $this
-     */
     public function date(DateTimeInterface $dateTime): static
     {
         return $this->setHeaderBody('Date', 'Date', $dateTime);
@@ -76,9 +71,6 @@ class Email extends Message
         return $this->getHeaders()->getHeaderBody('Date');
     }
 
-    /**
-     * @return $this
-     */
     public function returnPath(Address|string $address): static
     {
         return $this->setHeaderBody('Path', 'Return-Path', Address::create($address));
@@ -201,7 +193,7 @@ class Email extends Message
     {
         [$priority] = sscanf($this->getHeaders()->getHeaderBody('X-Priority') ?? '', '%[1-5]');
 
-        return (int) $priority ?? 3;
+        return $priority !== null ? (int) $priority : 3;
     }
 
     public function text(string $body, string $charset = 'utf-8'): static
@@ -315,7 +307,7 @@ class Email extends Message
         return $part ?? new TextPart($this->text, $this->textCharset);
     }
 
-    private function prepareParts(): ?array
+    private function prepareParts(): array
     {
         $names    = [];
         $htmlPart = null;
@@ -373,7 +365,8 @@ class Email extends Message
 
     private function addListAddressHeaderBody(string $name, array $addresses): static
     {
-        if (! $header = $this->getHeaders()->get($name)) {
+        $header = $this->getHeaders()->get($name);
+        if (! $header instanceof MailboxListHeader) {
             return $this->setListAddressHeaderBody($name, $addresses);
         }
         $header->addAddresses(Address::createArray($addresses));
@@ -385,7 +378,7 @@ class Email extends Message
     {
         $addresses = Address::createArray($addresses);
         $headers   = $this->getHeaders();
-        if ($header = $headers->get($name)) {
+        if (($header = $headers->get($name)) instanceof MailboxListHeader) {
             $header->setAddresses($addresses);
         } else {
             $headers->addMailboxListHeader($name, $addresses);

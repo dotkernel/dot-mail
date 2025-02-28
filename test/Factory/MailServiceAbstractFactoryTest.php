@@ -127,7 +127,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->method('getSmtpOptions')
             ->willReturn($this->smtpOptions);
 
-        $mailService = (new Subject())($this->container, $requestedName);
+        $mailService = ($this->subject)($this->container, $requestedName);
         $this->assertInstanceOf(MailService::class, $mailService);
         $this->assertInstanceOf(EsmtpTransport::class, $mailService->getTransport());
     }
@@ -197,7 +197,7 @@ class MailServiceAbstractFactoryTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
-        $mailService = (new Subject())($this->container, $requestedName);
+        $mailService = ($this->subject)($this->container, $requestedName);
 
         $this->assertInstanceOf(MailService::class, $mailService);
         $this->assertInstanceOf(EsmtpTransport::class, $mailService->getTransport());
@@ -226,7 +226,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ]);
 
         $this->expectException(InvalidArgumentException::class);
-        (new Subject())($this->container, $requestedName);
+        ($this->subject)($this->container, $requestedName);
     }
 
     /**
@@ -258,6 +258,6 @@ class MailServiceAbstractFactoryTest extends TestCase
             ]);
 
         $this->expectException(InvalidArgumentException::class);
-        (new Subject())($this->container, $requestedName);
+        ($this->subject)($this->container, $requestedName);
     }
 }
