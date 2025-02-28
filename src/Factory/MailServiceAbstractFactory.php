@@ -31,6 +31,7 @@ use function is_dir;
 use function is_object;
 use function is_string;
 use function is_subclass_of;
+use function rawurlencode;
 use function sprintf;
 
 class MailServiceAbstractFactory extends AbstractMailFactory
@@ -179,7 +180,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     {
         if ($transport instanceof EsmtpTransport) {
             $user      = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['username'];
-            $pass      = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['password'];
+            $pass      = rawurlencode($this->mailOptions->getSmtpOptions()->getConnectionConfig()['password']);
             $tls       = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['tls'] === false ? 'false' : null;
             $port      = $this->mailOptions->getSmtpOptions()->getPort();
             $host      = $this->mailOptions->getSmtpOptions()->getHost();
