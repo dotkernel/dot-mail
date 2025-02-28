@@ -179,7 +179,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     {
         if ($transport instanceof EsmtpTransport) {
             $user      = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['username'];
-            $pass      = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['password'];
+            $pass      = rawurlencode($this->mailOptions->getSmtpOptions()->getConnectionConfig()['password']);
             $tls       = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['tls'] === false ? 'false' : null;
             $port      = $this->mailOptions->getSmtpOptions()->getPort();
             $host      = $this->mailOptions->getSmtpOptions()->getHost();
