@@ -1,6 +1,6 @@
 # Overview
 
-Dotkernel's mail service
+Dotkernel's mail service.
 
 > dot-mail is a wrapper on top of [symfony mailer](https://github.com/symfony/mailer)
 
