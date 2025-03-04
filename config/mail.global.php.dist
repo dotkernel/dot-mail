@@ -66,8 +66,14 @@ return [
                     'username' => '',
                     //the smtp authentication credential
                     'password' => '',
-                    //to disable auto_tls set tls key to false
-                    //it's not recommended to disable TLS while connecting to an SMTP server
+                    /**
+                     * tls will run by default on this component, use:
+                     *
+                     * null  - to avoid interfering with automatic encryption
+                     * false - to disable automatic encryption
+                     *
+                     * It's not recommended to disable TLS while connecting to an SMTP server over the Internet
+                     **/
                     'tls' => null,
                 ],
             ],
