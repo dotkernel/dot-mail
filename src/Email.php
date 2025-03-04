@@ -49,7 +49,6 @@ class Email extends Message
 
     private ?string $htmlCharset = null;
     private array $attachments   = [];
-    private mixed $cachedBody;
 
     public function subject(string $subject): static
     {
@@ -198,7 +197,6 @@ class Email extends Message
 
     public function text(string $body, string $charset = 'utf-8'): static
     {
-        $this->cachedBody  = null;
         $this->text        = $body;
         $this->textCharset = $charset;
 
@@ -229,7 +227,6 @@ class Email extends Message
 
     public function html(string $body, string $charset = 'utf-8'): static
     {
-        $this->cachedBody  = null;
         $this->html        = $body;
         $this->htmlCharset = $charset;
 
@@ -275,10 +272,6 @@ class Email extends Message
 
     private function generateBody(): AbstractPart
     {
-        if (null !== $this->cachedBody) {
-            return $this->cachedBody;
-        }
-
         $this->ensureBodyValid();
 
         [$htmlPart, $otherParts, $relatedParts] = $this->prepareParts();
