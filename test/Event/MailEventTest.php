@@ -29,16 +29,16 @@ class MailEventTest extends TestCase
     {
         $defaultMailEvent = new MailEvent($this->mailService);
 
-        $this->assertInstanceOf(MailEvent::class, $defaultMailEvent);
-        $this->assertInstanceOf(MailServiceInterface::class, $defaultMailEvent->getMailService());
+        $this->assertContainsOnlyInstancesOf(MailEvent::class, [$defaultMailEvent]);
+        $this->assertContainsOnlyInstancesOf(MailServiceInterface::class, [$defaultMailEvent->getMailService()]);
 
         $customMailEvent      = new MailEvent($this->mailService, MailEvent::EVENT_MAIL_SEND_ERROR);
         $mailServiceInterface = $this->createMock(MailServiceInterface::class);
         $customMailEvent->setMailService($mailServiceInterface);
 
-        $this->assertInstanceOf(MailEvent::class, $customMailEvent);
+        $this->assertContainsOnlyInstancesOf(MailEvent::class, [$customMailEvent]);
         $this->assertSame(MailEvent::EVENT_MAIL_SEND_ERROR, $customMailEvent->getName());
-        $this->assertInstanceOf(MailServiceInterface::class, $customMailEvent->getMailService());
+        $this->assertContainsOnlyInstancesOf(MailServiceInterface::class, [$customMailEvent->getMailService()]);
     }
 
     public function testEventPropagation(): void

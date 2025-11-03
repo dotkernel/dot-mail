@@ -53,7 +53,7 @@ class MailOptionsAbstractFactoryTest extends TestCase
 
         $subject = (new MailOptionsAbstractFactory())($container, $defaultName);
 
-        $this->assertInstanceOf(MailOptions::class, $subject);
+        $this->assertContainsOnlyInstancesOf(MailOptions::class, [$subject]);
     }
 
     /**
@@ -73,6 +73,6 @@ class MailOptionsAbstractFactoryTest extends TestCase
 
         $subject = (new MailOptionsAbstractFactory())($container, $defaultName);
 
-        $this->assertInstanceOf(MailOptions::class, $subject);
+        $this->assertContainsOnlyInstancesOf(MailOptions::class, [$subject]);
     }
 }

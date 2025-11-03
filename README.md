@@ -1,12 +1,11 @@
 # dot-mail
 
-> [!IMPORTANT]
 > dot-mail is a wrapper on top of [symfony mailer](https://github.com/symfony/mailer)
 
 ## dot-mail badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.2.1)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.4)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
@@ -15,6 +14,7 @@
 
 [![Build Static](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-mail/branch/5.0/graph/badge.svg?token=G51NEHYKD3)](https://codecov.io/gh/dotkernel/dot-mail)
+[![PHPStan](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml)
 
 ## Installation
 
@@ -28,10 +28,9 @@ composer require dotkernel/dot-mail
 
 ### Mail - Sendmail
 
-If your server has Sendmail installed, update the `config/autoload/mail.local.php.dist` file by setting the `transport` key like below
+If your server has Sendmail installed, update the `config/autoload/mail.local.php.dist` file by setting the `transport` key like below:
 
 ```php
-<?php
 return [
     'dot_mail' => [
         'default' => [
@@ -40,12 +39,13 @@ return [
             //...
         ]
     ]
-]
+];
 ```
 
 ### Mail - ESMTP
 
-If you want your application to send mails on e.g. registration, contact, then edit the file `config/autoload/mail.local.php`.  Set the `transport`, `message_options` and `smtp_options` keys like below.
+If you want your application to send mails on e.g., registration, contact, then edit the file `config/autoload/mail.local.php`.
+Set the `transport`, `message_options` and `smtp_options` keys like below.
 
 Under `message_options` key:
 
@@ -56,12 +56,11 @@ Under `smtp_options` key:
 - `host` - the mail server's hostname or IP address
 - `port` - the mail server's port
 - `connection_config` - fill in the `username` and `password` keys with the login details of the email used in `from` above
-- if you want to disable auto_tls set `tls` key to false
+- if you want to disable `auto_tls` set `tls` key to false
 
-> Note: all other keys can be left as is.
+> All other keys can be left as is.
 
 ```php
-<?php
 return [
     'dot_mail' => [
         'default' => [
@@ -83,22 +82,25 @@ return [
             //...
         ]
     ]
-]
+];
 ```
 
-In `config/autoload/local.php` add under `contact` => `message_receivers` => `to` key *string* values with the emails that should receive contact messages
+In `config/autoload/local.php` add under `contact` => `message_receivers` => `to` key *string* values with the emails that should receive contact messages.
 
-> Note: **Please add at least 1 email address in order for contact message to reach someone**
+> **Please add at least one email address in order for a contact message to reach someone**
 
-Also feel free to add as many cc as you want under `contact` => `message_receivers` => `cc` key
+Also feel free to add as many cc as you want under `contact` => `message_receivers` => `cc` key.
 
 ### Sending an e-mail
 
-Below is an example of how to use the email in the most basic way. You can add your own code to it e.g. to get the user data from a User object or from a config file, to use a template for the body.
+Below is an example of how to use the email in the most basic way.
+You can add your own code to it, e.g., to get the user data from a User object or from a config file, to use a template for the body.
 
-Note that `addTo` is only one of the methods available for the `Message` class returned by `getMessage()`. Other useful methods that were not included in the example are `addCc()`, `addBcc()`, `addReplyTo()`.
+Note that `addTo` is only one of the methods available for the `Message` class returned by `getMessage()`.
+Other useful methods that were not included in the example are `addCc()`, `addBcc()`, `addReplyTo()`.
 
-The returned type is boolean, but if the `isValid()` method is removed, the returned type becomes `MailResult` which allows the use of `getMessage()` for a more detailed error message. See the `Testing if an e-mail message is valid` section below.
+The returned type is boolean, but if the `isValid()` method is removed, the returned type becomes `MailResult` which allows the use of `getMessage()` for a more detailed error message.
+See the `Testing if an e-mail message is valid` section below.
 
 ```php
 public function sendBasicMail()
@@ -111,7 +113,8 @@ public function sendBasicMail()
 }
 ```
 
-It's optional, but recommended to call the above function in a `try-catch` block to display helpful error messages. The next example calls the `sendBasicMail` function from within `UserController`, but you can implement it in other controllers, just make sure that the controller's construct also includes the `FlashMessenger` parameter `$messenger`.
+It's optional but recommended to call the above function in a `try-catch` block to display helpful error messages.
+The next example calls the `sendBasicMail` function from within `UserController`, but you can implement it in other controllers, just make sure that the controller's construct also includes the `FlashMessenger` parameter `$messenger`.
 
 ```php
 try {
@@ -126,7 +129,7 @@ try {
 
 ### Testing if an e-mail message is valid
 
-After sending an e-mail you can check if the message was valid or not.
+After sending an e-mail, you can check if the message was valid or not.
 The `$this->mailService->send()->isValid()` method call will return a boolean value.
 If the returned result is `true`, the e-mail was valid, otherwise the e-mail was invalid.
 In case your e-mail was invalid, you can check for any errors using `$this->mailService->send()->getMessage()`.
@@ -146,7 +149,8 @@ if (! $result->isValid()) {
 
 ### Logging outgoing emails
 
-Optionally, you can keep a log of each successfully sent email. This might be useful when you need to know if/when a specific email has been sent out to a recipient.
+Optionally, you can keep a log of each successfully sent email.
+This might be useful when you need to know if/when a specific email has been sent out to a recipient.
 
 Logs are stored in the following format:
 
@@ -154,11 +158,9 @@ Logs are stored in the following format:
 [YYYY-MM-DD HH:MM:SS]: {"subject":"Test subject","to":["Test Account <test@dotkernel.com>"],"cc":[],"bcc":[]}.
 ```
 
-In order to enable it, make sure that your `config/autoload/mail.local.php` has the below `log` configuration under the `dot_mail` key:
+To enable it, make sure that your `config/autoload/mail.local.php` has the below `log` configuration under the `dot_mail` key:
 
 ```php
-<?php
-
 return [
     'dot_mail' => [
         ...
