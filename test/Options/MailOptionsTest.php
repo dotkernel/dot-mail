@@ -31,8 +31,8 @@ class MailOptionsTest extends TestCase
 
         $this->assertSame(EsmtpTransport::class, $subject->getTransport());
         $this->assertSame($transportMap, $subject->getTransportMap());
-        $this->assertInstanceOf(MessageOptions::class, $subject->getMessageOptions());
-        $this->assertInstanceOf(SmtpOptions::class, $subject->getSmtpOptions());
+        $this->assertContainsOnlyInstancesOf(MessageOptions::class, [$subject->getMessageOptions()]);
+        $this->assertContainsOnlyInstancesOf(SmtpOptions::class, [$subject->getSmtpOptions()]);
         $this->assertSame($eventListeners, $subject->getEventListeners());
     }
 }

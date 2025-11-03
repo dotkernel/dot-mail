@@ -50,11 +50,9 @@ Using `Laminas\Mail\Transport\File` as the transport will require uncommenting t
 ## Logging configuration
 
 Uncommenting the `dot-mail.log` key will save a copy of all sent emails' subject, recipient addresses, cc and bcc addresses alongside a timestamp.
-In order to enable it, make sure that your `mail.local.php` has the below `log` configuration under the `dot_mail` key:
+To enable it, make sure that your `mail.local.php` has the below `log` configuration under the `dot_mail` key:
 
 ```php
-<?php
-
 return [
     'dot_mail' => [
         ...

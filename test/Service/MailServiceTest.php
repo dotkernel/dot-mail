@@ -81,12 +81,12 @@ class MailServiceTest extends TestCase
     public function testCreateMailEvent(): void
     {
         $defaultMailEvent = $this->mailService->createMailEvent();
-        $this->assertInstanceOf(MailEvent::class, $defaultMailEvent);
+        $this->assertContainsOnlyInstancesOf(MailEvent::class, [$defaultMailEvent]);
         $this->assertSame(MailEvent::EVENT_MAIL_PRE_SEND, $defaultMailEvent->getName());
 
         $result    = new MailResult();
         $mailEvent = $this->mailService->createMailEvent('testName', $result);
-        $this->assertInstanceOf(MailEvent::class, $mailEvent);
+        $this->assertContainsOnlyInstancesOf(MailEvent::class, [$mailEvent]);
         $this->assertSame('testName', $mailEvent->getName());
         $this->assertSame(MailResult::DEFAULT_MESSAGE, $mailEvent->getResult()->getMessage());
     }

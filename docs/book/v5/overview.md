@@ -4,4 +4,4 @@
 
 ## Extra features
 
-- the option to log the results of the mailing process it provides the developer with more information and greater control.
+The option to log the results of the mailing process it provides the developer with more information and greater control.
