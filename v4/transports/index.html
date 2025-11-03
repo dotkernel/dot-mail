@@ -27,9 +27,9 @@
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/docs.css">
-        <script src="https://docs.dotkernel.org//js/bootstrap.js" defer></script>
-        <script src="https://docs.dotkernel.org//js/docs.js" defer></script>
-        <script src="https://docs.dotkernel.org//js/scripts.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/bootstrap.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/docs.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/scripts.js" defer></script>
     </head>
     <body data-bs-spy="scroll" data-bs-target=".toc" data-bs-offset="100">
 
@@ -51,60 +51,72 @@
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/api-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">API</span>
-                                    <span>Dotkernel API</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/admin-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Admin</span>
-                                    <span>Dotkernel Admin</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/frontend-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Frontend</span>
-                                    <span>Dotkernel Frontend</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/light-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Light</span>
-                                    <span>Dotkernel Light</span>
                                 </div>
                             </a>
                         </li>
                         
-                        <li class="dropdown-item bg-light">
+                        <li class="dropdown-item ">
+                            <a href="https://docs.dotkernel.org/queue-documentation/" class="nav-link d-flex gap-4 align-items-center">
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
+                                    <span class="fw-bold d-block">Queue</span>
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="dropdown-item bg-dark-subtle">
                             <a href="https://docs.dotkernel.org/packages/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Packages</span>
-                                    <span>Dotkernel packages</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/development/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Development</span>
-                                    <span>WSL2 Development Environment</span>
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="dropdown-item ">
+                            <a href="https://docs.dotkernel.org/headless-documentation/" class="nav-link d-flex gap-4 align-items-center">
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
+                                    <span class="fw-bold d-block">Headless Platform</span>
                                 </div>
                             </a>
                         </li>
@@ -132,34 +144,36 @@
                 </li>
                 <li class="nav-item">
                     
-<div class="version-selector">
-    <div class="btn-group">
-        <button type="button" class="btn dropdown-toggle bg-light" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
-            
-                v4
-            
-        </button>
-        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
-            
+    
+    <div class="version-selector">
+        <div class="btn-group">
+            <button type="button" class="btn dropdown-toggle bg-light" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
                 
-                    <a href="../../v5/overview/" class="dropdown-item">
-                        
-                            v5 (latest)
-                        
-                    </a>
+                    v4
                 
-            
+            </button>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
                 
-                    <a href="../overview/" class="dropdown-item active">
-                        
-                            v4
-                        
-                    </a>
                 
-            
+                <a href="../../v5/overview/" class="dropdown-item">
+                    
+                        v5 (latest)
+                    
+                </a>
+                
+                
+                
+                <a href="../overview/" class="dropdown-item active">
+                    
+                        v4
+                    
+                </a>
+                
+                
+            </div>
         </div>
     </div>
-</div>
+    
 
                 </li>
             </ul>
@@ -210,6 +224,14 @@
 
                 
                 
+
+                    
+                    
+                
+            
+
+                
+                
                     
                         
 <li class="subnavigation__list-item ">
@@ -240,14 +262,6 @@
     <a href="./" class="subnavigation__link">Transports</a>
 </li>
 
-                    
-                
-            
-
-                
-                
-
-                    
                     
                 
             
@@ -294,19 +308,22 @@
 <blockquote>
 <p>Feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
 </blockquote>
-<p><code>Sendmail</code> is a wrapper over PHP's <code>mail()</code> function, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
+<p><code>Sendmail</code> is a wrapper over PHP's <code>mail()</code> function, and as such has a different behavior on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
 <ul>
 <li>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</li>
 </ul>
-<p><code>Smtp</code> connects to the configured SMTP host in order to handle sending emails. Saving a copy of an outgoing mail into a folder is possible for this transport only, and is done by uncommenting <code>save_sent_message_folder</code> in the config file <code>mail.local.php</code> under <code>dot_mail.default</code>.</p>
+<p><code>Smtp</code> connects to the configured SMTP host to handle sending emails.
+Saving a copy of outgoing mail into a folder is possible for this transport only, and is done by uncommenting <code>save_sent_message_folder</code> in the config file <code>mail.local.php</code> under <code>dot_mail.default</code>.</p>
 <ul>
-<li>Common folder names are <code>INBOX</code>, <code>INBOX.Archive</code>, <code>INBOX.Drafts</code>, <code>INBOX.Sent</code>, <code>INBOX.Spam</code>, <code>INBOX.Trash</code>. If you have <code>MailService</code> available in your class, you can call <code>$this-&gt;mailService-&gt;getFolderGlobalNames()</code> to list the folder global names for the email you are using.</li>
+<li>Common folder names are <code>INBOX</code>, <code>INBOX.Archive</code>, <code>INBOX.Drafts</code>, <code>INBOX.Sent</code>, <code>INBOX.Spam</code>, <code>INBOX.Trash</code>.
+  If you have <code>MailService</code> available in your class, you can call <code>$this-&gt;mailService-&gt;getFolderGlobalNames()</code> to list the folder global names for the email you are using.</li>
 <li>Multiple folders can be added to the <code>save_sent_message_folder</code> key to save a copy of the outgoing email in each folder.</li>
 </ul>
-<p><code>File</code> writes each message individually in a file named after the configured format, placed in the configured directory. From here the files may be used for sending via another transport mechanism, or simply as logs.</p>
+<p><code>File</code> writes each message individually in a file named after the configured format, placed in the configured directory.
+From here the files may be used for sending via another transport mechanism, or simply as logs.</p>
 <p><code>InMemory</code> saves the message in memory, allowing access to the last "sent" message via the <code>getLastMessage()</code> function.</p>
 <ul>
-<li>As the email is not sent, this transport can be helpful in development, with the access to the message being potentially useful in tests as well</li>
+<li>As the email is not sent, this transport can be helpful in development, with the access to the message being potentially useful in tests as well.</li>
 </ul>
 <pre class="highlight"><code class="language-php">$this-&gt;mailService-&gt;setBody('First email body');
 $this-&gt;mailService-&gt;setSubject('First email subject');
@@ -341,11 +358,6 @@ $lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();<
 
         
         <li class="col text-nowrap text-md-end pe-0">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../../v5/overview/">
-                    Overview
-                    <i class="bi bi-chevron-right"></i>
-                </a>
             
         </li>
     </ul>
@@ -449,6 +461,11 @@ $lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();<
                             <i class="bi bi-rss-fill"></i> Feed
                         </a>
                     </li>
+                    <li class="support__list-item col-lg-6 mb-md-3">
+                        <a href="https://github.com/orgs/dotkernel/discussions" class="support__link" title="Blog feed" target="_blank">
+                            <i class="bi bi-chat-left-text"></i> Discussions
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -456,7 +473,7 @@ $lastMessage = $this-&gt;mailService()-&gt;getTransport()-&gt;getLastMessage();<
         <hr class="mt-5" />
 
         <div class="footer_copy">
-            &#169; Copyright Dotkernel 2024. All rights reserved.
+            &#169; Copyright Dotkernel <span id="current-year"></span>. All rights reserved.
         </div>
     </div>
 </footer>

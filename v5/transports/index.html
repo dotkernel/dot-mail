@@ -27,9 +27,9 @@
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/docs.css">
-        <script src="https://docs.dotkernel.org//js/bootstrap.js" defer></script>
-        <script src="https://docs.dotkernel.org//js/docs.js" defer></script>
-        <script src="https://docs.dotkernel.org//js/scripts.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/bootstrap.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/docs.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/scripts.js" defer></script>
     </head>
     <body data-bs-spy="scroll" data-bs-target=".toc" data-bs-offset="100">
 
@@ -51,60 +51,72 @@
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/api-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">API</span>
-                                    <span>Dotkernel API</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/admin-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Admin</span>
-                                    <span>Dotkernel Admin</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/frontend-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Frontend</span>
-                                    <span>Dotkernel Frontend</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/light-documentation/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Light</span>
-                                    <span>Dotkernel Light</span>
                                 </div>
                             </a>
                         </li>
                         
-                        <li class="dropdown-item bg-light">
+                        <li class="dropdown-item ">
+                            <a href="https://docs.dotkernel.org/queue-documentation/" class="nav-link d-flex gap-4 align-items-center">
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
+                                    <span class="fw-bold d-block">Queue</span>
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="dropdown-item bg-dark-subtle">
                             <a href="https://docs.dotkernel.org/packages/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Packages</span>
-                                    <span>Dotkernel packages</span>
                                 </div>
                             </a>
                         </li>
                         
                         <li class="dropdown-item ">
                             <a href="https://docs.dotkernel.org/development/" class="nav-link d-flex gap-4 align-items-center">
-                                <img alt="Dotkernel Logo" class="d-inline-block align-text-top" height="50" src="https://docs.dotkernel.org/img/dk_logomark.svg" width="45" />
-                                <div>
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
                                     <span class="fw-bold d-block">Development</span>
-                                    <span>WSL2 Development Environment</span>
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="dropdown-item ">
+                            <a href="https://docs.dotkernel.org/headless-documentation/" class="nav-link d-flex gap-4 align-items-center">
+                                <i class="bi bi-arrow-return-right text-primary"></i>
+                                <div class="py-1">
+                                    <span class="fw-bold d-block">Headless Platform</span>
                                 </div>
                             </a>
                         </li>
@@ -132,34 +144,36 @@
                 </li>
                 <li class="nav-item">
                     
-<div class="version-selector">
-    <div class="btn-group">
-        <button type="button" class="btn dropdown-toggle bg-light" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
-            
-                v5
-            
-        </button>
-        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
-            
+    
+    <div class="version-selector">
+        <div class="btn-group">
+            <button type="button" class="btn dropdown-toggle bg-light" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
                 
-                    <a href="../overview/" class="dropdown-item active">
-                        
-                            v5 (latest)
-                        
-                    </a>
+                    v5
                 
-            
+            </button>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
                 
-                    <a href="../../v4/overview/" class="dropdown-item">
-                        
-                            v4
-                        
-                    </a>
                 
-            
+                <a href="../overview/" class="dropdown-item active">
+                    
+                        v5 (latest)
+                    
+                </a>
+                
+                
+                
+                <a href="../../v4/overview/" class="dropdown-item">
+                    
+                        v4
+                    
+                </a>
+                
+                
+            </div>
         </div>
     </div>
-</div>
+    
 
                 </li>
             </ul>
@@ -210,14 +224,6 @@
 
                 
                 
-
-                    
-                    
-                
-            
-
-                
-                
                     
                         
 <li class="subnavigation__list-item ">
@@ -257,6 +263,14 @@
                     
                 
             
+
+                
+                
+
+                    
+                    
+                
+            
         </ul>
     </div>
 
@@ -291,11 +305,12 @@
 <blockquote>
 <p>Feel free to use any custom transport you desire, provided it implements the mentioned <code>TransportInterface</code>.</p>
 </blockquote>
-<p>PHP's <code>mail()</code> function is a wrapper over <code>sendmail</code>, and as such has a different behaviour on Windows than on <em>nix systems. Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
+<p>PHP's <code>mail()</code> function is a wrapper over <code>sendmail</code>, and as such has a different behavior on Windows than on <em>nix systems.
+Using sendmail on Windows </em><em>will not work in combination with</em>* <code>addBcc()</code>.</p>
 <blockquote>
-<p>Note: emails sent using the sendmail transport will be more often delivered to SPAM.</p>
+<p>Emails sent using the sendmail transport will be more often delivered to SPAM.</p>
 </blockquote>
-<p><code>esmtp</code> connects to the configured SMTP host in order to handle sending emails.</p>
+<p><code>esmtp</code> connects to the configured SMTP host to handle sending emails.</p>
 
 
 
@@ -422,6 +437,11 @@
                             <i class="bi bi-rss-fill"></i> Feed
                         </a>
                     </li>
+                    <li class="support__list-item col-lg-6 mb-md-3">
+                        <a href="https://github.com/orgs/dotkernel/discussions" class="support__link" title="Blog feed" target="_blank">
+                            <i class="bi bi-chat-left-text"></i> Discussions
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -429,7 +449,7 @@
         <hr class="mt-5" />
 
         <div class="footer_copy">
-            &#169; Copyright Dotkernel 2024. All rights reserved.
+            &#169; Copyright Dotkernel <span id="current-year"></span>. All rights reserved.
         </div>
     </div>
 </footer>
