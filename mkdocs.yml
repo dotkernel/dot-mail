@@ -8,12 +8,6 @@ extra:
     - v4
 nav:
   - Home: index.md
-  - v4:
-      - Overview: v4/overview.md
-      - Installation: v4/installation.md
-      - Configuration: v4/configuration.md
-      - Usage: v4/usage.md
-      - Transports: v4/transports.md
   - v5:
       - Overview: v5/overview.md
       - Installation: v5/installation.md
@@ -21,6 +15,12 @@ nav:
       - Usage: v5/usage.md
       - Transports: v5/transports.md
       - Upgrade from V4 to v5: v5/upgrade-v4-to-v5.md
+  - v4:
+      - Overview: v4/overview.md
+      - Installation: v4/installation.md
+      - Configuration: v4/configuration.md
+      - Usage: v4/usage.md
+      - Transports: v4/transports.md
 site_name: dot-mail
 site_description: "Dotkernel's mail service"
 repo_url: "https://github.com/dotkernel/dot-mail"
