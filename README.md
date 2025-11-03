@@ -1,12 +1,11 @@
 # dot-mail
 
-> [!IMPORTANT]
 > dot-mail is a wrapper on top of [symfony mailer](https://github.com/symfony/mailer)
 
-## dot-mail badges
+## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.1.3)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.1.6)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
@@ -15,6 +14,7 @@
 
 [![Build Static](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml/badge.svg?branch=5.1)](https://github.com/dotkernel/dot-mail/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-mail/branch/5.0/graph/badge.svg?token=G51NEHYKD3)](https://codecov.io/gh/dotkernel/dot-mail)
+[![PHPStan](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml/badge.svg?branch=5.1)](https://github.com/dotkernel/dot-mail/actions/workflows/static-analysis.yml)
 
 ## Installation
 

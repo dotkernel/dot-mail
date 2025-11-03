@@ -17,8 +17,8 @@ You can follow all the changes in this list of PRs:
 
 > Function definition changes will not be covered in this article.
 
-When upgrading dotkernel/dot-mail from v4 to v5, the main focus is on the configuration file `mail.global.php`.
-It was revised to implement symfony/mailer, to remove features that are no longer available and to make dotkernel/dot-mail easier to configure.
+When upgrading DotMail from v4 to v5, the main focus is on the configuration file `mail.global.php`.
+It was revised to implement symfony/mailer, to remove features that are no longer available and to make DotMail easier to configure.
 
 ```php
 ?php
@@ -27,9 +27,10 @@ declare(strict_types=1);
 
 return [
     /**
-     * Dotkernel mail module configuration
-     * Note that many of these options can be set programmatically too, when sending mail messages actually that is
-     * what you'll usually do, these configs provide just defaults and options that remain the same for all mails
+     * Dotkernel mail module configuration.
+     * Note that many of these options can be set programmatically too;
+     * when sending mail messages, actually that is what you'll usually do,
+     * these configs provide just defaults and options that remain the same for all mails
      */
     'dot_mail' => [
         //the key is the mail service name, this is the default one, which does not extend any configuration

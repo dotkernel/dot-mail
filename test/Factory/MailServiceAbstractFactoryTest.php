@@ -34,7 +34,6 @@ class MailServiceAbstractFactoryTest extends TestCase
     private SmtpOptions|MockObject $smtpOptions;
     private MessageOptions|MockObject $messageOptions;
     private AttachmentsOptions|MockObject $attachmentsOptions;
-    private Subject $subject;
 
     /**
      * @throws Exception
@@ -60,8 +59,7 @@ class MailServiceAbstractFactoryTest extends TestCase
         $this->messageOptions     = $this->createMock(MessageOptions::class);
         $this->attachmentsOptions = $this->createMock(AttachmentsOptions::class);
 
-        $this->config  = $this->generateConfig();
-        $this->subject = new Subject();
+        $this->config = $this->generateConfig();
     }
 
     /**
