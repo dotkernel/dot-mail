@@ -27,7 +27,7 @@
         }
     },
     "require": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "dotkernel/dot-event": "^4.0",
@@ -59,7 +59,7 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "test": "phpunit --colors=always",
-        "static-analysis": "phpstan analyse --memory-limit 1G"
+        "static-analysis": "phpstan analyse --memory-limit 1G",
+        "test": "phpunit --colors=always"
     }
 }
