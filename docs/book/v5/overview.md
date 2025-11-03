@@ -7,7 +7,7 @@ Dotkernel's mail service.
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.3.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.4.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-mail)](https://github.com/dotkernel/dot-mail/network)
@@ -20,4 +20,4 @@ Dotkernel's mail service.
 
 ## Extra features
 
-- the option to log the results of the mailing process it provides the developer with more information and greater control.
+The option to log the results of the mailing process it provides the developer with more information and greater control.
