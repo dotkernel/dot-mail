@@ -2,7 +2,7 @@
 
 > dot-mail is a wrapper on top of [symfony mailer](https://github.com/symfony/mailer)
 
-## dot-mail badges
+## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
 ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.4)
