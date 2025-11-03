@@ -45,7 +45,7 @@ class MessageOptionsTest extends TestCase
         $this->assertSame($cc, $subject->getCc());
         $this->assertSame($bcc, $subject->getBcc());
         $this->assertSame($messageSubject, $subject->getSubject());
-        $this->assertInstanceOf(BodyOptions::class, $subject->getBody());
-        $this->assertInstanceOf(AttachmentsOptions::class, $subject->getAttachments());
+        $this->assertContainsOnlyInstancesOf(BodyOptions::class, [$subject->getBody()]);
+        $this->assertContainsOnlyInstancesOf(AttachmentsOptions::class, [$subject->getAttachments()]);
     }
 }

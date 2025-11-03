@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\LogicException;
+use Symfony\Component\Mime\Header\MailboxListHeader;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\Multipart\AlternativePart;
@@ -55,7 +56,9 @@ class Email extends Message
      */
     public function subject(string $subject): static
     {
-        return $this->setHeaderBody('Text', 'Subject', $subject);
+        $this->setHeaderBody('Text', 'Subject', $subject);
+
+        return $this;
     }
 
     public function getSubject(): ?string
@@ -68,7 +71,9 @@ class Email extends Message
      */
     public function date(DateTimeInterface $dateTime): static
     {
-        return $this->setHeaderBody('Date', 'Date', $dateTime);
+        $this->setHeaderBody('Date', 'Date', $dateTime);
+
+        return $this;
     }
 
     public function getDate(): ?DateTimeImmutable
@@ -81,7 +86,9 @@ class Email extends Message
      */
     public function returnPath(Address|string $address): static
     {
-        return $this->setHeaderBody('Path', 'Return-Path', Address::create($address));
+        $this->setHeaderBody('Path', 'Return-Path', Address::create($address));
+
+        return $this;
     }
 
     public function getReturnPath(): ?Address
@@ -199,9 +206,15 @@ class Email extends Message
 
     public function getPriority(): int
     {
-        [$priority] = sscanf($this->getHeaders()->getHeaderBody('X-Priority') ?? '', '%[1-5]');
+        $headerValue = $this->getHeaders()->getHeaderBody('X-Priority');
 
-        return (int) $priority ?? 3;
+        if ($headerValue === null) {
+            return self::PRIORITY_NORMAL;
+        }
+
+        [$priority] = sscanf($headerValue, '%[1-5]');
+
+        return $priority !== null ? (int) $priority : self::PRIORITY_NORMAL;
     }
 
     public function text(string $body, string $charset = 'utf-8'): static
@@ -315,7 +328,7 @@ class Email extends Message
         return $part ?? new TextPart($this->text, $this->textCharset);
     }
 
-    private function prepareParts(): ?array
+    private function prepareParts(): array
     {
         $names    = [];
         $htmlPart = null;
@@ -373,19 +386,24 @@ class Email extends Message
 
     private function addListAddressHeaderBody(string $name, array $addresses): static
     {
-        if (! $header = $this->getHeaders()->get($name)) {
-            return $this->setListAddressHeaderBody($name, $addresses);
-        }
-        $header->addAddresses(Address::createArray($addresses));
+        $header = $this->getHeaders()->get($name);
 
-        return $this;
+        if ($header instanceof MailboxListHeader) {
+            $header->addAddresses(Address::createArray($addresses));
+
+            return $this;
+        }
+
+        return $this->setListAddressHeaderBody($name, $addresses);
     }
 
     private function setListAddressHeaderBody(string $name, array $addresses): static
     {
         $addresses = Address::createArray($addresses);
         $headers   = $this->getHeaders();
-        if ($header = $headers->get($name)) {
+        $header    = $headers->get($name);
+
+        if ($header instanceof MailboxListHeader) {
             $header->setAddresses($addresses);
         } else {
             $headers->addMailboxListHeader($name, $addresses);
