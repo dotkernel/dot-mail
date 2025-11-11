@@ -2,6 +2,15 @@
 
 > dot-mail is a wrapper on top of [laminas-mail](https://github.com/laminas/laminas-mail)
 
+## Version History
+
+| Branch | Release   | Service Manager        | Mailer Implementation | OSS Lifecycle         | PHP Version                                                                                               |
+|--------|-----------|------------------------|-----------------------|-----------------------|-----------------------------------------------------------------------------------------------------------|
+| 5.2    | >= 5.2.0  | Service Manager 3 or 4 | symfony/mailer        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.2%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.4.0) |
+| 5.1    | < 5.2.0   | Service Manager 3      | symfony/mailer        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.1%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.1.6) |
+| 5.0    | < 5.1.0   | Service Manager 3 or 4 | symfony/mailer        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.4) |
+| 4.0    | <= 4.3.0  | Service Manager 3      | laminas/laminas-mail  | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F4.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0) |
+
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-mail)
