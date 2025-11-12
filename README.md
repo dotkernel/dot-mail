@@ -10,12 +10,12 @@ Documentation is available at: https://docs.dotkernel.org/dot-mail/.
 
 ## Version History
 
-| Branch | Release   | Service Manager        | Mailer Implementation | OSS Lifecycle         | PHP Version                                                                                               |
+| Branch | Release   | PSR-11 Container        | Mailer Implementation | OSS Lifecycle         | PHP Version                                                                                               |
 |--------|-----------|------------------------|-----------------------|-----------------------|-----------------------------------------------------------------------------------------------------------|
-| 5.2    | >= 5.2.0  | Service Manager 3 OR 4 | `symfony/mailer`        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.2%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.4.0) |
-| 5.1    | < 5.2.0   | Service Manager 3      | `symfony/mailer`        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.1%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.1.6) |
-| 5.0    | < 5.1.0   | Service Manager 3 OR 4 | `symfony/mailer`        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.4) |
-| 4.0    | <= 4.3.0  | Service Manager 3      | `laminas/laminas-mail`  | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F4.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0) |
+| 5.2    | >= 5.2.0  | 1 \|\| 2 | `symfony/mailer`        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.2%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.4.0) |
+| 5.1    | < 5.2.0   | 1     | `symfony/mailer`        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.1%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.1.6) |
+| 5.0    | < 5.1.0   | 1 \|\| 2 | `symfony/mailer`        | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.4) |
+| 4.0    | <= 4.3.0  | 1      | `laminas/laminas-mail`  | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F4.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0) |
 
 ## Badges
 
