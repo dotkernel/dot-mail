@@ -2,11 +2,13 @@
 
 ## Supported Versions
 
-| Version | Supported          | PHP Version                                                                                              |
-|---------|--------------------|----------------------------------------------------------------------------------------------------------|
-| 5.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.4) |
-| 4.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0) |
-| <= 3.x  | :x:                |                                                                                                          |
+| Version | Supported                                                                                                                                 | PHP Version                                                                                              |
+|---------|-------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| 5.2     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.2%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.2.0) |
+| 5.1     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.1%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.1.0) |
+| 5.0     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/5.0.0) |
+| 4.x     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fdot-mail%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-mail/4.3.0) |
+| <= 3.x  | :x:                                                                                                                                       |                                                                                                          |
 
 ## Reporting Potential Security Issues
 
