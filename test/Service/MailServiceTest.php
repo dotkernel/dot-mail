@@ -236,7 +236,8 @@ class MailServiceTest extends TestCase
 
         $this->mailService->attachFiles();
 
-        $body  = $this->message->getBody();
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
         $parts = $body->getParts();
 
         $this->assertCount(2, $parts);
@@ -282,7 +283,8 @@ class MailServiceTest extends TestCase
 
         $this->mailService->attachFiles();
 
-        $body  = $this->message->getBody();
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
         $parts = $body->getParts();
 
         // None of the children should be a MixedPart (no nesting)
