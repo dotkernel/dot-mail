@@ -96,18 +96,19 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             return false;
         }
 
-        $mimeMessage = $this->message->getBody();
+        $body  = $this->message->getBody();
+        $parts = [];
 
-        //generate a new Part for each attachment
         foreach ($this->attachments as $key => $attachment) {
             if (! is_file($attachment)) {
                 continue;
             }
-            $basename     = is_string($key) ? $key : basename($attachment);
-            $attachedFile = new DataPart(fopen($attachment, 'r'), $basename);
-            $mimeMessage  = new MixedPart($mimeMessage, $attachedFile);
+            $basename = is_string($key) ? $key : basename($attachment);
+            $parts[]  = new DataPart(fopen($attachment, 'r'), $basename);
+        }
 
-            $this->message->setBody($mimeMessage);
+        if (count($parts) > 0) {
+            $this->message->setBody(new MixedPart($body, ...$parts));
         }
 
         return $this->message;

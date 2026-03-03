@@ -19,6 +19,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\MixedPart;
 use Symfony\Component\Mime\Part\TextPart;
 
 class MailServiceTest extends TestCase
@@ -152,5 +154,142 @@ class MailServiceTest extends TestCase
         $this->assertInstanceOf(MailResult::class, $mailResult);
         $this->assertSame($customException, $mailResult->getException());
         $this->assertSame('Custom exception test', $mailResult->getMessage());
+    }
+
+    public function testAttachFilesReturnsFalseWhenNoAttachments(): void
+    {
+        $this->message->html('Test body');
+        $result = $this->mailService->attachFiles();
+        $this->assertFalse($result);
+    }
+
+    public function testAttachFilesCreatesFlatMixedPart(): void
+    {
+        $this->message->html('<p>Test</p>');
+
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
+        );
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testXlsAttachment.xls'
+        );
+
+        $this->mailService->attachFiles();
+
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+
+        $parts = $body->getParts();
+        // 1 TextPart (html) + 2 DataParts (attachments) = 3 parts at same level
+        $this->assertCount(3, $parts);
+        $this->assertInstanceOf(TextPart::class, $parts[0]);
+        $this->assertInstanceOf(DataPart::class, $parts[1]);
+        $this->assertInstanceOf(DataPart::class, $parts[2]);
+    }
+
+    public function testAttachFilesSingleAttachmentIsFlat(): void
+    {
+        $this->message->html('<p>Single attachment</p>');
+
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
+        );
+
+        $this->mailService->attachFiles();
+
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+
+        $parts = $body->getParts();
+        $this->assertCount(2, $parts);
+        $this->assertInstanceOf(TextPart::class, $parts[0]);
+        $this->assertInstanceOf(DataPart::class, $parts[1]);
+    }
+
+    public function testAttachFilesSkipsNonExistentFiles(): void
+    {
+        $this->message->html('<p>Test</p>');
+
+        $this->mailService->addAttachment('/nonexistent/file.pdf');
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
+        );
+
+        $this->mailService->attachFiles();
+
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+
+        $parts = $body->getParts();
+        // only 1 valid attachment + the html body
+        $this->assertCount(2, $parts);
+    }
+
+    public function testAttachFilesPreservesCustomFilename(): void
+    {
+        $this->message->html('<p>Test</p>');
+
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf',
+            'custom-ticket.pdf'
+        );
+
+        $this->mailService->attachFiles();
+
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+        $parts = $body->getParts();
+
+        $this->assertCount(2, $parts);
+        $attachment = $parts[1];
+        $this->assertInstanceOf(DataPart::class, $attachment);
+        $this->assertSame('custom-ticket.pdf', $attachment->getFilename());
+    }
+
+    public function testAttachFilesWithTextPartBody(): void
+    {
+        $textPart = new TextPart('<h1>HTML content</h1>', 'utf-8', 'html');
+        $this->mailService->setBody($textPart);
+
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
+        );
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testXlsAttachment.xls'
+        );
+
+        $this->mailService->attachFiles();
+
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+
+        $parts = $body->getParts();
+        $this->assertCount(3, $parts);
+        $this->assertInstanceOf(TextPart::class, $parts[0]);
+        $this->assertInstanceOf(DataPart::class, $parts[1]);
+        $this->assertInstanceOf(DataPart::class, $parts[2]);
+    }
+
+    public function testAttachFilesNoNestedMixedParts(): void
+    {
+        $this->message->html('<p>Test nesting</p>');
+
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
+        );
+        $this->mailService->addAttachment(
+            $this->fileSystem->url() . '/data/mail/attachments/testXlsAttachment.xls'
+        );
+
+        $this->mailService->attachFiles();
+
+        $body = $this->message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+        $parts = $body->getParts();
+
+        // None of the children should be a MixedPart (no nesting)
+        foreach ($parts as $part) {
+            $this->assertNotInstanceOf(MixedPart::class, $part);
+        }
     }
 }
