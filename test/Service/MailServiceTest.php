@@ -306,6 +306,7 @@ class MailServiceTest extends TestCase
     public function testMessageBodyIsResetAfterFailedSendToPreventAttachmentLeak(): void
     {
         $this->mailService->setSubject('First');
+        $this->message->text('');
         $this->message->html('First body');
         $this->mailService->addAttachment(
             $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
@@ -338,6 +339,7 @@ class MailServiceTest extends TestCase
     public function testAttachmentsDoNotLeakIntoSubsequentSendAfterFailure(): void
     {
         $this->mailService->setSubject('First');
+        $this->message->text('');
         $this->message->html('First email');
         $this->mailService->addAttachment(
             $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
@@ -365,6 +367,7 @@ class MailServiceTest extends TestCase
         // Reconfigure: brand new email with NO attachments.
         $this->mailService->setAttachments([]);
         $this->mailService->setSubject('Second');
+        $this->message->text('');
         $this->message->html('Second email - must not carry first email\'s attachment');
 
         $this->mailService->send();
@@ -387,6 +390,7 @@ class MailServiceTest extends TestCase
     public function testMessageBodyIsResetAfterSuccessfulSend(): void
     {
         $this->mailService->setSubject('Hello');
+        $this->message->text('');
         $this->message->html('Body');
         $this->mailService->addAttachment(
             $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
