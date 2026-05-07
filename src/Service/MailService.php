@@ -70,6 +70,12 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             //trigger error event
             $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
             throw new MailException($result->getMessage());
+        } finally {
+            // Reset the Symfony Message body after every send attempt (success or failure).
+            // attachFiles() embeds DataParts into Message::$body; without this reset those
+            // DataParts survive a failed send and get wrapped into the next email's body,
+            // causing attachments from a failed send to leak into subsequent emails.
+            $this->getMessage()->setBody(null);
         }
 
         if ($result->isValid()) {
