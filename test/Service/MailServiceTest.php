@@ -297,7 +297,7 @@ class MailServiceTest extends TestCase
     }
 
     /**
-     * Regression: divi-mail 1.0.6 fixed an attachment leak where DataParts
+     * Found an attachment leak where DataParts
      * embedded into Message::$body by attachFiles() survived a failed send
      * and were wrapped into the next email. The fix must live in dot-mail:
      * after send() (success OR failure) the underlying Message::$body must
