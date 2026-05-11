@@ -297,7 +297,7 @@ class Email extends Message
             }
         }
 
-        return $part ?? new TextPart($this->text, $this->textCharset);
+        return $part ?? new TextPart((string) $this->text, $this->textCharset);
     }
 
     private function prepareParts(): array
