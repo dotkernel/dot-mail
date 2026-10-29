@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Service;
 
+use DirectoryIterator;
 use Dot\Mail\Email;
 use Dot\Mail\Event\MailEvent;
 use Dot\Mail\Event\MailEventListenerAwareInterface;
@@ -12,8 +13,9 @@ use Dot\Mail\Exception\MailException;
 use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
-use Exception;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\DataPart;
@@ -23,9 +25,12 @@ use Throwable;
 use function array_merge;
 use function basename;
 use function count;
-use function fopen;
+use function is_dir;
 use function is_file;
+use function is_readable;
 use function is_string;
+use function sprintf;
+use function str_starts_with;
 
 class MailService implements MailServiceInterface, MailEventListenerAwareInterface
 {
@@ -33,24 +38,37 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
 
     protected LogServiceInterface $logService;
     protected Email $message;
+    protected Email $prototype;
     protected TransportInterface $transport;
     protected MailOptions $mailOptions;
-    protected array $attachments = [];
+    protected array $attachments        = [];
+    protected array $defaultAttachments = [];
 
+    /**
+     * @param array $attachments The default attachments, restored by reset() after every send
+     */
     public function __construct(
         LogServiceInterface $logService,
         Email $message,
         TransportInterface $transport,
-        MailOptions $mailOptions
+        MailOptions $mailOptions,
+        array $attachments = []
     ) {
-        $this->logService  = $logService;
-        $this->message     = $message;
-        $this->transport   = $transport;
-        $this->mailOptions = $mailOptions;
+        $this->logService         = $logService;
+        $this->message            = $message;
+        $this->prototype          = clone $message;
+        $this->transport          = $transport;
+        $this->mailOptions        = $mailOptions;
+        $this->attachments        = $attachments;
+        $this->defaultAttachments = $attachments;
     }
 
     /**
-     * @throws MailException|TransportExceptionInterface
+     * Sends the current message, then restores the configured defaults (see reset()).
+     * Recipients, subject, body and attachments must be set again for every message.
+     * An exception thrown by a post-send listener propagates unchanged: the message was already delivered.
+     *
+     * @throws MailException
      */
     public function send(): ResultInterface
     {
@@ -66,29 +84,33 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             //attach files before sending
             $this->attachFiles();
             $this->getTransport()->send($this->getMessage());
-            $this->getMessage()->setBody(null);
-
-            $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_POST_SEND, $result));
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $result = $this->createMailResultFromException($e);
-            //trigger error event
-            $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result));
-            throw new MailException($result->getMessage());
-        } finally {
-            // Reset the Symfony Message body after every send attempt (success or failure).
-            // attachFiles() embeds DataParts into Message::$body; without this reset those
-            // DataParts survive a failed send and get wrapped into the next email's body,
-            // causing attachments from a failed send to leak into subsequent emails.
-            $this->getMessage()->setBody(null);
+            try {
+                //trigger error event
+                $this->getEventManager()->triggerEvent(
+                    $this->createMailEvent(MailEvent::EVENT_MAIL_SEND_ERROR, $result)
+                );
+            } finally {
+                $this->reset();
+            }
+            throw new MailException($result->getMessage(), (int) $e->getCode(), $e);
         }
 
         try {
-            $this->logService->sent($this->getMessage());
-        } catch (Throwable) {
-            // a failed log write must never turn a delivered email into an error
+            $this->logSent();
+            $this->getEventManager()->triggerEvent($this->createMailEvent(MailEvent::EVENT_MAIL_POST_SEND, $result));
+        } finally {
+            $this->reset();
         }
 
         return $result;
+    }
+
+    public function reset(): void
+    {
+        $this->message     = clone $this->prototype;
+        $this->attachments = $this->defaultAttachments;
     }
 
     public function createMailEvent(
@@ -102,26 +124,30 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
         return $event;
     }
 
+    /**
+     * @throws MailException When an attachment does not exist or is not readable.
+     */
     public function attachFiles(): false|Email
     {
-        if (count($this->attachments) === 0) {
+        $attachments = array_merge($this->attachments, $this->getDirectoryAttachments());
+        if (count($attachments) === 0) {
             return false;
         }
 
         $body  = $this->message->getBody();
         $parts = [];
 
-        foreach ($this->attachments as $key => $attachment) {
-            if (! is_file($attachment)) {
-                continue;
+        foreach ($attachments as $key => $attachment) {
+            if (! is_file($attachment) || ! is_readable($attachment)) {
+                throw new MailException(
+                    sprintf('Attachment "%s" does not exist or is not readable', $attachment)
+                );
             }
             $basename = is_string($key) ? $key : basename($attachment);
-            $parts[]  = new DataPart(fopen($attachment, 'r'), $basename);
+            $parts[]  = DataPart::fromPath($attachment, $basename);
         }
 
-        if (count($parts) > 0) {
-            $this->message->setBody(new MixedPart($body, ...$parts));
-        }
+        $this->message->setBody(new MixedPart($body, ...$parts));
 
         return $this->message;
     }
@@ -135,7 +161,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
         }
     }
 
-    public function createMailResultFromException(Exception $e): ResultInterface
+    public function createMailResultFromException(Throwable $e): ResultInterface
     {
         return new MailResult(false, $e->getMessage(), $e);
     }
@@ -182,5 +208,50 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
     public function setTransport(TransportInterface $transport): void
     {
         $this->transport = $transport;
+    }
+
+    /**
+     * A failed log write must never turn a delivered email into an error
+     */
+    protected function logSent(): void
+    {
+        try {
+            $this->logService->sent($this->getMessage());
+        } catch (Throwable) {
+            // intentionally ignored
+        }
+    }
+
+    /**
+     * Collects the files of the configured attachments directory at send time.
+     * Relative paths are resolved against the current working directory; dotfiles are skipped.
+     *
+     * @return string[]
+     */
+    protected function getDirectoryAttachments(): array
+    {
+        $dir = $this->mailOptions->getMessageOptions()->getAttachments()->getDir();
+
+        if (($dir['iterate'] ?? false) !== true || ! is_string($dir['path'] ?? null) || ! is_dir($dir['path'])) {
+            return [];
+        }
+
+        $files = ($dir['recursive'] ?? false) === true
+            ? new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dir['path'], FilesystemIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
+            )
+            : new DirectoryIterator($dir['path']);
+
+        $paths = [];
+        foreach ($files as $fileInfo) {
+            if ($fileInfo->isDir() || str_starts_with($fileInfo->getFilename(), '.')) {
+                continue;
+            }
+
+            $paths[] = $fileInfo->getPathname();
+        }
+
+        return $paths;
     }
 }

@@ -9,6 +9,7 @@ use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\LogService;
 use Dot\Mail\Service\LogServiceInterface;
+use Dot\Mail\Service\MailServiceInterface;
 
 class ConfigProvider
 {
@@ -26,7 +27,8 @@ class ConfigProvider
                 LogService::class => LogServiceFactory::class,
             ],
             'aliases'            => [
-                LogServiceInterface::class => LogService::class,
+                LogServiceInterface::class  => LogService::class,
+                MailServiceInterface::class => 'dot-mail.service.default',
             ],
             'abstract_factories' => [
                 MailServiceAbstractFactory::class,

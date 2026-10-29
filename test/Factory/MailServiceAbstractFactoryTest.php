@@ -26,6 +26,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream;
 
 use function restore_error_handler;
 use function set_error_handler;
@@ -124,10 +125,6 @@ class MailServiceAbstractFactoryTest extends TestCase
                 'tls'      => null,
             ]);
 
-        $this->smtpOptions->expects($this->once())
-            ->method('getHost')
-            ->willReturn('localhost');
-
         $this->mailOptions->expects($this->any())
             ->method('getSmtpOptions')
             ->willReturn($this->smtpOptions);
@@ -191,10 +188,6 @@ class MailServiceAbstractFactoryTest extends TestCase
                 'password' => 'testPassword',
                 'tls'      => false,
             ]);
-
-        $this->smtpOptions->expects($this->once())
-            ->method('getHost')
-            ->willReturn('localhost');
 
         $this->mailOptions->expects($this->any())
             ->method('getSmtpOptions')
@@ -350,7 +343,7 @@ class MailServiceAbstractFactoryTest extends TestCase
      * @throws Exception
      * @throws NotFoundExceptionInterface
      */
-    public function testEsmtpCredentialsAreUrlEncoded(): void
+    public function testEsmtpCredentialsWithSpecialCharacters(): void
     {
         $options = new MailOptions([
             'transport'    => 'esmtp',
@@ -372,5 +365,124 @@ class MailServiceAbstractFactoryTest extends TestCase
         $this->assertInstanceOf(EsmtpTransport::class, $transport);
         $this->assertSame('user@example.com', $transport->getUsername());
         $this->assertSame('p:ss/w@rd', $transport->getPassword());
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testEsmtpTransportConfiguration(): void
+    {
+        $options = new MailOptions([
+            'transport'    => 'esmtp',
+            'smtp_options' => [
+                'host'                  => 'mail.example.com',
+                'port'                  => 2525,
+                'name'                  => 'client.example.com',
+                'connection_time_limit' => 7,
+                'connection_config'     => ['username' => 'user', 'password' => 'secret'],
+            ],
+        ]);
+
+        $transport = ($this->subject)($this->containerFor($options), 'dot-mail.service.default')->getTransport();
+
+        $this->assertInstanceOf(EsmtpTransport::class, $transport);
+        $this->assertSame('client.example.com', $transport->getLocalDomain());
+        $stream = $transport->getStream();
+        $this->assertInstanceOf(SocketStream::class, $stream);
+        $this->assertSame(7.0, $stream->getTimeout());
+        $this->assertTrue($transport->isAutoTls());
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testEsmtpTlsSettings(): void
+    {
+        $cases = [
+            'automatic on 587' => [587, null, true, false],
+            'implicit on 465'  => [465, null, true, true],
+            'disabled'         => [587, false, false, false],
+        ];
+
+        foreach ($cases as $label => [$port, $tls, $autoTls, $implicitTls]) {
+            $options = new MailOptions([
+                'transport'    => 'esmtp',
+                'smtp_options' => [
+                    'host'              => 'mail.example.com',
+                    'port'              => $port,
+                    'connection_config' => ['tls' => $tls],
+                ],
+            ]);
+
+            $transport = ($this->subject)($this->containerFor($options), 'dot-mail.service.default')->getTransport();
+
+            $this->assertInstanceOf(EsmtpTransport::class, $transport);
+            $this->assertSame($autoTls, $transport->isAutoTls(), $label);
+            $this->assertInstanceOf(SocketStream::class, $transport->getStream());
+            $this->assertSame($implicitTls, $transport->getStream()->isTLS(), $label);
+        }
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testProvidedTransportObjectIsUsedAsGiven(): void
+    {
+        $provided = new EsmtpTransport('provided.example.com', 25, false);
+        $options  = new MailOptions([
+            'transport'    => $provided,
+            'smtp_options' => ['host' => 'ignored.example.com', 'port' => 587],
+        ]);
+
+        $transport = ($this->subject)($this->containerFor($options), 'dot-mail.service.default')->getTransport();
+
+        $this->assertSame($provided, $transport);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws NotFoundExceptionInterface
+     */
+    public function testServiceKeepsConfiguredDefaultsAfterReset(): void
+    {
+        $options = new MailOptions([
+            'transport'       => 'sendmail',
+            'message_options' => [
+                'from'        => 'from@example.com',
+                'subject'     => 'Default subject',
+                'body'        => ['content' => '<p>Default</p>'],
+                'attachments' => ['files' => ['/some/default/file.txt']],
+            ],
+        ]);
+
+        $mailService = ($this->subject)($this->containerFor($options), 'dot-mail.service.default');
+        $mailService->getMessage()->addTo('someone@example.com');
+        $mailService->addAttachment('/another/file.txt');
+
+        $mailService->reset();
+
+        $this->assertSame('Default subject', $mailService->getMessage()->getSubject());
+        $this->assertSame('<p>Default</p>', $mailService->getMessage()->getHtmlBody());
+        $this->assertSame('from@example.com', $mailService->getMessage()->getFrom()[0]->getAddress());
+        $this->assertSame([], $mailService->getMessage()->getTo());
+        $this->assertSame(['/some/default/file.txt'], $mailService->getAttachments());
+    }
+
+    private function containerFor(MailOptions $options): ContainerInterface
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturnMap([
+            ['dot-mail.options.default', $options],
+            [LogServiceInterface::class, $this->createMock(LogService::class)],
+        ]);
+
+        return $container;
     }
 }

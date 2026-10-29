@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Factory;
 
-use DirectoryIterator;
 use Dot\Mail\Email;
 use Dot\Mail\Event\MailEventListenerAwareInterface;
 use Dot\Mail\Event\MailEventListenerInterface;
@@ -14,24 +13,19 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Service\LogServiceInterface;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Service\MailServiceInterface;
-use FilesystemIterator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
 use function explode;
 use function gettype;
 use function is_array;
-use function is_dir;
 use function is_object;
 use function is_string;
 use function is_subclass_of;
-use function rawurlencode;
 use function sprintf;
 
 class MailServiceAbstractFactory extends AbstractMailFactory
@@ -61,47 +55,12 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             )
         );
 
-        $logService = $container->get(LogServiceInterface::class);
-        $message    = $this->createMessage();
-        $transport  = $this->createTransport($container);
+        $logService  = $container->get(LogServiceInterface::class);
+        $message     = $this->createMessage();
+        $transport   = $this->createTransport($container);
+        $attachments = $this->mailOptions->getMessageOptions()->getAttachments()->getFiles();
 
-        $mailService = new MailService($logService, $message, $transport, $this->mailOptions);
-
-        //set subject
-        $mailService->setSubject($this->mailOptions->getMessageOptions()->getSubject());
-
-        $body = $this->mailOptions->getMessageOptions()->getBody();
-
-        if ($body->getContent() !== '') {
-            $mailService->setBody($body->getContent(), $body->getCharset());
-        }
-
-        //attach files
-        $files = $this->mailOptions->getMessageOptions()->getAttachments()->getFiles();
-        $mailService->addAttachments($files);
-
-        //attach files from dir
-        $dir = $this->mailOptions->getMessageOptions()->getAttachments()->getDir();
-
-        if ($dir['iterate'] === true && is_string($dir['path']) && is_dir($dir['path'])) {
-            $files = $dir['recursive'] === true
-                ? new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator(
-                        $dir['path'],
-                        FilesystemIterator::SKIP_DOTS
-                    ),
-                    RecursiveIteratorIterator::CHILD_FIRST
-                )
-                : new DirectoryIterator($dir['path']);
-
-            foreach ($files as $fileInfo) {
-                if ($fileInfo->isDir()) {
-                    continue;
-                }
-
-                $mailService->addAttachment($fileInfo->getPathname());
-            }
-        }
+        $mailService = new MailService($logService, $message, $transport, $this->mailOptions, $attachments);
 
         $this->attachMailListeners($mailService, $container);
         return $mailService;
@@ -137,6 +96,13 @@ class MailServiceAbstractFactory extends AbstractMailFactory
             $message->setBcc($bcc);
         }
 
+        $message->subject($options->getSubject());
+
+        $body = $options->getBody();
+        if ($body->getContent() !== '') {
+            $message->html($body->getContent(), $body->getCharset());
+        }
+
         return $message;
     }
 
@@ -147,25 +113,32 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     protected function createTransport(ContainerInterface $container): TransportInterface
     {
         $adapter = $this->mailOptions->getTransport();
+
+        //a transport object provided by the user is used as it is
         if ($adapter instanceof TransportInterface) {
-            return $this->setupTransportConfig($adapter);
+            return $adapter;
         }
 
         //check is adapter is a service
         if ($container->has($adapter)) {
             $transport = $container->get($adapter);
             if ($transport instanceof TransportInterface) {
-                return $this->setupTransportConfig($transport);
-            } else {
-                throw new InvalidArgumentException(
-                    'Provided transport service does not return a ' . TransportInterface::class . ' instance'
-                );
+                return $transport;
             }
+
+            throw new InvalidArgumentException(
+                'Provided transport service does not return a ' . TransportInterface::class . ' instance'
+            );
+        }
+
+        //the esmtp alias is configured from the smtp options
+        if ($adapter === EsmtpTransport::class) {
+            return $this->createEsmtpTransport();
         }
 
         //check is the adapter is Symfony default adapter
         if (is_subclass_of($adapter, TransportInterface::class)) {
-            return $this->setupTransportConfig(new $adapter());
+            return new $adapter();
         }
 
         //the adapter is not valid - throw exception
@@ -178,17 +151,35 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         );
     }
 
-    protected function setupTransportConfig(TransportInterface $transport): TransportInterface
+    protected function createEsmtpTransport(): EsmtpTransport
     {
-        if ($transport instanceof EsmtpTransport) {
-            $connection = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
-            $user       = rawurlencode((string) ($connection['username'] ?? ''));
-            $pass       = rawurlencode((string) ($connection['password'] ?? ''));
-            $tls        = ($connection['tls'] ?? null) === false ? 'false' : null;
-            $port       = $this->mailOptions->getSmtpOptions()->getPort();
-            $host       = $this->mailOptions->getSmtpOptions()->getHost();
-            $transport  = Transport::fromDsn('smtp://' . $user . ':' . $pass . '@' . $host . ':' . $port
-                . '?auto_tls=' . $tls);
+        $smtp       = $this->mailOptions->getSmtpOptions();
+        $connection = $smtp->getConnectionConfig();
+        $tls        = $connection['tls'] ?? null;
+
+        //null leaves the encryption to the transport (automatic), false disables it
+        $transport = new EsmtpTransport($smtp->getHost(), $smtp->getPort(), $tls === false ? false : null);
+        $transport->setAutoTls($tls !== false);
+
+        $username = (string) ($connection['username'] ?? '');
+        if ($username !== '') {
+            $transport->setUsername($username);
+        }
+
+        $password = (string) ($connection['password'] ?? '');
+        if ($password !== '') {
+            $transport->setPassword($password);
+        }
+
+        $name = $smtp->getName();
+        if ($name !== null) {
+            $transport->setLocalDomain($name);
+        }
+
+        $timeLimit = $smtp->getConnectionTimeLimit();
+        $stream    = $transport->getStream();
+        if ($timeLimit !== null && $stream instanceof SocketStream) {
+            $stream->setTimeout((float) $timeLimit);
         }
 
         return $transport;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Result;
 
-use Exception;
+use Throwable;
 
 interface ResultInterface
 {
@@ -14,5 +14,5 @@ interface ResultInterface
 
     public function hasException(): bool;
 
-    public function getException(): ?Exception;
+    public function getException(): ?Throwable;
 }
