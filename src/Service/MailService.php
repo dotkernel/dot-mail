@@ -18,6 +18,7 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\MixedPart;
+use Throwable;
 
 use function array_merge;
 use function basename;
@@ -55,7 +56,10 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
     {
         $result = new MailResult();
 
-        $this->message->setEncoding('utf-8');
+        if ($this->message->getEncoding() === null) {
+            $this->message->setEncoding(self::DEFAULT_CHARSET);
+        }
+
         try {
             $this->getEventManager()->triggerEvent($this->createMailEvent());
 
@@ -78,8 +82,10 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             $this->getMessage()->setBody(null);
         }
 
-        if ($result->isValid()) {
+        try {
             $this->logService->sent($this->getMessage());
+        } catch (Throwable) {
+            // a failed log write must never turn a delivered email into an error
         }
 
         return $result;
@@ -123,7 +129,7 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
     public function setBody(string|AbstractPart $body, ?string $charset = null): void
     {
         if (is_string($body)) {
-            $this->message->html($body);
+            $this->message->html($body, $charset ?? self::DEFAULT_CHARSET);
         } else {
             $this->message->setBody($body);
         }

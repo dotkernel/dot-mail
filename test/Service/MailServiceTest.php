@@ -427,4 +427,57 @@ class MailServiceTest extends TestCase
 
         return false;
     }
+
+    public function testSetBodyUsesProvidedCharset(): void
+    {
+        $this->mailService->setBody('<p>Body</p>', 'iso-8859-1');
+
+        $this->assertSame('iso-8859-1', $this->message->getHtmlCharset());
+    }
+
+    public function testSetBodyDefaultsToUtf8(): void
+    {
+        $this->mailService->setBody('<p>Body</p>');
+
+        $this->assertSame('utf-8', $this->message->getHtmlCharset());
+    }
+
+    public function testSendKeepsConfiguredEncoding(): void
+    {
+        $this->mailService->setBody('<p>Body</p>', 'iso-8859-1');
+        $this->mailService->send();
+
+        $this->assertSame('iso-8859-1', $this->message->getEncoding());
+    }
+
+    public function testSendSetsDefaultEncodingWhenNoneIsSet(): void
+    {
+        $this->assertNull($this->message->getEncoding());
+
+        $this->mailService->send();
+
+        $this->assertSame('utf-8', $this->message->getEncoding());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testLogFailureDoesNotBreakSuccessfulSend(): void
+    {
+        $logService = $this->createMock(LogServiceInterface::class);
+        $logService->expects($this->once())
+            ->method('sent')
+            ->willThrowException(new RuntimeException('Log failure'));
+
+        $mailService = new MailService(
+            $logService,
+            new Email(),
+            $this->transportInterface,
+            $this->createMock(MailOptions::class)
+        );
+
+        $result = $mailService->send();
+
+        $this->assertTrue($result->isValid());
+    }
 }

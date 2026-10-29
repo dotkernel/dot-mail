@@ -50,4 +50,14 @@ class MailOptionsTest extends TestCase
         $subject->setTransport('Custom\\Transport');
         $this->assertSame('Custom\\Transport', $subject->getTransport());
     }
+
+    public function testDefaultsWithoutConfiguration(): void
+    {
+        $subject = new MailOptions();
+
+        $this->assertSame(SendmailTransport::class, $subject->getTransport());
+        $this->assertContainsOnlyInstancesOf(MessageOptions::class, [$subject->getMessageOptions()]);
+        $this->assertContainsOnlyInstancesOf(SmtpOptions::class, [$subject->getSmtpOptions()]);
+        $this->assertSame($subject->getMessageOptions(), $subject->getMessageOptions());
+    }
 }

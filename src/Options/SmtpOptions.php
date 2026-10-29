@@ -19,7 +19,7 @@ class SmtpOptions extends AbstractOptions
     protected string $host            = '127.0.0.1';
     protected int $port               = 25;
 
-    protected ?int $connectionTimeLimit;
+    protected ?int $connectionTimeLimit = null;
 
     public function getName(): string
     {

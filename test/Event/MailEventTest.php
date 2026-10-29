@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DotTest\Mail\Event;
 
 use Dot\Mail\Event\MailEvent;
+use Dot\Mail\Result\MailResult;
 use Dot\Mail\Service\MailServiceInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -47,5 +48,15 @@ class MailEventTest extends TestCase
         $this->assertFalse($event->propagationIsStopped());
         $event->stopPropagation();
         $this->assertTrue($event->propagationIsStopped());
+    }
+
+    public function testResultIsNullUntilSet(): void
+    {
+        $event = new MailEvent($this->mailService);
+        $this->assertNull($event->getResult());
+
+        $result = new MailResult();
+        $event->setResult($result);
+        $this->assertSame($result, $event->getResult());
     }
 }

@@ -37,7 +37,7 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
 
         $specificServiceName = $parts[2];
         $config              = $this->getConfig($container);
-        return array_key_exists($specificServiceName, $config);
+        return array_key_exists($specificServiceName, $config) && $specificServiceName !== 'log';
     }
 
     /**

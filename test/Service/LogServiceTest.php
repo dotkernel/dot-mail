@@ -83,4 +83,24 @@ class LogServiceTest extends TestCase
             file_get_contents($this->fileSystem->url() . '/log/mail/sent.log')
         );
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testSentReturnsFalseWhenLogDirectoryCannotBeCreated(): void
+    {
+        // the "directory" of the target is an existing file, so it can be neither used nor created
+        $target     = $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf/sent.log';
+        $logService = new LogService(['log' => ['sent' => $target]]);
+        $message    = $this->createMock(Email::class);
+
+        $this->assertFalse($logService->sent($message));
+    }
+
+    public function testSentIsDisabledWithoutTarget(): void
+    {
+        $logService = new LogService(['log' => ['sent' => null]]);
+
+        $this->assertNull($logService->sent(new Email()));
+    }
 }

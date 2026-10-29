@@ -102,4 +102,18 @@ class AbstractMailFactoryTest extends TestCase
             restore_error_handler();
         }
     }
+
+    /**
+     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function testLogKeyIsNotACreatableService(): void
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturn($this->config);
+
+        $this->assertTrue($this->subject->canCreate($container, 'dot-mail.testPart.default'));
+        $this->assertFalse($this->subject->canCreate($container, 'dot-mail.testPart.log'));
+    }
 }

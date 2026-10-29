@@ -72,7 +72,9 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
         $body = $this->mailOptions->getMessageOptions()->getBody();
 
-        $mailService->setBody($body->getContent(), $body->getCharset());
+        if ($body->getContent() !== '') {
+            $mailService->setBody($body->getContent(), $body->getCharset());
+        }
 
         //attach files
         $files = $this->mailOptions->getMessageOptions()->getAttachments()->getFiles();
@@ -179,12 +181,13 @@ class MailServiceAbstractFactory extends AbstractMailFactory
     protected function setupTransportConfig(TransportInterface $transport): TransportInterface
     {
         if ($transport instanceof EsmtpTransport) {
-            $user      = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['username'];
-            $pass      = rawurlencode($this->mailOptions->getSmtpOptions()->getConnectionConfig()['password']);
-            $tls       = $this->mailOptions->getSmtpOptions()->getConnectionConfig()['tls'] === false ? 'false' : null;
-            $port      = $this->mailOptions->getSmtpOptions()->getPort();
-            $host      = $this->mailOptions->getSmtpOptions()->getHost();
-            $transport = Transport::fromDsn('smtp://' . $user . ':' . $pass . '@' . $host . ':' . $port
+            $connection = $this->mailOptions->getSmtpOptions()->getConnectionConfig();
+            $user       = rawurlencode((string) ($connection['username'] ?? ''));
+            $pass       = rawurlencode((string) ($connection['password'] ?? ''));
+            $tls        = ($connection['tls'] ?? null) === false ? 'false' : null;
+            $port       = $this->mailOptions->getSmtpOptions()->getPort();
+            $host       = $this->mailOptions->getSmtpOptions()->getHost();
+            $transport  = Transport::fromDsn('smtp://' . $user . ':' . $pass . '@' . $host . ':' . $port
                 . '?auto_tls=' . $tls);
         }
 
