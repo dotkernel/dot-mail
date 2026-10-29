@@ -398,7 +398,9 @@ class Email extends Message
     {
         $createdAddresses = [];
         foreach ($addresses as $address) {
-            $createdAddresses[] = new Address($address, $name ?? '');
+            $createdAddresses[] = $address instanceof Address
+                ? $address
+                : new Address($address, $name ?? '');
         }
 
         return $createdAddresses;

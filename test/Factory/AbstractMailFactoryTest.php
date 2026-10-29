@@ -7,12 +7,16 @@ namespace DotTest\Mail\Factory;
 use Dot\Mail\Factory\AbstractMailFactory;
 use Dot\Mail\Options\MailOptions;
 use DotTest\Mail\CommonTrait;
+use ErrorException;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+
+use function restore_error_handler;
+use function set_error_handler;
 
 class AbstractMailFactoryTest extends TestCase
 {
@@ -76,5 +80,26 @@ class AbstractMailFactoryTest extends TestCase
 
         $result = $this->subject->canCreate($container, $requestedName);
         $this->assertFalse($result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function testWillNotCreateRequestedNameWithoutParts(): void
+    {
+        $container = $this->createMock(ContainerInterface::class);
+
+        set_error_handler(static function (int $severity, string $message): never {
+            throw new ErrorException($message, 0, $severity);
+        });
+
+        try {
+            $this->assertFalse($this->subject->canCreate($container, 'dot-mail'));
+            $this->assertFalse($this->subject->canCreate($container, 'dot-mail.testPart'));
+        } finally {
+            restore_error_handler();
+        }
     }
 }

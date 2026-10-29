@@ -27,11 +27,12 @@
         }
     },
     "require": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "dotkernel/dot-event": "^4.0",
         "laminas/laminas-servicemanager": "^3.22 || ^4.0",
+        "laminas/laminas-stdlib": "^3.19",
         "symfony/mailer": "^v7.1.6"
     },
     "require-dev": {

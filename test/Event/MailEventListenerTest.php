@@ -43,4 +43,23 @@ class MailEventListenerTest extends TestCase
         $listeners = $listenersProperty->getValue($trait);
         $this->assertEmpty($listeners);
     }
+
+    /**
+     * @throws Exception
+     * @throws ReflectionException
+     */
+    public function testDetachingUnknownListenerKeepsOthers(): void
+    {
+        $trait    = new class {
+            use MailEventListenerAwareTrait;
+        };
+        $attached = $this->createMock(MailEventListenerInterface::class);
+        $unknown  = $this->createMock(MailEventListenerInterface::class);
+
+        $trait->attachListener($attached);
+        $trait->detachListener($unknown);
+
+        $listenersProperty = (new ReflectionObject($trait))->getProperty('listeners');
+        $this->assertSame([$attached], $listenersProperty->getValue($trait));
+    }
 }

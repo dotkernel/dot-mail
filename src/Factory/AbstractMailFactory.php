@@ -31,7 +31,7 @@ abstract class AbstractMailFactory implements AbstractFactoryInterface
     {
         $parts = explode('.', $requestedName);
 
-        if ($parts[0] !== self::DOT_MAIL_PART || $parts[1] !== static::SPECIFIC_PART || count($parts) !== 3) {
+        if (count($parts) !== 3 || $parts[0] !== self::DOT_MAIL_PART || $parts[1] !== static::SPECIFIC_PART) {
             return false;
         }
 
