@@ -29,4 +29,16 @@ class SmtpOptionsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $subject->setPort(0);
     }
+
+    public function testPortBoundaries(): void
+    {
+        $subject = new SmtpOptions();
+
+        $subject->setPort(1);
+        $this->assertSame(1, $subject->getPort());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Port must be greater than 0; received "0"');
+        $subject->setPort(0);
+    }
 }

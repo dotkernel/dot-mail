@@ -84,7 +84,7 @@ class SmtpOptions extends AbstractOptions
     {
         if ($port < 1) {
             throw new InvalidArgumentException(sprintf(
-                'Port must be greater than 1; received "%d"',
+                'Port must be greater than 0; received "%d"',
                 $port
             ));
         }

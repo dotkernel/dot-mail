@@ -196,6 +196,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturn($this->smtpOptions);
 
         $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Mail event listener "Invalid Listener Test" must be an instance of');
 
         $mailService = ($this->subject)($this->container, $requestedName);
 
@@ -226,6 +227,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ]);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/"transport" must be a known alias.*"test" provided/');
         ($this->subject)($this->container, $requestedName);
     }
 

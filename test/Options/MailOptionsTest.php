@@ -9,6 +9,7 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Options\MessageOptions;
 use Dot\Mail\Options\SmtpOptions;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 
 class MailOptionsTest extends TestCase
@@ -34,5 +35,19 @@ class MailOptionsTest extends TestCase
         $this->assertContainsOnlyInstancesOf(MessageOptions::class, [$subject->getMessageOptions()]);
         $this->assertContainsOnlyInstancesOf(SmtpOptions::class, [$subject->getSmtpOptions()]);
         $this->assertSame($eventListeners, $subject->getEventListeners());
+    }
+
+    public function testTransportAliasIsCaseInsensitive(): void
+    {
+        $subject = new MailOptions();
+
+        $subject->setTransport('ESMTP');
+        $this->assertSame(EsmtpTransport::class, $subject->getTransport());
+
+        $subject->setTransport('SendMail');
+        $this->assertSame(SendmailTransport::class, $subject->getTransport());
+
+        $subject->setTransport('Custom\\Transport');
+        $this->assertSame('Custom\\Transport', $subject->getTransport());
     }
 }

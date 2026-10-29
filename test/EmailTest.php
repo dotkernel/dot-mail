@@ -66,4 +66,23 @@ class EmailTest extends TestCase
         $this->expectException(LogicException::class);
         $subject->ensureValidity();
     }
+
+    public function testAddressObjectsInArraysAreKept(): void
+    {
+        $subject = new Email();
+
+        $subject->addTo([new Address('first@example.com', 'First'), 'second@example.com'], 'Ignored');
+        $subject->setCc([new Address('cc@example.com', 'Copy')]);
+
+        $to = $subject->getTo();
+        $this->assertCount(2, $to);
+        $this->assertSame('first@example.com', $to[0]->getAddress());
+        $this->assertSame('First', $to[0]->getName());
+        $this->assertSame('second@example.com', $to[1]->getAddress());
+        $this->assertSame('Ignored', $to[1]->getName());
+
+        $cc = $subject->getCc();
+        $this->assertCount(1, $cc);
+        $this->assertSame('Copy', $cc[0]->getName());
+    }
 }

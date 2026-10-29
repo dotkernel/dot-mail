@@ -6,6 +6,8 @@ namespace Dot\Mail\Event;
 
 use Laminas\EventManager\EventManagerAwareTrait;
 
+use function array_search;
+
 trait MailEventListenerAwareTrait
 {
     use EventManagerAwareTrait;
@@ -22,16 +24,10 @@ trait MailEventListenerAwareTrait
     {
         $listener->detach($this->getEventManager());
 
-        $idx = 0;
-        foreach ($this->listeners as $l) {
-            if ($l === $listener) {
-                break;
-            }
-
-            $idx++;
+        $idx = array_search($listener, $this->listeners, true);
+        if ($idx !== false) {
+            unset($this->listeners[$idx]);
         }
-
-        unset($this->listeners[$idx]);
     }
 
     public function clearListeners(): void

@@ -156,7 +156,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
                 return $this->setupTransportConfig($transport);
             } else {
                 throw new InvalidArgumentException(
-                    'Provided mail_adapter service does not return a ' . TransportInterface::class . ' instance'
+                    'Provided transport service does not return a ' . TransportInterface::class . ' instance'
                 );
             }
         }
@@ -169,9 +169,9 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         //the adapter is not valid - throw exception
         throw new InvalidArgumentException(
             sprintf(
-                'mail_adapter must be an instance of %s or string, "%s" provided',
+                '"transport" must be a known alias, a container service or a class implementing %s; "%s" provided',
                 TransportInterface::class,
-                gettype($adapter)
+                $adapter
             )
         );
     }
@@ -230,7 +230,8 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
         if (! $listener instanceof MailEventListenerInterface) {
             throw new RuntimeException(sprintf(
-                'Mail event listener must be an instance of `%s`, but `%s was given`',
+                'Mail event listener "%s" must be an instance of `%s`, but `%s` was given',
+                $type,
                 MailEventListenerInterface::class,
                 is_object($listener) ? $listener::class : gettype($listener)
             ));

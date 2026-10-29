@@ -46,9 +46,9 @@ class MailOptions extends AbstractOptions
 
     public function setTransport(string|TransportInterface $transport): void
     {
-        if (is_string($transport) && array_key_exists(strtolower($transport), $this->transportMap)) {
-            $transport = $this->transportMap[$transport];
-            foreach ($transport as $class) {
+        $key = is_string($transport) ? strtolower($transport) : null;
+        if ($key !== null && array_key_exists($key, $this->transportMap)) {
+            foreach ($this->transportMap[$key] as $class) {
                 if (class_exists($class)) {
                     $transport = $class;
                     break;
