@@ -14,22 +14,22 @@ use function sprintf;
  */
 class SmtpOptions extends AbstractOptions
 {
-    protected string $name            = 'localhost';
+    protected ?string $name           = null;
     protected array $connectionConfig = [];
     protected string $host            = '127.0.0.1';
     protected int $port               = 25;
 
-    protected ?int $connectionTimeLimit;
+    protected ?int $connectionTimeLimit = null;
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * Set the local client hostname or IP
+     * Set the local client hostname or IP; when null, the transport's own default is kept
      */
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
         return $this;

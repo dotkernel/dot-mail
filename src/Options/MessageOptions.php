@@ -105,6 +105,9 @@ class MessageOptions extends AbstractOptions
 
     public function getBody(): BodyOptions
     {
+        if (! isset($this->body)) {
+            $this->body = new BodyOptions();
+        }
         return $this->body;
     }
 
@@ -115,6 +118,9 @@ class MessageOptions extends AbstractOptions
 
     public function getAttachments(): AttachmentsOptions
     {
+        if (! isset($this->attachments)) {
+            $this->attachments = new AttachmentsOptions();
+        }
         return $this->attachments;
     }
 

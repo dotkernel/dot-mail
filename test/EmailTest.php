@@ -9,6 +9,8 @@ use Dot\Mail\Email;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\LogicException;
+use Symfony\Component\Mime\Part\Multipart\AlternativePart;
+use Symfony\Component\Mime\Part\TextPart;
 
 class EmailTest extends TestCase
 {
@@ -84,5 +86,35 @@ class EmailTest extends TestCase
         $cc = $subject->getCc();
         $this->assertCount(1, $cc);
         $this->assertSame('Copy', $cc[0]->getName());
+    }
+
+    public function testTextOnlyMessageHasOnlyTextPart(): void
+    {
+        $subject = new Email();
+        $subject->text('plain text');
+
+        $body = $subject->getBody();
+        $this->assertSame(TextPart::class, $body::class);
+        $this->assertSame('plain text', $body->getBody());
+    }
+
+    public function testTextAndHtmlMessageIsAlternative(): void
+    {
+        $subject = new Email();
+        $subject->text('plain text');
+        $subject->html('<p>html</p>');
+
+        $this->assertInstanceOf(AlternativePart::class, $subject->getBody());
+    }
+
+    public function testMessageWithoutBodyIsInvalid(): void
+    {
+        $subject = new Email();
+        $subject->setFrom('from@example.com');
+        $subject->setTo('to@example.com');
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('A message must have a text or an HTML part.');
+        $subject->ensureValidity();
     }
 }

@@ -21,7 +21,7 @@ class MailEvent extends Event
     public const EVENT_MAIL_SEND_ERROR = 'event.mail.send.error';
 
     protected MailServiceInterface $mailService;
-    protected ResultInterface $result;
+    protected ?ResultInterface $result = null;
 
     public function __construct(MailServiceInterface $mailService, string $name = self::EVENT_MAIL_PRE_SEND)
     {
@@ -39,7 +39,7 @@ class MailEvent extends Event
         $this->mailService = $mailService;
     }
 
-    public function getResult(): ResultInterface
+    public function getResult(): ?ResultInterface
     {
         return $this->result;
     }

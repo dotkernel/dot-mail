@@ -31,4 +31,10 @@ interface MailServiceInterface
     public function setAttachments(array $paths): void;
 
     public function setTransport(TransportInterface $transport): void;
+
+    /**
+     * Restores the message and attachments to the configured defaults.
+     * Called automatically after every send() attempt.
+     */
+    public function reset(): void;
 }

@@ -21,7 +21,7 @@ use function strtolower;
 class MailOptions extends AbstractOptions
 {
     protected array $eventListeners                = [];
-    protected TransportInterface|string $transport = EsmtpTransport::class;
+    protected TransportInterface|string $transport = SendmailTransport::class;
     protected array $transportMap                  = [
         'esmtp'    => [EsmtpTransport::class],
         'sendmail' => [SendmailTransport::class],
@@ -61,6 +61,9 @@ class MailOptions extends AbstractOptions
 
     public function getMessageOptions(): MessageOptions
     {
+        if (! isset($this->messageOptions)) {
+            $this->messageOptions = new MessageOptions();
+        }
         return $this->messageOptions;
     }
 
@@ -71,6 +74,9 @@ class MailOptions extends AbstractOptions
 
     public function getSmtpOptions(): SmtpOptions
     {
+        if (! isset($this->smtpOptions)) {
+            $this->smtpOptions = new SmtpOptions();
+        }
         return $this->smtpOptions;
     }
 

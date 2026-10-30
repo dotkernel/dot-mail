@@ -10,6 +10,7 @@ use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\LogService;
 use Dot\Mail\Service\LogServiceInterface;
+use Dot\Mail\Service\MailServiceInterface;
 use PHPUnit\Framework\TestCase;
 
 class ConfigProviderTest extends TestCase
@@ -41,6 +42,10 @@ class ConfigProviderTest extends TestCase
         $this->assertSame(
             LogService::class,
             $this->config['dependencies']['aliases'][LogServiceInterface::class]
+        );
+        $this->assertSame(
+            'dot-mail.service.default',
+            $this->config['dependencies']['aliases'][MailServiceInterface::class]
         );
     }
 

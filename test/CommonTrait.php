@@ -44,55 +44,57 @@ trait CommonTrait
     {
         return [
             'dot_mail' => [
-                'default' => [
-                    'message_options' => [
-                        'from'          => '',
-                        'from_name'     => '',
-                        'reply_to'      => '',
-                        'reply_to_name' => '',
-                        'to'            => [],
-                        'cc'            => [],
-                        'bcc'           => [],
-                        'subject'       => '',
-                        'body'          => [
-                            'content' => '',
-                            'charset' => 'utf-8',
+                'services' => [
+                    'default' => [
+                        'message_options' => [
+                            'from'          => '',
+                            'from_name'     => '',
+                            'reply_to'      => '',
+                            'reply_to_name' => '',
+                            'to'            => [],
+                            'cc'            => [],
+                            'bcc'           => [],
+                            'subject'       => '',
+                            'body'          => [
+                                'content' => '',
+                                'charset' => 'utf-8',
+                            ],
+                            'attachments'   => [
+                                'files' => [],
+                                'dir'   => [
+                                    'iterate'   => false,
+                                    'path'      => $this->fileSystem->url() . '/data/mail/attachments',
+                                    'recursive' => false,
+                                ],
+                            ],
                         ],
-                        'attachments'   => [
-                            'files' => [],
-                            'dir'   => [
-                                'iterate'   => false,
-                                'path'      => $this->fileSystem->url() . '/data/mail/attachments',
-                                'recursive' => false,
+                        /**
+                         * the mail transport to use
+                         * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
+                         *
+                         * for standard mail transports, you can use these aliases
+                         * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
+                         * - esmtp     => Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
+                         *
+                         * defaults to sendmail
+                         **/
+                        'transport' => 'esmtp',
+                        //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
+                        // adapter is used
+                        'smtp_options' => [
+                            'host'              => 'testHost',
+                            'port'              => 587,
+                            'connection_config' => [
+                                //the smtp authentication identity
+                                'username' => 'test',
+                                //the smtp authentication credential
+                                'password' => 'testPassword',
+                                'tls'      => null,
                             ],
                         ],
                     ],
-                    /**
-                     * the mail transport to use
-                     * can be any class implementing Symfony\Component\Mailer\Transport\TransportInterface
-                     *
-                     * for standard mail transports, you can use these aliases
-                     * - sendmail => Symfony\Component\Mailer\Transport\SendmailTransport
-                     * - esmtp     => Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
-                     *
-                     * defaults to sendmail
-                     **/
-                    'transport' => 'esmtp',
-                    //options that will be used only if Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
-                    // adapter is used
-                    'smtp_options' => [
-                        'host'              => 'testHost',
-                        'port'              => 587,
-                        'connection_config' => [
-                            //the smtp authentication identity
-                            'username' => 'test',
-                            //the smtp authentication credential
-                            'password' => 'testPassword',
-                            'tls'      => null,
-                        ],
-                    ],
+                    'test'    => 'string test',
                 ],
-                'test'    => 'string test',
                 // option to log the SENT emails
                 'log' => [
                     'sent' => $this->fileSystem->url() . '/log/mail/sent.log',

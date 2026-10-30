@@ -12,20 +12,12 @@ use Symfony\Component\Mime\Header\MailboxListHeader;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\Multipart\AlternativePart;
-use Symfony\Component\Mime\Part\Multipart\MixedPart;
-use Symfony\Component\Mime\Part\Multipart\RelatedPart;
 use Symfony\Component\Mime\Part\TextPart;
 
-use function array_filter;
-use function array_merge;
-use function array_unique;
-use function array_values;
 use function is_array;
 use function is_string;
-use function preg_match_all;
 use function sprintf;
 use function sscanf;
-use function str_replace;
 
 class Email extends Message
 {
@@ -48,7 +40,6 @@ class Email extends Message
     private ?string $html        = null;
 
     private ?string $htmlCharset = null;
-    private array $attachments   = [];
 
     public function subject(string $subject): static
     {
@@ -265,8 +256,8 @@ class Email extends Message
 
     private function ensureBodyValid(): void
     {
-        if (null === $this->text && null === $this->html && ! $this->attachments) {
-            throw new LogicException('A message must have a text or an HTML part or attachments.');
+        if (null === $this->text && null === $this->html) {
+            throw new LogicException('A message must have a text or an HTML part.');
         }
     }
 
@@ -274,79 +265,13 @@ class Email extends Message
     {
         $this->ensureBodyValid();
 
-        [$htmlPart, $otherParts, $relatedParts] = $this->prepareParts();
-
         $part = null === $this->text ? null : new TextPart($this->text, $this->textCharset);
-        if (null !== $htmlPart) {
-            if (null !== $part) {
-                $part = new AlternativePart($part, $htmlPart);
-            } else {
-                $part = $htmlPart;
-            }
-        }
-
-        if ($relatedParts) {
-            $part = new RelatedPart($part, ...$relatedParts);
-        }
-
-        if ($otherParts) {
-            if ($part) {
-                $part = new MixedPart($part, ...$otherParts);
-            } else {
-                $part = new MixedPart(...$otherParts);
-            }
+        if (null !== $this->html) {
+            $htmlPart = new TextPart($this->html, $this->htmlCharset, 'html');
+            $part     = null !== $part ? new AlternativePart($part, $htmlPart) : $htmlPart;
         }
 
         return $part ?? new TextPart((string) $this->text, $this->textCharset);
-    }
-
-    private function prepareParts(): array
-    {
-        $names    = [];
-        $htmlPart = null;
-        $html     = $this->html;
-        if (null !== $html) {
-            $htmlPart = new TextPart($html, $this->htmlCharset, 'html');
-            $html     = $htmlPart->getBody();
-
-            $regexes    = [
-                '<img\s+[^>]*src\s*=\s*(?:([\'"])cid:(.+?)\\1|cid:([^>\s]+))',
-                '<\w+\s+[^>]*background\s*=\s*(?:([\'"])cid:(.+?)\\1|cid:([^>\s]+))',
-            ];
-            $tmpMatches = [];
-            foreach ($regexes as $regex) {
-                preg_match_all('/' . $regex . '/i', $html, $tmpMatches);
-                $names = array_merge($names, $tmpMatches[2], $tmpMatches[3]);
-            }
-            $names = array_filter(array_unique($names));
-        }
-
-        $otherParts = $relatedParts = [];
-        foreach ($this->attachments as $part) {
-            foreach ($names as $name) {
-                if ($name !== $part->getName() && (! $part->hasContentId() || $name !== $part->getContentId())) {
-                    continue;
-                }
-                if (isset($relatedParts[$name])) {
-                    continue 2;
-                }
-
-                if ($name !== $part->getContentId()) {
-                    $html = str_replace('cid:' . $name, 'cid:' . $part->getContentId(), $html, $count);
-                }
-                $relatedParts[$name] = $part;
-                $part->setName($part->getContentId())->asInline();
-
-                continue 2;
-            }
-
-            $otherParts[] = $part;
-        }
-        if (null !== $htmlPart) {
-            $htmlPart = new TextPart($html, $this->htmlCharset, 'html');
-        }
-
-        return [$htmlPart, $otherParts, array_values($relatedParts)];
     }
 
     private function setHeaderBody(string $type, string $name, mixed $body): static

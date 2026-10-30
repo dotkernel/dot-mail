@@ -8,14 +8,15 @@ use DateTimeImmutable;
 use Dot\Mail\Email;
 
 use function dirname;
-use function file_exists;
 use function file_put_contents;
+use function is_dir;
 use function json_encode;
 use function mkdir;
 use function sprintf;
 use function trim;
 
 use const FILE_APPEND;
+use const LOCK_EX;
 use const PHP_EOL;
 
 class LogService implements LogServiceInterface
@@ -43,8 +44,8 @@ class LogService implements LogServiceInterface
          */
         $dirname = dirname($target);
 
-        if (! file_exists($dirname)) {
-            mkdir($dirname, 0755, true);
+        if (! is_dir($dirname) && ! @mkdir($dirname, 0755, true) && ! is_dir($dirname)) {
+            return false;
         }
 
         /**
@@ -63,7 +64,7 @@ class LogService implements LogServiceInterface
         /**
          * Write the log data and return the result
          */
-        return file_put_contents($target, $data, FILE_APPEND);
+        return file_put_contents($target, $data, FILE_APPEND | LOCK_EX);
     }
 
     public function extractAddresses(array $addressList): array

@@ -48,4 +48,14 @@ class MessageOptionsTest extends TestCase
         $this->assertContainsOnlyInstancesOf(BodyOptions::class, [$subject->getBody()]);
         $this->assertContainsOnlyInstancesOf(AttachmentsOptions::class, [$subject->getAttachments()]);
     }
+
+    public function testDefaultsWithoutConfiguration(): void
+    {
+        $subject = new MessageOptions();
+
+        $this->assertContainsOnlyInstancesOf(BodyOptions::class, [$subject->getBody()]);
+        $this->assertSame('', $subject->getBody()->getContent());
+        $this->assertContainsOnlyInstancesOf(AttachmentsOptions::class, [$subject->getAttachments()]);
+        $this->assertSame([], $subject->getAttachments()->getFiles());
+    }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DotTest\Mail\Factory;
 
+use Dot\Mail\Exception\InvalidArgumentException;
 use Dot\Mail\Factory\AbstractMailFactory;
 use Dot\Mail\Options\MailOptions;
 use DotTest\Mail\CommonTrait;
@@ -101,5 +102,73 @@ class AbstractMailFactoryTest extends TestCase
         } finally {
             restore_error_handler();
         }
+    }
+
+    /**
+     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function testLogKeyIsNotACreatableService(): void
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturn($this->config);
+
+        $this->assertTrue($this->subject->canCreate($container, 'dot-mail.testPart.default'));
+        $this->assertFalse($this->subject->canCreate($container, 'dot-mail.testPart.log'));
+    }
+
+    /**
+     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function testServicesCanOnlyComeFromServicesKey(): void
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturn([
+            'dot_mail' => [
+                'log'      => ['sent' => '/tmp/sent.log'],
+                'services' => ['log' => [], 'other' => []],
+            ],
+        ]);
+
+        $this->assertTrue($this->subject->canCreate($container, 'dot-mail.testPart.other'));
+        $this->assertTrue($this->subject->canCreate($container, 'dot-mail.testPart.log'));
+        $this->assertFalse($this->subject->canCreate($container, 'dot-mail.testPart.missing'));
+    }
+
+    /**
+     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function testOldConfigurationLayoutIsRejected(): void
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturn([
+            'dot_mail' => [
+                'default' => ['transport' => 'sendmail'],
+                'log'     => ['sent' => '/tmp/sent.log'],
+            ],
+        ]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Mail service "default" must be configured under "dot_mail.services"');
+        $this->subject->canCreate($container, 'dot-mail.testPart.default');
+    }
+
+    /**
+     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function testConfigurationWithOnlyLogCreatesNoService(): void
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturn(['dot_mail' => ['log' => ['sent' => '/tmp/sent.log']]]);
+
+        $this->assertFalse($this->subject->canCreate($container, 'dot-mail.testPart.log'));
+        $this->assertFalse($this->subject->canCreate($container, 'dot-mail.testPart.default'));
     }
 }
