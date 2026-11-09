@@ -7,25 +7,18 @@ namespace DotTest\Mail\Event;
 use Dot\Mail\Event\MailEvent;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Service\MailServiceInterface;
-use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 class MailEventTest extends TestCase
 {
-    private MailServiceInterface|MockObject $mailService;
+    private MailServiceInterface&Stub $mailService;
 
-    /**
-     * @throws Exception
-     */
     public function setUp(): void
     {
-        $this->mailService = $this->createMock(MailServiceInterface::class);
+        $this->mailService = $this->createStub(MailServiceInterface::class);
     }
 
-    /**
-     * @throws Exception
-     */
     public function testMailEventCanBeCreated(): void
     {
         $defaultMailEvent = new MailEvent($this->mailService);
@@ -34,12 +27,12 @@ class MailEventTest extends TestCase
         $this->assertContainsOnlyInstancesOf(MailServiceInterface::class, [$defaultMailEvent->getMailService()]);
 
         $customMailEvent      = new MailEvent($this->mailService, MailEvent::EVENT_MAIL_SEND_ERROR);
-        $mailServiceInterface = $this->createMock(MailServiceInterface::class);
+        $mailServiceInterface = $this->createStub(MailServiceInterface::class);
         $customMailEvent->setMailService($mailServiceInterface);
 
         $this->assertContainsOnlyInstancesOf(MailEvent::class, [$customMailEvent]);
         $this->assertSame(MailEvent::EVENT_MAIL_SEND_ERROR, $customMailEvent->getName());
-        $this->assertContainsOnlyInstancesOf(MailServiceInterface::class, [$customMailEvent->getMailService()]);
+        $this->assertSame($mailServiceInterface, $customMailEvent->getMailService());
     }
 
     public function testEventPropagation(): void

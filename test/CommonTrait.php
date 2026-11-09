@@ -9,6 +9,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
 
 trait CommonTrait
 {
+    /** @var array<string, mixed> */
     protected array $config;
     protected vfsStreamDirectory $fileSystem;
 
@@ -30,9 +31,12 @@ trait CommonTrait
         $this->config = $this->generateConfig();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getConfig(): array
     {
-        return $this->getConfig();
+        return $this->config;
     }
 
     public function getFileSystem(): vfsStreamDirectory
@@ -40,6 +44,9 @@ trait CommonTrait
         return $this->fileSystem;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function generateConfig(): array
     {
         return [

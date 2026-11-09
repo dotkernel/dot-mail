@@ -7,8 +7,7 @@ namespace Dot\Mail\Options;
 use Laminas\Stdlib\AbstractOptions;
 
 /**
- * @template TValue
- * @template-extends AbstractOptions<TValue>
+ * @extends AbstractOptions<mixed>
  */
 class MessageOptions extends AbstractOptions
 {
@@ -16,10 +15,13 @@ class MessageOptions extends AbstractOptions
     protected string $fromName    = '';
     protected string $replyTo     = '';
     protected string $replyToName = '';
-    protected array $to           = [];
-    protected array $cc           = [];
-    protected array $bcc          = [];
-    protected string $subject     = '';
+    /** @var string[] */
+    protected array $to = [];
+    /** @var string[] */
+    protected array $cc = [];
+    /** @var string[] */
+    protected array $bcc      = [];
+    protected string $subject = '';
     protected BodyOptions $body;
     protected AttachmentsOptions $attachments;
 
@@ -63,31 +65,49 @@ class MessageOptions extends AbstractOptions
         $this->replyToName = $replyToName;
     }
 
+    /**
+     * @return string[]
+     */
     public function getTo(): array
     {
         return $this->to;
     }
 
+    /**
+     * @param string[] $to
+     */
     public function setTo(array $to): void
     {
         $this->to = $to;
     }
 
+    /**
+     * @return string[]
+     */
     public function getCc(): array
     {
         return $this->cc;
     }
 
+    /**
+     * @param string[] $cc
+     */
     public function setCc(array $cc): void
     {
         $this->cc = $cc;
     }
 
+    /**
+     * @return string[]
+     */
     public function getBcc(): array
     {
         return $this->bcc;
     }
 
+    /**
+     * @param string[] $bcc
+     */
     public function setBcc(array $bcc): void
     {
         $this->bcc = $bcc;
@@ -111,6 +131,9 @@ class MessageOptions extends AbstractOptions
         return $this->body;
     }
 
+    /**
+     * @param array<string, mixed> $body
+     */
     public function setBody(array $body): void
     {
         $this->body = new BodyOptions($body);
@@ -124,6 +147,9 @@ class MessageOptions extends AbstractOptions
         return $this->attachments;
     }
 
+    /**
+     * @param array<string, mixed> $attachments
+     */
     public function setAttachments(array $attachments): void
     {
         $this->attachments = new AttachmentsOptions($attachments);

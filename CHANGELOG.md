@@ -7,7 +7,7 @@
 - **BC:** mail services are configured under `dot_mail.services`; `dot_mail.log` stays separate. A configuration in the old layout (`dot_mail.default`) now fails with an `InvalidArgumentException`. Move the service blocks as shown in `config/mail.global.php.dist`.
 - **BC:** `send()` restores the configured defaults after every attempt, successful or not: recipients, subject, body and attachments must be set again for every message. `getMessage()` returns a new object after each send.
 - **BC:** a missing or unreadable attachment now throws a `MailException` instead of being skipped.
-- **BC:** the attachment directory (`attachments.dir`) is scanned at send time instead of once at start-up, and files starting with a dot are skipped. Attachments are read with `DataPart::fromPath()`, so no file handles are left open.
+- **BC:** the attachment directory (`attachments.dir`) is scanned at send time instead of once at start-up, and files and directories starting with a dot are skipped. Attachments are read with `DataPart::fromPath()`, so no file handles are left open.
 - **BC:** `send()` handles any `Throwable`, and the `MailException` it throws carries the original exception and code. `ResultInterface`, `MailResult` and `createMailResultFromException()` use `Throwable` instead of `Exception`.
 - **BC:** an exception thrown by a post-send listener propagates unchanged and is no longer reported as a send error, because the message was already delivered.
 - **BC:** the `esmtp` transport is built directly from `smtp_options` instead of through a DSN string. Credentials with special characters work, empty credentials are not sent, and `smtp_options.name` and `connection_time_limit` now take effect. `SmtpOptions::getName()` returns `?string` and defaults to `null`.
@@ -17,6 +17,12 @@
 - **BC:** a message that never received a body fails validation instead of being sent empty; an empty `body.content` in the configuration is no longer applied.
 - **BC:** the charset passed to `setBody()` and `body.charset` are used; `send()` only sets `utf-8` when no encoding is set.
 - **BC:** the minimum supported PHP version is 8.3 (`~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0`).
+- **BC:** mail services are created by `MailServiceFactory` and `MailOptionsFactory`, which work with any PSR-11 container. `dot-mail.service.default` and `dot-mail.options.default` are registered by `ConfigProvider`; any other mail service must be registered by the application, for example `'dot-mail.service.newsletter' => MailServiceFactory::class`.
+- **BC:** requesting a mail service that is not configured under `dot_mail.services` throws an `InvalidArgumentException`.
+- **BC:** `MailServiceInterface::setBody()` accepts `string|AbstractPart`; implementations must widen the parameter.
+- **BC:** `MailEvent` extends `Laminas\EventManager\Event` instead of `Dot\Event\Event`.
+- **BC:** `Email::setSender()` takes `Address|string $address` and `?string $name`; the first parameter was named `$addresses`.
+- PHPUnit 12, PHPStan level 8, and newer GitHub Actions versions (`actions/checkout@v7`, `actions/cache@v6`, `codecov/codecov-action@v7`).
 - A failing log write no longer turns a delivered email into an error; `LogService::sent()` returns `false` when the log directory cannot be created, and writes use `LOCK_EX`.
 - Option getters fall back to defaults, so a minimal configuration no longer fails with uninitialized properties.
 
@@ -25,7 +31,7 @@
 - `MailServiceInterface::reset()`, which restores the configured message and attachments. The `MailService` constructor accepts the default attachments as an optional fifth argument.
 - `MailServiceInterface` is aliased to `dot-mail.service.default`, so it can be injected by interface.
 - PHP 8.6 in the version constraint and in the CI matrix.
-- `laminas/laminas-stdlib` as a direct dependency.
+- `laminas/laminas-stdlib`, `laminas/laminas-eventmanager` and `psr/container` as direct dependencies.
 
 ### Deprecated
 
@@ -35,15 +41,22 @@
 
 - Support for PHP 8.2.
 - Unused attachment handling code from `Dot\Mail\Email`.
+- **BC:** `AbstractMailFactory`, `MailServiceAbstractFactory` and `MailOptionsAbstractFactory`, and the `abstract_factories` entry in `ConfigProvider`.
+- The `laminas/laminas-servicemanager` requirement. Applications using Laminas Service Manager require it themselves.
+- The `dotkernel/dot-event` requirement.
 
 ### Fixed
 
 - `Email::addTo()` and the other address methods accept arrays of `Address` objects.
 - Transport aliases are matched case-insensitively (`ESMTP`, `SendMail`).
-- Missing `username`, `password` or `tls` keys in `smtp_options.connection_config` no longer raise warnings, and a username with special characters is encoded correctly.
-- `canCreate()` no longer reads an undefined array key for names with too few parts.
+- Missing `username`, `password` or `tls` keys in `smtp_options.connection_config` no longer raise warnings, and credentials with special characters work.
 - Detaching a listener that was never attached no longer removes a wrong entry.
 - Error messages for an invalid transport, an invalid event listener and an invalid port are accurate.
+- `Email::setSender()` accepts an `Address` object.
+- A body set as a MIME part (`setBody(AbstractPart)`) is sent instead of failing validation.
+- Files inside hidden directories of the attachments directory are no longer attached.
+- An invalid `event_listeners` entry throws a `RuntimeException` instead of a `TypeError`.
+- `config/mail.global.php.dist` sets `smtp_options.host` to `127.0.0.1` instead of an empty string.
 
 ## 5.4.3 - 2026-05-11
 

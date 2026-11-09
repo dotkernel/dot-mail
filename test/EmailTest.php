@@ -117,4 +117,36 @@ class EmailTest extends TestCase
         $this->expectExceptionMessage('A message must have a text or an HTML part.');
         $subject->ensureValidity();
     }
+
+    public function testPriorityIsReadFromTheHeader(): void
+    {
+        $this->assertSame(Email::PRIORITY_NORMAL, (new Email())->getPriority());
+
+        foreach ([1, 2, 3, 4, 5] as $priority) {
+            $this->assertSame($priority, (new Email())->priority($priority)->getPriority());
+        }
+
+        $this->assertSame(Email::PRIORITY_LOWEST, (new Email())->priority(9)->getPriority());
+        $this->assertSame(Email::PRIORITY_HIGHEST, (new Email())->priority(0)->getPriority());
+
+        $malformed = new Email();
+        $malformed->getHeaders()->addTextHeader('X-Priority', 'x');
+        $this->assertSame(Email::PRIORITY_NORMAL, $malformed->getPriority());
+    }
+
+    public function testSenderAcceptsAnAddressObject(): void
+    {
+        $email = (new Email())->setSender(new Address('sender@example.com', 'Sender Name'));
+
+        $this->assertSame('sender@example.com', $email->getSender()?->getAddress());
+        $this->assertSame('Sender Name', $email->getSender()->getName());
+    }
+
+    public function testSenderAcceptsAStringAndName(): void
+    {
+        $email = (new Email())->setSender('sender@example.com', 'Sender Name');
+
+        $this->assertSame('sender@example.com', $email->getSender()?->getAddress());
+        $this->assertSame('Sender Name', $email->getSender()->getName());
+    }
 }

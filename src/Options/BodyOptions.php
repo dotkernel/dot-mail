@@ -8,8 +8,7 @@ use Dot\Mail\Service\MailServiceInterface;
 use Laminas\Stdlib\AbstractOptions;
 
 /**
- * @template TValue
- * @template-extends AbstractOptions<TValue>
+ * @extends AbstractOptions<mixed>
  */
 class BodyOptions extends AbstractOptions
 {

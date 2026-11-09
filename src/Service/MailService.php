@@ -14,8 +14,10 @@ use Dot\Mail\Options\MailOptions;
 use Dot\Mail\Result\MailResult;
 use Dot\Mail\Result\ResultInterface;
 use FilesystemIterator;
+use RecursiveCallbackFilterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\DataPart;
@@ -41,11 +43,13 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
     protected Email $prototype;
     protected TransportInterface $transport;
     protected MailOptions $mailOptions;
-    protected array $attachments        = [];
+    /** @var array<int|string, string> */
+    protected array $attachments = [];
+    /** @var array<int|string, string> */
     protected array $defaultAttachments = [];
 
     /**
-     * @param array $attachments The default attachments, restored by reset() after every send
+     * @param array<int|string, string> $attachments The default attachments, restored by reset() after every send
      */
     public function __construct(
         LogServiceInterface $logService,
@@ -185,16 +189,25 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
         }
     }
 
+    /**
+     * @param array<int|string, string> $paths
+     */
     public function addAttachments(array $paths): void
     {
         $this->setAttachments(array_merge($this->attachments, $paths));
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getAttachments(): array
     {
         return $this->attachments;
     }
 
+    /**
+     * @param array<int|string, string> $paths
+     */
     public function setAttachments(array $paths): void
     {
         $this->attachments = $paths;
@@ -224,7 +237,8 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
 
     /**
      * Collects the files of the configured attachments directory at send time.
-     * Relative paths are resolved against the current working directory; dotfiles are skipped.
+     * Relative paths are resolved against the current working directory; files and directories starting with a dot
+     * are skipped.
      *
      * @return string[]
      */
@@ -236,10 +250,13 @@ class MailService implements MailServiceInterface, MailEventListenerAwareInterfa
             return [];
         }
 
+        //hidden files and directories are skipped; a hidden directory is not descended into
         $files = ($dir['recursive'] ?? false) === true
             ? new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($dir['path'], FilesystemIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::CHILD_FIRST
+                new RecursiveCallbackFilterIterator(
+                    new RecursiveDirectoryIterator($dir['path'], FilesystemIterator::SKIP_DOTS),
+                    static fn (SplFileInfo $file): bool => ! str_starts_with($file->getFilename(), '.')
+                )
             )
             : new DirectoryIterator($dir['path']);
 

@@ -20,55 +20,50 @@ use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
-use function explode;
+use function get_debug_type;
 use function gettype;
 use function is_array;
+use function is_int;
 use function is_object;
 use function is_string;
 use function is_subclass_of;
 use function sprintf;
 
-class MailServiceAbstractFactory extends AbstractMailFactory
+/**
+ * Creates a mail service, registered as `dot-mail.service.<name>` and configured under `dot_mail.services.<name>`.
+ * Works with any PSR-11 container that accepts a factory per service key.
+ */
+class MailServiceFactory
 {
     public const SPECIFIC_PART = 'service';
 
-    protected MailOptions $mailOptions;
-
     /**
-     * @param string $requestedName
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws InvalidArgumentException When the service is not configured or its transport is invalid.
+     * @throws RuntimeException When an event listener is invalid.
      */
     public function __invoke(
         ContainerInterface $container,
-        $requestedName,
-        ?array $options = null
+        string $requestedName = MailConfig::DOT_MAIL_PART . '.' . self::SPECIFIC_PART . '.default'
     ): MailServiceInterface {
-        $specificServiceName = explode('.', $requestedName)[2];
-
-        $this->mailOptions = $container->get(
-            sprintf(
-                '%s.%s.%s',
-                self::DOT_MAIL_PART,
-                MailOptionsAbstractFactory::SPECIFIC_PART,
-                $specificServiceName
-            )
-        );
+        $name        = MailConfig::serviceName($requestedName, self::SPECIFIC_PART);
+        $mailOptions = new MailOptions(MailConfig::service($container, $name));
 
         $logService  = $container->get(LogServiceInterface::class);
-        $message     = $this->createMessage();
-        $transport   = $this->createTransport($container);
-        $attachments = $this->mailOptions->getMessageOptions()->getAttachments()->getFiles();
+        $message     = $this->createMessage($mailOptions);
+        $transport   = $this->createTransport($mailOptions, $container);
+        $attachments = $mailOptions->getMessageOptions()->getAttachments()->getFiles();
 
-        $mailService = new MailService($logService, $message, $transport, $this->mailOptions, $attachments);
+        $mailService = new MailService($logService, $message, $transport, $mailOptions, $attachments);
 
-        $this->attachMailListeners($mailService, $container);
+        $this->attachMailListeners($mailOptions, $mailService, $container);
         return $mailService;
     }
 
-    protected function createMessage(): Email
+    protected function createMessage(MailOptions $mailOptions): Email
     {
-        $options = $this->mailOptions->getMessageOptions();
+        $options = $mailOptions->getMessageOptions();
         $message = new Email();
 
         $from = $options->getFrom();
@@ -110,9 +105,9 @@ class MailServiceAbstractFactory extends AbstractMailFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function createTransport(ContainerInterface $container): TransportInterface
+    protected function createTransport(MailOptions $mailOptions, ContainerInterface $container): TransportInterface
     {
-        $adapter = $this->mailOptions->getTransport();
+        $adapter = $mailOptions->getTransport();
 
         //a transport object provided by the user is used as it is
         if ($adapter instanceof TransportInterface) {
@@ -133,7 +128,7 @@ class MailServiceAbstractFactory extends AbstractMailFactory
 
         //the esmtp alias is configured from the smtp options
         if ($adapter === EsmtpTransport::class) {
-            return $this->createEsmtpTransport();
+            return $this->createEsmtpTransport($mailOptions);
         }
 
         //check is the adapter is Symfony default adapter
@@ -151,9 +146,9 @@ class MailServiceAbstractFactory extends AbstractMailFactory
         );
     }
 
-    protected function createEsmtpTransport(): EsmtpTransport
+    protected function createEsmtpTransport(MailOptions $mailOptions): EsmtpTransport
     {
-        $smtp       = $this->mailOptions->getSmtpOptions();
+        $smtp       = $mailOptions->getSmtpOptions();
         $connection = $smtp->getConnectionConfig();
         $tls        = $connection['tls'] ?? null;
 
@@ -190,24 +185,23 @@ class MailServiceAbstractFactory extends AbstractMailFactory
      * @throws NotFoundExceptionInterface
      */
     protected function attachMailListeners(
+        MailOptions $mailOptions,
         MailEventListenerAwareInterface $service,
         ContainerInterface $container
     ): void {
-        $listeners = $this->mailOptions->getEventListeners();
+        $listeners = $mailOptions->getEventListeners();
         foreach ($listeners as $listener) {
-            if (is_array($listener)) {
-                $type     = $listener['type'] ?? '';
-                $priority = $listener['priority'] ?? 1;
-
-                $listener = $this->getListenerObject($container, $type);
-                $service->attachListener($listener, $priority);
-            } elseif (is_string($listener)) {
-                $type     = $listener;
-                $priority = 1;
-
-                $listener = $this->getListenerObject($container, $type);
-                $service->attachListener($listener, $priority);
+            $type     = is_array($listener) ? ($listener['type'] ?? null) : $listener;
+            $priority = is_array($listener) ? ($listener['priority'] ?? 1) : 1;
+            if (! is_string($type) || ! is_int($priority)) {
+                throw new RuntimeException(sprintf(
+                    'Mail event listener config must be a service name or ["type" => string, "priority" => int];'
+                    . ' %s given',
+                    get_debug_type($listener)
+                ));
             }
+
+            $service->attachListener($this->getListenerObject($container, $type), $priority);
         }
     }
 

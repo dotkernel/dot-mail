@@ -63,8 +63,8 @@ return [
                 'transport' => 'sendmail',
                 //options that will be used only if esmtp adapter is used
                 'smtp_options' => [
-                    //hostname or IP address of the mail server
-                    'host' => '',
+                    //hostname or IP address of the mail server, required for esmtp
+                    'host' => '127.0.0.1',
                     //port of the mail server - 587 or 465 for secure connections
                     'port'              => 587,
                     'connection_config' => [

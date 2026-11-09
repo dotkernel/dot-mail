@@ -6,6 +6,7 @@ namespace Dot\Mail\Service;
 
 use DateTimeImmutable;
 use Dot\Mail\Email;
+use Symfony\Component\Mime\Address;
 
 use function dirname;
 use function file_put_contents;
@@ -21,8 +22,12 @@ use const PHP_EOL;
 
 class LogService implements LogServiceInterface
 {
+    /** @var array<string, mixed> */
     protected array $config = [];
 
+    /**
+     * @param array<string, mixed> $config the dot_mail configuration
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -67,6 +72,10 @@ class LogService implements LogServiceInterface
         return file_put_contents($target, $data, FILE_APPEND | LOCK_EX);
     }
 
+    /**
+     * @param Address[] $addressList
+     * @return string[]
+     */
     public function extractAddresses(array $addressList): array
     {
         $addresses = [];

@@ -14,9 +14,10 @@ use Dot\Mail\Result\MailResult;
 use Dot\Mail\Service\LogServiceInterface;
 use Dot\Mail\Service\MailService;
 use DotTest\Mail\CommonTrait;
+use DotTest\Mail\Fixture\RecordingTransport;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
@@ -38,8 +39,8 @@ class MailServiceTest extends TestCase
     use CommonTrait;
 
     private MailService $mailService;
-    private Email|MockObject $message;
-    private TransportInterface|MockObject $transportInterface;
+    private Email $message;
+    private TransportInterface&Stub $transportInterface;
 
     /**
      * @throws Exception
@@ -47,9 +48,9 @@ class MailServiceTest extends TestCase
     public function setUp(): void
     {
         $this->message            = new Email();
-        $this->transportInterface = $this->createMock(TransportInterface::class);
-        $mailOptions              = $this->createMock(MailOptions::class);
-        $logServiceInterface      = $this->createMock(LogServiceInterface::class);
+        $this->transportInterface = $this->createStub(TransportInterface::class);
+        $mailOptions              = new MailOptions();
+        $logServiceInterface      = $this->createStub(LogServiceInterface::class);
 
         $this->mailService = new MailService(
             $logServiceInterface,
@@ -80,7 +81,7 @@ class MailServiceTest extends TestCase
     public function testGettersAndSetters(): void
     {
         $attachments = ['/testAttachment.pdf', '/testDirectory/testAttachment2.xls'];
-        $transport   = $this->createMock(EsmtpTransport::class);
+        $transport   = new EsmtpTransport();
 
         $this->mailService->setAttachments($attachments);
         $this->mailService->setTransport($transport);
@@ -100,6 +101,7 @@ class MailServiceTest extends TestCase
         $mailEvent = $this->mailService->createMailEvent('testName', $result);
         $this->assertContainsOnlyInstancesOf(MailEvent::class, [$mailEvent]);
         $this->assertSame('testName', $mailEvent->getName());
+        $this->assertNotNull($mailEvent->getResult());
         $this->assertSame(MailResult::DEFAULT_MESSAGE, $mailEvent->getResult()->getMessage());
     }
 
@@ -146,9 +148,11 @@ class MailServiceTest extends TestCase
     public function testSendFailureTriggersErrorEvent(): void
     {
         $exception = new RuntimeException("Test Error Message");
-        $this->transportInterface->expects($this->once())
+        $transport = $this->createMock(TransportInterface::class);
+        $transport->expects($this->once())
             ->method('send')
             ->willThrowException($exception);
+        $this->mailService->setTransport($transport);
 
         $this->expectException(MailException::class);
         $this->expectExceptionMessage("Test Error Message");
@@ -394,7 +398,9 @@ class MailServiceTest extends TestCase
             $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf'
         );
 
-        $this->transportInterface->expects($this->once())->method('send');
+        $transport = $this->createMock(TransportInterface::class);
+        $transport->expects($this->once())->method('send');
+        $this->mailService->setTransport($transport);
 
         $this->mailService->send();
 
@@ -413,10 +419,10 @@ class MailServiceTest extends TestCase
         $defaults->addFrom('from@example.com');
 
         $mailService = new MailService(
-            $this->createMock(LogServiceInterface::class),
+            $this->createStub(LogServiceInterface::class),
             $defaults,
             $this->transportInterface,
-            $this->createMock(MailOptions::class),
+            new MailOptions(),
             ['/default/attachment.txt']
         );
 
@@ -435,6 +441,7 @@ class MailServiceTest extends TestCase
     public function testListenersSeeTheFullMessageBeforeTheReset(): void
     {
         $listener = new class extends AbstractMailEventListener {
+            /** @var list<string|null> */
             public array $seen = [];
 
             public function onPostSend(MailEvent $e): void
@@ -469,11 +476,15 @@ class MailServiceTest extends TestCase
     public function testErrorsAreReportedAsSendErrors(): void
     {
         $listener = new class extends AbstractMailEventListener {
+            /** @var list<class-string> */
             public array $events = [];
 
             public function onSendError(MailEvent $e): void
             {
-                $this->events[] = $e->getResult()?->getException()::class;
+                $exception = $e->getResult()?->getException();
+                if ($exception !== null) {
+                    $this->events[] = $exception::class;
+                }
             }
         };
         $this->mailService->attachListener($listener);
@@ -535,7 +546,7 @@ class MailServiceTest extends TestCase
 
         $message     = new Email();
         $mailService = new MailService(
-            $this->createMock(LogServiceInterface::class),
+            $this->createStub(LogServiceInterface::class),
             $message,
             $this->transportInterface,
             $options
@@ -574,7 +585,7 @@ class MailServiceTest extends TestCase
 
         $message     = new Email();
         $mailService = new MailService(
-            $this->createMock(LogServiceInterface::class),
+            $this->createStub(LogServiceInterface::class),
             $message,
             $this->transportInterface,
             $options
@@ -586,6 +597,92 @@ class MailServiceTest extends TestCase
         $body = $message->getBody();
         $this->assertInstanceOf(MixedPart::class, $body);
         $this->assertCount(4, $body->getParts());
+    }
+
+    public function testHiddenDirectoriesAreNotAttached(): void
+    {
+        $dir = $this->fileSystem->url() . '/data/mail/attachments';
+        mkdir($dir . '/.git');
+        file_put_contents($dir . '/.git/config', 'secret');
+        mkdir($dir . '/nested');
+        file_put_contents($dir . '/nested/nested.txt', 'nested');
+        file_put_contents($dir . '/nested/.env', 'secret');
+
+        $options = new MailOptions([
+            'message_options' => [
+                'attachments' => ['dir' => ['iterate' => true, 'path' => $dir, 'recursive' => true]],
+            ],
+        ]);
+
+        $message     = new Email();
+        $mailService = new MailService(
+            $this->createStub(LogServiceInterface::class),
+            $message,
+            $this->transportInterface,
+            $options
+        );
+        $message->html('<p>Test</p>');
+
+        $mailService->attachFiles();
+
+        $body = $message->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+        $names = [];
+        foreach ($body->getParts() as $part) {
+            if ($part instanceof DataPart) {
+                $names[] = $part->getFilename();
+            }
+        }
+        sort($names);
+
+        $this->assertSame(['nested.txt', 'testPdfAttachment.pdf', 'testXlsAttachment.xls'], $names);
+    }
+
+    public function testBodySetAsMimePartIsSent(): void
+    {
+        $transport = new RecordingTransport();
+        $this->mailService->setTransport($transport);
+        $this->message->addFrom('from@example.com');
+        $this->message->addTo('to@example.com');
+
+        $this->mailService->setBody(new TextPart('plain body'));
+        $result = $this->mailService->send();
+
+        $this->assertTrue($result->isValid());
+        $this->assertCount(1, $transport->sent);
+        $this->assertInstanceOf(Email::class, $transport->sent[0]);
+        $body = $transport->sent[0]->getBody();
+        $this->assertInstanceOf(TextPart::class, $body);
+        $this->assertSame('plain body', $body->getBody());
+    }
+
+    public function testBodySetAsMimePartIsSentWithAttachments(): void
+    {
+        $transport = new RecordingTransport();
+        $this->mailService->setTransport($transport);
+        $this->message->addFrom('from@example.com');
+        $this->message->addTo('to@example.com');
+
+        $this->mailService->setBody(new TextPart('plain body'));
+        $this->mailService->addAttachment($this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf');
+        $this->mailService->send();
+
+        $this->assertCount(1, $transport->sent);
+        $this->assertInstanceOf(Email::class, $transport->sent[0]);
+        $body = $transport->sent[0]->getBody();
+        $this->assertInstanceOf(MixedPart::class, $body);
+        $this->assertCount(2, $body->getParts());
+    }
+
+    public function testMessageWithoutAnyBodyIsNotSent(): void
+    {
+        $this->message->addFrom('from@example.com');
+        $this->message->addTo('to@example.com');
+        $this->mailService->setTransport(new RecordingTransport());
+
+        $this->expectException(MailException::class);
+        $this->expectExceptionMessage('A message must have a text or an HTML part.');
+        $this->mailService->send();
     }
 
     private function readPrivateMessageBody(Message $message): ?AbstractPart
@@ -674,7 +771,7 @@ class MailServiceTest extends TestCase
             $logService,
             new Email(),
             $this->transportInterface,
-            $this->createMock(MailOptions::class)
+            new MailOptions()
         );
 
         $result = $mailService->send();

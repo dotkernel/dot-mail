@@ -12,6 +12,7 @@ trait MailEventListenerAwareTrait
 {
     use EventManagerAwareTrait;
 
+    /** @var MailEventListenerInterface[] */
     protected array $listeners = [];
 
     public function attachListener(MailEventListenerInterface $listener, int $priority = 1): void

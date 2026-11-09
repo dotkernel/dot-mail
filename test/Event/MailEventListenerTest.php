@@ -6,7 +6,6 @@ namespace DotTest\Mail\Event;
 
 use Dot\Mail\Event\MailEventListenerAwareTrait;
 use Dot\Mail\Event\MailEventListenerInterface;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use ReflectionObject;
@@ -14,7 +13,6 @@ use ReflectionObject;
 class MailEventListenerTest extends TestCase
 {
     /**
-     * @throws Exception
      * @throws ReflectionException
      */
     public function testListenerDetachingAndClearing(): void
@@ -22,8 +20,8 @@ class MailEventListenerTest extends TestCase
         $trait     = new class {
             use MailEventListenerAwareTrait;
         };
-        $listener1 = $this->createMock(MailEventListenerInterface::class);
-        $listener2 = $this->createMock(MailEventListenerInterface::class);
+        $listener1 = $this->createStub(MailEventListenerInterface::class);
+        $listener2 = $this->createStub(MailEventListenerInterface::class);
 
         $trait->attachListener($listener1, 10);
         $trait->attachListener($listener2);
@@ -45,7 +43,6 @@ class MailEventListenerTest extends TestCase
     }
 
     /**
-     * @throws Exception
      * @throws ReflectionException
      */
     public function testDetachingUnknownListenerKeepsOthers(): void
@@ -53,8 +50,8 @@ class MailEventListenerTest extends TestCase
         $trait    = new class {
             use MailEventListenerAwareTrait;
         };
-        $attached = $this->createMock(MailEventListenerInterface::class);
-        $unknown  = $this->createMock(MailEventListenerInterface::class);
+        $attached = $this->createStub(MailEventListenerInterface::class);
+        $unknown  = $this->createStub(MailEventListenerInterface::class);
 
         $trait->attachListener($attached);
         $trait->detachListener($unknown);

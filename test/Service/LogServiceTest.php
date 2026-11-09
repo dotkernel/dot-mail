@@ -8,7 +8,6 @@ use Dot\Mail\Email;
 use Dot\Mail\Service\LogService;
 use DotTest\Mail\CommonTrait;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
 
@@ -56,43 +55,31 @@ class LogServiceTest extends TestCase
         );
     }
 
-    /**
-     * @throws Exception
-     */
     public function testSentMailIsLogged(): void
     {
-        $message    = $this->createMock(Email::class);
-        $toAddress  = [new Address('testTo@dotkernel.com')];
-        $ccAddress  = [new Address('testCc@dotkernel.com')];
-        $bccAddress = [new Address('testBcc@dotkernel.com')];
-
-        $message->expects($this->once())->method('getSubject')
-            ->willReturn('testSubject@dotkernel.com');
-        $message->expects($this->once())->method('getTo')
-            ->willReturn($toAddress);
-        $message->expects($this->once())->method('getCc')
-            ->willReturn($ccAddress);
-        $message->expects($this->once())->method('getBcc')
-            ->willReturn($bccAddress);
+        $message = (new Email())->subject('testSubject@dotkernel.com');
+        $message->addTo('testTo@dotkernel.com', 'To Name');
+        $message->addCc('testCc@dotkernel.com');
+        $message->addBcc('testBcc@dotkernel.com');
 
         $this->logService->sent($message);
 
-        $this->assertTrue(is_file($this->config['dot_mail']['log']['sent']));
-        $this->assertStringContainsString(
-            '"subject":"testSubject@dotkernel.com"',
-            file_get_contents($this->fileSystem->url() . '/log/mail/sent.log')
-        );
+        $logFile = $this->fileSystem->url() . '/log/mail/sent.log';
+        $this->assertTrue(is_file($logFile));
+        $contents = file_get_contents($logFile);
+        $this->assertIsString($contents);
+        $this->assertStringContainsString('"subject":"testSubject@dotkernel.com"', $contents);
+        $this->assertStringContainsString('"to":["To Name <testTo@dotkernel.com>"]', $contents);
+        $this->assertStringContainsString('"cc":[" <testCc@dotkernel.com>"]', $contents);
+        $this->assertStringContainsString('"bcc":[" <testBcc@dotkernel.com>"]', $contents);
     }
 
-    /**
-     * @throws Exception
-     */
     public function testSentReturnsFalseWhenLogDirectoryCannotBeCreated(): void
     {
         // the "directory" of the target is an existing file, so it can be neither used nor created
         $target     = $this->fileSystem->url() . '/data/mail/attachments/testPdfAttachment.pdf/sent.log';
         $logService = new LogService(['log' => ['sent' => $target]]);
-        $message    = $this->createMock(Email::class);
+        $message    = new Email();
 
         $this->assertFalse($logService->sent($message));
     }

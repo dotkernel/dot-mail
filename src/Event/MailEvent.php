@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Event;
 
-use ArrayAccess;
-use Dot\Event\Event;
 use Dot\Mail\Result\ResultInterface;
 use Dot\Mail\Service\MailServiceInterface;
+use Laminas\EventManager\Event;
 
 /**
- * @template TTarget of object|string|null
- * @template TParams of array|ArrayAccess|object
- * @extends Event<TTarget, TParams>
+ * @extends Event<null, array<string, mixed>>
  */
 class MailEvent extends Event
 {
