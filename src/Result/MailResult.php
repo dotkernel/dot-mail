@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Result;
 
-use Exception;
+use Throwable;
 
 class MailResult implements ResultInterface
 {
@@ -12,12 +12,12 @@ class MailResult implements ResultInterface
 
     protected bool $valid;
     protected string $message;
-    protected Exception|null $exception;
+    protected Throwable|null $exception;
 
     public function __construct(
         bool $valid = true,
         string $message = self::DEFAULT_MESSAGE,
-        ?Exception $exception = null
+        ?Throwable $exception = null
     ) {
         $this->valid     = $valid;
         $this->message   = $message;
@@ -36,10 +36,10 @@ class MailResult implements ResultInterface
 
     public function hasException(): bool
     {
-        return $this->exception instanceof Exception;
+        return $this->exception instanceof Throwable;
     }
 
-    public function getException(): ?Exception
+    public function getException(): ?Throwable
     {
         return $this->exception;
     }

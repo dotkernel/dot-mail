@@ -2,12 +2,20 @@ docs_dir: docs/book
 site_dir: docs/html
 extra:
   project: Packages
-  current_version: v5
+  current_version: v6
   versions:
+    - v6
     - v5
     - v4
 nav:
   - Home: index.md
+  - v6:
+      - Overview: v6/overview.md
+      - Installation: v6/installation.md
+      - Configuration: v6/configuration.md
+      - Usage: v6/usage.md
+      - Transports: v6/transports.md
+      - Upgrade from v5 to v6: v6/upgrade-v5-to-v6.md
   - v5:
       - Overview: v5/overview.md
       - Installation: v5/installation.md

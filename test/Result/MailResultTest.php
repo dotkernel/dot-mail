@@ -7,6 +7,7 @@ namespace DotTest\Mail\Result;
 use Dot\Mail\Result\MailResult;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class MailResultTest extends TestCase
 {
@@ -26,5 +27,15 @@ class MailResultTest extends TestCase
         $this->assertSame($exception, $mailResult->getException());
         $this->assertSame($exception->getMessage(), $mailResult->getException()->getMessage());
         $this->assertTrue($mailResult->hasException());
+    }
+
+    public function testResultCanHoldAnyThrowable(): void
+    {
+        $error = new TypeError('Type error test');
+
+        $mailResult = new MailResult(false, $error->getMessage(), $error);
+
+        $this->assertTrue($mailResult->hasException());
+        $this->assertSame($error, $mailResult->getException());
     }
 }

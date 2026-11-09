@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Dot\Mail\Event;
 
-use ArrayAccess;
-use Dot\Event\Event;
 use Dot\Mail\Result\ResultInterface;
 use Dot\Mail\Service\MailServiceInterface;
+use Laminas\EventManager\Event;
 
 /**
- * @template TTarget of object|string|null
- * @template TParams of array|ArrayAccess|object
- * @extends Event<TTarget, TParams>
+ * @extends Event<null, array<string, mixed>>
  */
 class MailEvent extends Event
 {
@@ -21,7 +18,7 @@ class MailEvent extends Event
     public const EVENT_MAIL_SEND_ERROR = 'event.mail.send.error';
 
     protected MailServiceInterface $mailService;
-    protected ResultInterface $result;
+    protected ?ResultInterface $result = null;
 
     public function __construct(MailServiceInterface $mailService, string $name = self::EVENT_MAIL_PRE_SEND)
     {
@@ -39,7 +36,7 @@ class MailEvent extends Event
         $this->mailService = $mailService;
     }
 
-    public function getResult(): ResultInterface
+    public function getResult(): ?ResultInterface
     {
         return $this->result;
     }

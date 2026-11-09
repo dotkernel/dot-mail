@@ -10,26 +10,27 @@ use Symfony\Component\Mailer\Exception\InvalidArgumentException;
 use function sprintf;
 
 /**
- * @extends AbstractOptions<string>
+ * @extends AbstractOptions<mixed>
  */
 class SmtpOptions extends AbstractOptions
 {
-    protected string $name            = 'localhost';
+    protected ?string $name = null;
+    /** @var array{username?: string, password?: string, tls?: bool|null} */
     protected array $connectionConfig = [];
     protected string $host            = '127.0.0.1';
     protected int $port               = 25;
 
-    protected ?int $connectionTimeLimit;
+    protected ?int $connectionTimeLimit = null;
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * Set the local client hostname or IP
+     * Set the local client hostname or IP; when null, the transport's own default is kept
      */
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
         return $this;
@@ -37,6 +38,8 @@ class SmtpOptions extends AbstractOptions
 
     /**
      * Get connection configuration array
+     *
+     * @return array{username?: string, password?: string, tls?: bool|null}
      */
     public function getConnectionConfig(): array
     {
@@ -45,6 +48,8 @@ class SmtpOptions extends AbstractOptions
 
     /**
      * Set connection configuration array
+     *
+     * @param array{username?: string, password?: string, tls?: bool|null} $connectionConfig
      */
     public function setConnectionConfig(array $connectionConfig): static
     {

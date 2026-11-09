@@ -12,20 +12,12 @@ use Symfony\Component\Mime\Header\MailboxListHeader;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\Multipart\AlternativePart;
-use Symfony\Component\Mime\Part\Multipart\MixedPart;
-use Symfony\Component\Mime\Part\Multipart\RelatedPart;
 use Symfony\Component\Mime\Part\TextPart;
 
-use function array_filter;
-use function array_merge;
-use function array_unique;
-use function array_values;
 use function is_array;
 use function is_string;
-use function preg_match_all;
+use function preg_match;
 use function sprintf;
-use function sscanf;
-use function str_replace;
 
 class Email extends Message
 {
@@ -48,7 +40,6 @@ class Email extends Message
     private ?string $html        = null;
 
     private ?string $htmlCharset = null;
-    private array $attachments   = [];
 
     public function subject(string $subject): static
     {
@@ -80,9 +71,11 @@ class Email extends Message
         return $this->getHeaders()->getHeaderBody('Return-Path');
     }
 
-    public function setSender(Address|string $addresses, mixed $name = null): static
+    public function setSender(Address|string $address, ?string $name = null): static
     {
-        return $this->setHeaderBody('Mailbox', 'Sender', new Address($addresses, $name ?? ''));
+        $sender = $address instanceof Address ? $address : new Address($address, $name ?? '');
+
+        return $this->setHeaderBody('Mailbox', 'Sender', $sender);
     }
 
     public function getSender(): ?Address
@@ -90,40 +83,61 @@ class Email extends Message
         return $this->getHeaders()->getHeaderBody('Sender');
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function addFrom(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->addListAddressHeaderBody('From', $updatedAddresses);
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function setFrom(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->setListAddressHeaderBody('From', $updatedAddresses);
     }
 
+    /**
+     * @return Address[]
+     */
     public function getFrom(): array
     {
         return $this->getHeaders()->getHeaderBody('From') ?: [];
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function addReplyTo(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->addListAddressHeaderBody('Reply-To', $updatedAddresses);
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function setReplyTo(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->setListAddressHeaderBody('Reply-To', $updatedAddresses);
     }
 
+    /**
+     * @return Address[]
+     */
     public function getReplyTo(): array
     {
         return $this->getHeaders()->getHeaderBody('Reply-To') ?: [];
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function addTo(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
@@ -132,46 +146,70 @@ class Email extends Message
         return $this;
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function setTo(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->setListAddressHeaderBody('To', $updatedAddresses);
     }
 
+    /**
+     * @return Address[]
+     */
     public function getTo(): array
     {
         return $this->getHeaders()->getHeaderBody('To') ?: [];
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function addCc(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->addListAddressHeaderBody('Cc', $updatedAddresses);
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function setCc(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->setListAddressHeaderBody('Cc', $updatedAddresses);
     }
 
+    /**
+     * @return Address[]
+     */
     public function getCc(): array
     {
         return $this->getHeaders()->getHeaderBody('Cc') ?: [];
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function addBcc(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->addListAddressHeaderBody('Bcc', $updatedAddresses);
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     */
     public function setBcc(array|Address|string $addresses, ?string $name = null): static
     {
         $updatedAddresses = $this->updateAddresses($addresses, $name ?? '');
         return $this->setListAddressHeaderBody('Bcc', $updatedAddresses);
     }
 
+    /**
+     * @return Address[]
+     */
     public function getBcc(): array
     {
         return $this->getHeaders()->getHeaderBody('Bcc') ?: [];
@@ -190,9 +228,9 @@ class Email extends Message
 
     public function getPriority(): int
     {
-        [$priority] = sscanf($this->getHeaders()->getHeaderBody('X-Priority') ?? '', '%[1-5]');
+        $header = (string) $this->getHeaders()->getHeaderBody('X-Priority');
 
-        return $priority !== null ? (int) $priority : 3;
+        return preg_match('/^([1-5])/', $header, $matches) === 1 ? (int) $matches[1] : self::PRIORITY_NORMAL;
     }
 
     public function text(string $body, string $charset = 'utf-8'): static
@@ -265,8 +303,8 @@ class Email extends Message
 
     private function ensureBodyValid(): void
     {
-        if (null === $this->text && null === $this->html && ! $this->attachments) {
-            throw new LogicException('A message must have a text or an HTML part or attachments.');
+        if (null === $this->text && null === $this->html && null === parent::getBody()) {
+            throw new LogicException('A message must have a text or an HTML part.');
         }
     }
 
@@ -274,79 +312,13 @@ class Email extends Message
     {
         $this->ensureBodyValid();
 
-        [$htmlPart, $otherParts, $relatedParts] = $this->prepareParts();
-
         $part = null === $this->text ? null : new TextPart($this->text, $this->textCharset);
-        if (null !== $htmlPart) {
-            if (null !== $part) {
-                $part = new AlternativePart($part, $htmlPart);
-            } else {
-                $part = $htmlPart;
-            }
-        }
-
-        if ($relatedParts) {
-            $part = new RelatedPart($part, ...$relatedParts);
-        }
-
-        if ($otherParts) {
-            if ($part) {
-                $part = new MixedPart($part, ...$otherParts);
-            } else {
-                $part = new MixedPart(...$otherParts);
-            }
+        if (null !== $this->html) {
+            $htmlPart = new TextPart($this->html, $this->htmlCharset, 'html');
+            $part     = null !== $part ? new AlternativePart($part, $htmlPart) : $htmlPart;
         }
 
         return $part ?? new TextPart((string) $this->text, $this->textCharset);
-    }
-
-    private function prepareParts(): array
-    {
-        $names    = [];
-        $htmlPart = null;
-        $html     = $this->html;
-        if (null !== $html) {
-            $htmlPart = new TextPart($html, $this->htmlCharset, 'html');
-            $html     = $htmlPart->getBody();
-
-            $regexes    = [
-                '<img\s+[^>]*src\s*=\s*(?:([\'"])cid:(.+?)\\1|cid:([^>\s]+))',
-                '<\w+\s+[^>]*background\s*=\s*(?:([\'"])cid:(.+?)\\1|cid:([^>\s]+))',
-            ];
-            $tmpMatches = [];
-            foreach ($regexes as $regex) {
-                preg_match_all('/' . $regex . '/i', $html, $tmpMatches);
-                $names = array_merge($names, $tmpMatches[2], $tmpMatches[3]);
-            }
-            $names = array_filter(array_unique($names));
-        }
-
-        $otherParts = $relatedParts = [];
-        foreach ($this->attachments as $part) {
-            foreach ($names as $name) {
-                if ($name !== $part->getName() && (! $part->hasContentId() || $name !== $part->getContentId())) {
-                    continue;
-                }
-                if (isset($relatedParts[$name])) {
-                    continue 2;
-                }
-
-                if ($name !== $part->getContentId()) {
-                    $html = str_replace('cid:' . $name, 'cid:' . $part->getContentId(), $html, $count);
-                }
-                $relatedParts[$name] = $part;
-                $part->setName($part->getContentId())->asInline();
-
-                continue 2;
-            }
-
-            $otherParts[] = $part;
-        }
-        if (null !== $htmlPart) {
-            $htmlPart = new TextPart($html, $this->htmlCharset, 'html');
-        }
-
-        return [$htmlPart, $otherParts, array_values($relatedParts)];
     }
 
     private function setHeaderBody(string $type, string $name, mixed $body): static
@@ -356,6 +328,9 @@ class Email extends Message
         return $this;
     }
 
+    /**
+     * @param Address[] $addresses
+     */
     private function addListAddressHeaderBody(string $name, array $addresses): static
     {
         $header = $this->getHeaders()->get($name);
@@ -367,6 +342,9 @@ class Email extends Message
         return $this;
     }
 
+    /**
+     * @param Address[] $addresses
+     */
     private function setListAddressHeaderBody(string $name, array $addresses): static
     {
         $addresses = Address::createArray($addresses);
@@ -380,6 +358,10 @@ class Email extends Message
         return $this;
     }
 
+    /**
+     * @param array<Address|string>|Address|string $addresses
+     * @return Address[]
+     */
     private function updateAddresses(array|Address|string $addresses, ?string $name = null): array
     {
         if (is_array($addresses)) {
@@ -394,6 +376,10 @@ class Email extends Message
         return [$addresses];
     }
 
+    /**
+     * @param array<Address|string> $addresses
+     * @return Address[]
+     */
     private function createAddresses(array $addresses, ?string $name = null): array
     {
         $createdAddresses = [];

@@ -1,7 +1,7 @@
 {
     "name": "dotkernel/dot-mail",
     "type": "library",
-    "description": "Dotkernel mail component based on symfony mailer",
+    "description": "Dotkernel mail component based on Symfony Mailer, for any PSR-11 container",
     "license": "MIT",
     "homepage": "https://github.com/dotkernel/dot-mail",
     "keywords": [
@@ -10,9 +10,8 @@
         "symfony",
         "mailer",
         "event",
-        "dot-event",
         "laminas",
-        "laminas-dependency"
+        "psr-11"
     ],
     "authors": [
         {
@@ -30,17 +29,17 @@
         "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
         "ext-fileinfo": "*",
         "ext-json": "*",
-        "dotkernel/dot-event": "^4.0",
-        "laminas/laminas-servicemanager": "^3.22 || ^4.0",
+        "laminas/laminas-eventmanager": "^3.4",
         "laminas/laminas-stdlib": "^3.19",
-        "symfony/mailer": "^v7.1.6"
+        "psr/container": "^1.1 || ^2.0",
+        "symfony/mailer": "^v7.1.6 || ^v8.0"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^3.0",
         "mikey179/vfsstream": "^v1.6.11",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^10.2"
+        "phpunit/phpunit": "^12"
     },
     "autoload": {
         "psr-4": {

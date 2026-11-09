@@ -15,25 +15,32 @@ use function is_string;
 use function strtolower;
 
 /**
- * @template TValue
- * @template-extends AbstractOptions<TValue>
+ * @extends AbstractOptions<mixed>
  */
 class MailOptions extends AbstractOptions
 {
+    /** @var list<string|array{type?: mixed, priority?: mixed}> */
     protected array $eventListeners                = [];
-    protected TransportInterface|string $transport = EsmtpTransport::class;
-    protected array $transportMap                  = [
+    protected TransportInterface|string $transport = SendmailTransport::class;
+    /** @var array<string, list<class-string<TransportInterface>>> */
+    protected array $transportMap = [
         'esmtp'    => [EsmtpTransport::class],
         'sendmail' => [SendmailTransport::class],
     ];
     protected MessageOptions $messageOptions;
     protected SmtpOptions $smtpOptions;
 
+    /**
+     * @return array<string, list<class-string<TransportInterface>>>
+     */
     public function getTransportMap(): array
     {
         return $this->transportMap;
     }
 
+    /**
+     * @param array<string, list<class-string<TransportInterface>>> $transportMap
+     */
     public function setTransportMap(array $transportMap): void
     {
         $this->transportMap = $transportMap;
@@ -61,9 +68,15 @@ class MailOptions extends AbstractOptions
 
     public function getMessageOptions(): MessageOptions
     {
+        if (! isset($this->messageOptions)) {
+            $this->messageOptions = new MessageOptions();
+        }
         return $this->messageOptions;
     }
 
+    /**
+     * @param array<string, mixed> $messageOptions
+     */
     public function setMessageOptions(array $messageOptions): void
     {
         $this->messageOptions = new MessageOptions($messageOptions);
@@ -71,19 +84,31 @@ class MailOptions extends AbstractOptions
 
     public function getSmtpOptions(): SmtpOptions
     {
+        if (! isset($this->smtpOptions)) {
+            $this->smtpOptions = new SmtpOptions();
+        }
         return $this->smtpOptions;
     }
 
+    /**
+     * @param array<string, mixed> $smtpOptions
+     */
     public function setSmtpOptions(array $smtpOptions): void
     {
         $this->smtpOptions = new SmtpOptions($smtpOptions);
     }
 
+    /**
+     * @return list<string|array{type?: mixed, priority?: mixed}>
+     */
     public function getEventListeners(): array
     {
         return $this->eventListeners;
     }
 
+    /**
+     * @param list<string|array{type?: mixed, priority?: mixed}> $eventListeners
+     */
     public function setEventListeners(array $eventListeners): void
     {
         $this->eventListeners = $eventListeners;

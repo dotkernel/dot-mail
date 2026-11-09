@@ -41,4 +41,9 @@ class SmtpOptionsTest extends TestCase
         $this->expectExceptionMessage('Port must be greater than 0; received "0"');
         $subject->setPort(0);
     }
+
+    public function testConnectionTimeLimitDefaultsToNull(): void
+    {
+        $this->assertNull((new SmtpOptions())->getConnectionTimeLimit());
+    }
 }
