@@ -22,8 +22,8 @@ class MailEventListenerTest extends TestCase
         $trait     = new class {
             use MailEventListenerAwareTrait;
         };
-        $listener1 = $this->createMock(MailEventListenerInterface::class);
-        $listener2 = $this->createMock(MailEventListenerInterface::class);
+        $listener1 = $this->createStub(MailEventListenerInterface::class);
+        $listener2 = $this->createStub(MailEventListenerInterface::class);
 
         $trait->attachListener($listener1, 10);
         $trait->attachListener($listener2);
