@@ -14,6 +14,7 @@ use Dot\Mail\Service\LogServiceInterface;
 use Dot\Mail\Service\MailService;
 use DotTest\Mail\CommonTrait;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -26,6 +27,7 @@ use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\MixedPart;
 use Symfony\Component\Mime\Part\TextPart;
 
+#[AllowMockObjectsWithoutExpectations]
 class MailServiceTest extends TestCase
 {
     use CommonTrait;
@@ -41,8 +43,8 @@ class MailServiceTest extends TestCase
     {
         $this->message            = new Email();
         $this->transportInterface = $this->createMock(TransportInterface::class);
-        $mailOptions              = $this->createMock(MailOptions::class);
-        $logServiceInterface      = $this->createMock(LogServiceInterface::class);
+        $mailOptions              = $this->createStub(MailOptions::class);
+        $logServiceInterface      = $this->createStub(LogServiceInterface::class);
 
         $this->mailService = new MailService(
             $logServiceInterface,
@@ -73,7 +75,7 @@ class MailServiceTest extends TestCase
     public function testGettersAndSetters(): void
     {
         $attachments = ['/testAttachment.pdf', '/testDirectory/testAttachment2.xls'];
-        $transport   = $this->createMock(EsmtpTransport::class);
+        $transport   = $this->createStub(EsmtpTransport::class);
 
         $this->mailService->setAttachments($attachments);
         $this->mailService->setTransport($transport);

@@ -17,6 +17,7 @@ use Dot\Mail\Service\LogServiceInterface;
 use Dot\Mail\Service\MailService;
 use DotTest\Mail\CommonTrait;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 
+#[AllowMockObjectsWithoutExpectations]
 class MailServiceAbstractFactoryTest extends TestCase
 {
     use CommonTrait;
@@ -91,7 +93,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->willReturn($this->messageOptions);
         $this->mailOptions->expects($this->any())
             ->method('getTransport')
-            ->willReturn($this->createMock(EsmtpTransport::class));
+            ->willReturn($this->createStub(EsmtpTransport::class));
         $this->mailOptions->expects($this->any())
             ->method('getEventListeners')
             ->willReturn([AbstractMailEventListener::class]);
@@ -100,7 +102,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
-                [LogServiceInterface::class, $this->createMock(LogService::class)],
+                [LogServiceInterface::class, $this->createStub(LogService::class)],
                 [
                     AbstractMailEventListener::class,
                     new class extends AbstractMailEventListener {
@@ -168,7 +170,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
-                [LogServiceInterface::class, $this->createMock(LogService::class)],
+                [LogServiceInterface::class, $this->createStub(LogService::class)],
                 [EsmtpTransport::class, new EsmtpTransport()],
                 ['Invalid Listener Test', 'Invalid Listener provided'],
             ]);
@@ -221,7 +223,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
-                [LogServiceInterface::class, $this->createMock(LogService::class)],
+                [LogServiceInterface::class, $this->createStub(LogService::class)],
                 ['Invalid Listener Test', 'Invalid Listener provided'],
             ]);
 
@@ -246,7 +248,7 @@ class MailServiceAbstractFactoryTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['dot-mail.options.default', $this->mailOptions],
-                [LogServiceInterface::class, $this->createMock(LogService::class)],
+                [LogServiceInterface::class, $this->createStub(LogService::class)],
                 [EsmtpTransport::class, new EsmtpTransport()],
                 ['Invalid Listener Test', 'Invalid Listener provided'],
             ]);

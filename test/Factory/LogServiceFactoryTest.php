@@ -22,7 +22,7 @@ class LogServiceFactoryTest extends TestCase
      */
     public function testServiceCreatedWithoutValidConfig(): void
     {
-        $message    = $this->createMock(Email::class);
+        $message    = $this->createStub(Email::class);
         $container  = $this->createMock(ContainerInterface::class);
         $logService = (new LogServiceFactory())($container);
 
